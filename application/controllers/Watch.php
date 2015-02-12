@@ -48,7 +48,15 @@ class Watch extends Core_controller
             $this->template->file = $filepath;
             $this->template->videotype = mime_content_type($filepath);
             $this->template->codec= $this->getCodecInfo($filepath)['videoCodec'];
-            $this->template->subs = glob(dirname($filepath) . "*.srt");
+            $subs = array();
+            foreach (glob(dirname($filepath) . "*.srt") as $sub){
+                array_push($subs, array(
+                        'file' => $sub,
+                        'lang' => substr($sub, strpos(substr($sub,0,-4), '.')+1, -4),
+                        'label'=> substr($sub, strpos(substr($sub,0,-4), '.')+1, -4),
+                    ));
+            }
+            $this->template->subs = $subs;
             $this->template->render('media/watch');
         } 
     }
