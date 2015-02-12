@@ -7,7 +7,7 @@ The idea is to have a central place for the less tech-savvy user.
 
 
 # Installation
-1. Setup a web server (I supplied the apache2 site config in (/apache2-site)[/apache2-site]) and database server.
+1. Setup a database and web server. I supplied a sample apache2 site config in [apache2-site](/apache2-site)
 2. Create the following tables on the SQL server; (sql script to be done)
     Table users with: id, login, password, datejoined
     Table langs with: id, name, flag
