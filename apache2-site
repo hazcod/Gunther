@@ -1,4 +1,5 @@
 <VirtualHost *:80>
+	# This VirtualHost redirects everything to HTTPS on port 443.
 	NameVirtualHost *:80
 	RewriteEngine On
 	RewriteCond %{HTTPS} off
@@ -6,27 +7,29 @@
 </VirtualHost>
 
 <VirtualHost *:443>
+	# Main VirtualHost
 	NameVirtualHost *:443
-
+	# Required for the routing
 	RewriteEngine On
-
+	# HTTPS baby!
 	SSLEngine on
-	SSLCertificateFile /etc/apache2/server.crt
-	SSLCertificateKeyFile /etc/apache2/server.key
-
+	SSLCertificateFile /etc/apache2/server.crt	#create this yourself
+	SSLCertificateKeyFile /etc/apache2/server.key	#create this yourself
+	# where the website is located
 	DocumentRoot /var/www/
-
-	Alias /webdav /media/storage
-
-	<Location /webdav>
-		Options Indexes
-		DAV On
-		AuthType Basic
-		AuthName "Gunther webdav"
-		AuthUserFile /home/www-data/passwd.dav
-		Require valid-user
-	</Location>
-
+	
+	# OPTIONAL: offer a webdav over HTTPS share with this;
+	#Alias /webdav /media/storage
+	#<Location /webdav>
+	#	Options Indexes
+	#	DAV On
+	#	AuthType Basic
+	#	AuthName "Gunther webdav"
+	#	AuthUserFile /home/www-data/passwd.dav
+	#	Require valid-user
+	#</Location>
+	
+	# This is where the good stuff happens
 	<Directory /var/www>
 		AllowOverride All
 		Options Indexes FollowSymLinks MultiViews
