@@ -3,7 +3,7 @@
 
     public function __construct()
     {
-        parent::__construct('admin');
+        parent::__construct('dashboard');
 
         $this->template->setPartial('navbar')
             ->setPartial('headermeta')
@@ -22,7 +22,6 @@
     function checkPrivilege()
     {
         if (!isset($_SESSION['user'])){
-            //unset($_SESSION['user']);
             $this->setFlashmessage($this->lang['accessdenied'], 'danger');
             $this->redirect('home/index');
             return false;
@@ -32,7 +31,7 @@
     }
 
     public function index()
-    { //show the overview admin page
+    { 
         if ($this->checkPrivilege() == true){
             $this->template->user = $this->user_m->getUserByLogin($_SESSION['user']);
             $this->template->render('dashboard/index');

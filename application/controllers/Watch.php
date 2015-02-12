@@ -4,7 +4,7 @@ class Watch extends Core_controller
 {
     public function __construct()
     {
-        parent::__construct('start');
+        parent::__construct('watch');
         //set our partials in the template
         $this->template->setPartial('navbar')
             ->setPartial('headermeta')
@@ -24,7 +24,6 @@ class Watch extends Core_controller
     function checkPrivilege()
     {
         if (!isset($_SESSION['user'])){
-            //unset($_SESSION['user']);
             $this->setFlashmessage($this->lang['accessdenied'], 'danger');
             $this->redirect('home/index');
             return false;
@@ -35,44 +34,47 @@ class Watch extends Core_controller
 
    public function stream(){
         if ($this->checkPrivilege() == true) {
-            $stream = new VideoStream('/media/storage/' . $_GET['f']);
-		$stream->start();
+            global $settings;
+            $stream = new VideoStream($settings['media_location'] . $_GET['f']);
+            $stream->start();
         } 
    }
 
     public function index()
     {
         if ($this->checkPrivilege() == true) {
-            $this->template->file = $_GET['f'];
-		 $this->template->videotype = mime_content_type('/media/storage/' . $this->template->file);
-		  $this->template->codec= $this->getCodecInfo('/media/storage/' .$this->template->file)['videoCodec'];
-		  $this->template->subs = glob(dirname('media/storage' . $_GET['f']) . "*.srt");
+            global $settings;
+            $filepath = $settings['media_location'] . $_GET['f']; #TODO; use id instead of relative location
+            $this->template->file = $filepath;
+            $this->template->videotype = mime_content_type($filepath);
+            $this->template->codec= $this->getCodecInfo($filepath)['videoCodec'];
+            $this->template->subs = glob(dirname($filepath) . "*.srt");
             $this->template->render('media/watch');
         } 
     }
 
-function getCodecInfo($inputFile)
-{
-    $cmdLine = '/usr/bin/mediainfo --Output=XML ' . escapeshellarg($inputFile);
-
-    exec($cmdLine, $output, $retcode);
-
-    try
+    function getCodecInfo($inputFile)
     {
-        $xml = new SimpleXMLElement(join("\n",$output));
-        $videoCodec = $xml->xpath('//track[@type="Video"]/Format');
-        $audioCodec = $xml->xpath('//track[@type="Audio"]/Format');
-    }
-    catch(Exception $e)
-    {
-        return null;
-    }
+        $cmdLine = '/usr/bin/mediainfo --Output=XML ' . escapeshellarg($inputFile);
 
-    return array(
-        'videoCodec' => (string)$videoCodec[0],
-        'audioCodec' => (string)$audioCodec[0],
-    );
-}
+        exec($cmdLine, $output, $retcode);
+
+        try
+        {
+            $xml = new SimpleXMLElement(join("\n",$output));
+            $videoCodec = $xml->xpath('//track[@type="Video"]/Format');
+            $audioCodec = $xml->xpath('//track[@type="Audio"]/Format');
+        }
+        catch(Exception $e)
+        {
+            return null;
+        }
+
+        return array(
+            'videoCodec' => (string)$videoCodec[0],
+            'audioCodec' => (string)$audioCodec[0],
+        );
+    }
 
 }
 

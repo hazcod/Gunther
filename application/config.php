@@ -14,3 +14,9 @@ $db_config = array(
         'port' => '3306', //default SQL port
     )
 );
+
+$settings = array(
+	'media_location' => '/media/storage',
+	'salt1' => 'pumpkin',
+	'salt2' => 'spice',
+);

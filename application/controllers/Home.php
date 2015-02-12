@@ -4,7 +4,7 @@ class Home extends Core_controller
 {
     public function __construct()
     {
-        parent::__construct('start');
+        parent::__construct('home');
         //set our partials in the template
         $this->template->setPartial('navbar')
             ->setPartial('headermeta')
@@ -13,7 +13,7 @@ class Home extends Core_controller
         //load models
         $this->menu_m = Load::model('menu_m');
         $this->langs_m = Load::model('langs_m');
-	   $this->user_m = Load::model('user_m');
+        $this->user_m = Load::model('user_m');
 
         $this->template->menuitems = $this->menu_m->getStartMenu();
         $this->template->langs = $this->langs_m->getLangs();
@@ -32,21 +32,20 @@ class Home extends Core_controller
 
     public function login()
     {
-        $formdata = $this->form->getPost();//get post data
-        //Make sure data isn't empty
+        $formdata = $this->form->getPost();
         $this->form->validateLength('username', 4);
-        //$this->form->validateLength('password', 6);
-        //if everything is validated..
+        $this->form->validateLength('password', 5);
+
         if ($this->form->isFormValid()) {
             $pass = sha1('pumpkin' . $formdata->password .  'spice');
-		 if ($this->user_m->isValid(strtolower($formdata->username), $pass)){
-			$_SESSION['user'] = $formdata->username;
-			$this->redirect('dashboard');
-		 } else {
-            $this->template->formdata = $formdata;
-            $this->setCurrentFlashmessage($this->lang['wronglogin'], 'danger');
-            $this->template->render('home/login');
-		}
+            if ($this->user_m->isValid(strtolower($formdata->username), $pass)){
+                $_SESSION['user'] = $formdata->username;
+                $this->redirect('dashboard');
+            } else {
+                $this->template->formdata = $formdata;
+                $this->setCurrentFlashmessage($this->lang['wronglogin'], 'danger');
+                $this->template->render('home/login');
+            }
         } else {
             $this->template->formdata = $formdata;
             $this->setCurrentFlashmessage($this->lang['invalidlogin'], 'danger');
