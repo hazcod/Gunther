@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="<?= $_SESSION['lang']; ?>">
+    <head>
+        <?php $this->renderPartial('headermeta'); ?>
+    </head>
+    <body>
+        <?php $this->renderPartial('navbar'); ?>
+        <div class="container">
+            <h2 class="hidden"><?php echo $this->getPagetitle(); ?></h2>
+            <?php $this->getContent(); ?>
+            <hr>
+            <?php $this->renderPartial('footer'); ?>
+        </div>
+	<script src="<?= URL::base_uri(); ?>js/jquery.js"></script>
+        <script src="<?= URL::base_uri(); ?>js/bootstrap.min.js"></script>
+    </body>
+</html>
+

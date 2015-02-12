@@ -1,0 +1,59 @@
+.videoWrapper {
+	position: relative;
+	padding-bottom: 41%; /* video dimensions - height/width */
+	padding-top: 0px;
+	height: 0;
+	z-index: 1000;
+}
+
+video {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 1;
+}    
+
+video.video-js {
+  z-index: 1000;
+}               
+
+.video-js .vjs-controls {
+  z-index: 1002;
+}
+
+.video-js .vjs-big-play-button {
+  z-index: 1002;
+}
+
+.videoWrapper .video-js {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100% !important;
+	height: 100% !important;
+	z-index: 1;
+	background: #000000;
+}         
+
+.videoWrapper object,
+.videoWrapper embed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100% !important;
+  z-index: 1;
+}        
+
+.vjs-spinner {
+  display: none !important;
+}
+
+.video-js img.vjs-poster {
+  height: 100% !important;
+  width: 100% !important;
+  z-index: 1;
+  max-width: 100%;
+}

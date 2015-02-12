@@ -1,0 +1,36 @@
+<VirtualHost *:80>
+	NameVirtualHost *:80
+	RewriteEngine On
+	RewriteCond %{HTTPS} off
+	RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
+</VirtualHost>
+
+<VirtualHost *:443>
+	NameVirtualHost *:443
+
+	RewriteEngine On
+
+	SSLEngine on
+	SSLCertificateFile /etc/apache2/server.crt
+	SSLCertificateKeyFile /etc/apache2/server.key
+
+	DocumentRoot /var/www/
+
+	Alias /webdav /media/storage
+
+	<Location /webdav>
+		Options Indexes
+		DAV On
+		AuthType Basic
+		AuthName "Gunther webdav"
+		AuthUserFile /home/www-data/passwd.dav
+		Require valid-user
+	</Location>
+
+	<Directory /var/www>
+		AllowOverride All
+		Options Indexes FollowSymLinks MultiViews
+		Order allow,deny
+		allow from all
+	</Directory>
+</VirtualHost>
