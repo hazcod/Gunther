@@ -25,3 +25,6 @@ The idea is to have a central place for the less tech-savvy user.
 
 # Screenshots
 ![Gunther login screenshot](https://i.imgur.com/RWgQcBR.png "Login screen")
+
+# Project dependencies
+(HTML/PHP/CSS/SQL), VideoJS, Bootswatch Flatly
