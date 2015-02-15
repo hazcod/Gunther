@@ -2,6 +2,8 @@
 
 class Watch extends Core_controller
 {
+   var $api = "http://localhost:5050/api/40389981c6a54cb4a3b813a4961e249d/";
+
     public function __construct()
     {
         parent::__construct('watch');
@@ -32,31 +34,53 @@ class Watch extends Core_controller
         }
     }
 
-   public function stream(){
+   public function stream($id=false){
         if ($this->checkPrivilege() == true) {
-            global $settings;
-            $stream = new VideoStream($settings['media_location'] . $_GET['f']);
+            $movie = $this->getMovie($id);
+		 
+            $stream = new VideoStream($movie->releases[0]->files->movie[0]);
             $stream->start();
         } 
    }
 
-    public function index()
+   public function sub($id=false, $lang=false){
+	$movie = $this->getMovie($id);
+     $subfile = false;
+foreach ($movie->releases[0]->files->subtitle as $sub){
+                if ($lang == substr($sub, strpos(substr($sub,0,-4), '.')+1, -4)){
+	$subfile = $sub;
+}
+            }
+	header('Content-Disposition: attachment; filename="' . basename($subfile) . '"');
+header('Content-Type: text/plain'); # Don't use application/force-download - it's not a real MIME type, and the Content-Disposition header is sufficient
+header('Content-Length: ' . strlen($str));
+header('Connection: close');
+echo file_get_contents($subfile);
+   }
+
+   public function getMovie($id=false){
+	 return json_decode(file_get_contents($this->api . 'media.get?id=' . $id))->media;
+   }
+
+    public function index($id=false)
     {
         if ($this->checkPrivilege() == true) {
-            global $settings;
-            $filepath = $settings['media_location'] . $_GET['f']; #TODO; use id instead of relative location
-            $this->template->file = $filepath;
+		 $movie = $this->getMovie($id);  
+		 $filepath = $movie->releases[0]->files->movie[0];
+            $this->template->file = $id;
             $this->template->videotype = mime_content_type($filepath);
             $this->template->codec= $this->getCodecInfo($filepath)['videoCodec'];
             $subs = array();
-            foreach (glob(dirname($filepath) . "*.srt") as $sub){
+            foreach ($movie->releases[0]->files->subtitle as $sub){
                 array_push($subs, array(
                         'file' => $sub,
                         'lang' => substr($sub, strpos(substr($sub,0,-4), '.')+1, -4),
                         'label'=> substr($sub, strpos(substr($sub,0,-4), '.')+1, -4),
                     ));
             }
+
             $this->template->subs = $subs;
+            $this->template->setPagetitle($movie->info->original_title . ' - Gunther');
             $this->template->render('media/watch');
         } 
     }

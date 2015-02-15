@@ -1,59 +1,16 @@
-.videoWrapper {
-	position: relative;
-	padding-bottom: 41%; /* video dimensions - height/width */
-	padding-top: 0px;
-	height: 0;
-	z-index: 1000;
+.grey-inactive {
+   opacity: 0.4;
+   filter: alpha(opacity=40);
+}
+.imgscale {
+	width: 100%;
 }
 
-video {
-  position: absolute !important;
-  top: 0;
-  left: 0;
-  width: 100% !important;
-  height: 100% !important;
-  z-index: 1;
-}    
-
-video.video-js {
-  z-index: 1000;
-}               
-
-.video-js .vjs-controls {
-  z-index: 1002;
+@media only screen and (max-width:599px) {
+	.vjs-default-skin .vjs-big-play-button {left:25%;top:25%;width:50%;height:50%;}
 }
-
-.video-js .vjs-big-play-button {
-  z-index: 1002;
+@media only screen and (min-width:600px) and (max-width:768px) {
+	.vjs-default-skin .vjs-big-play-button {left:25%;top:25%;width:50%;height:50%;font-size:5em;}
 }
-
-.videoWrapper .video-js {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100% !important;
-	height: 100% !important;
-	z-index: 1;
-	background: #000000;
-}         
-
-.videoWrapper object,
-.videoWrapper embed {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100% !important;
-  z-index: 1;
-}        
-
-.vjs-spinner {
-  display: none !important;
-}
-
-.video-js img.vjs-poster {
-  height: 100% !important;
-  width: 100% !important;
-  z-index: 1;
-  max-width: 100%;
-}
+.video-js {padding-top: 56.25%}
+.vjs-fullscreen {padding-top: 0px}

@@ -34,14 +34,65 @@ class Movies extends Core_controller
         }
     }
 
-    public function getMovies(){
-        return json_decode(file_get_contents($this->api . 'media.list'));
+    public function getAllMovies(){
+        return json_decode(file_get_contents($this->api . 'media.list'))->movies;
     }
+
+    public function getDoneMovies(){
+        return json_decode(file_get_contents($this->api . 'media.list?status=done'))->movies;
+    }
+
+
+    public function getBusyMovies(){
+        return json_decode(file_get_contents($this->api . 'media.list?status=active'))->movies;
+    }
+
+    public function busy(){
+        if ($this->checkPrivilege() == true) {
+		 $this->template->setPagetitle('Inactive Movies - Gunther');
+            $this->template->movies = $this->getBusyMovies();
+            $this->template->render('media/movies.busy');
+        } 
+    }
+
+	public function findExistingMovie($title){
+        return json_decode(file_get_contents($this->api . 'media.list?search=' . $title))->movies;
+	}
+
+	public function findMovies($title){
+		return json_decode(false);
+	}
+
+     public function search(){
+		if ($this->checkPrivilege() == true) {
+			$formdata = $this->form->getPost();
+			$this->template->searchterm = $formdata->title;
+			$existing = $this->findExistingMovie($formdata->title);
+			$arr=array();
+			for ($this->findMovies($formdata->title) as $result){
+				//TODO: if $result is not in $existing, append to $arr
+			}
+			$this->template->results = $arr;
+			$this->template->setPagetitle('Search: ' . $formdata->title);
+			$this->template->render('media/movies.add');
+		}
+	}
+
+	public function add(){
+        if ($this->checkPrivilege() == true) {
+			$this->template->setPagetitle('Add movie - Gunther');
+		 	if ($_POST){
+
+			 } else {
+	            $this->template->render('media/movies.add');
+			 }
+        }
+     }
 
     public function index()
     {
         if ($this->checkPrivilege() == true) {
-            $this->template->movies = $this->getMovies();
+            $this->template->movies = $this->getDoneMovies();
             $this->template->render('media/movies');
         } 
     }
