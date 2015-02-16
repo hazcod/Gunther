@@ -4,6 +4,7 @@
 Gunther can be used as a web frontend for your personal media. You can stream your media, aswell as automatically send new movies to program controlled by API. (think CouchPotato, Sickbeard, ...)
 
 The idea is to have a central place for the less tech-savvy user.
+If you want to contribute, application/ is the folder you need.
 
 
 # Installation
@@ -16,11 +17,9 @@ The idea is to have a central place for the less tech-savvy user.
 
 # TODO
 - Provide SQL setup script
-- Write controllers cleanly
-- Add movies overview
 - Add Series overview
 - Add serie episode overview
-- Finish watch page
+- Finish add movie
 - Add administrator panel (user management, statistics, ...)
 
 # Screenshots
