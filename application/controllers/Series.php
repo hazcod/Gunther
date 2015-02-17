@@ -32,8 +32,8 @@ class Series extends Core_controller
 
         $this->tvdb = new TvDbClient('http://thetvdb.com', $settings['TVDB_API']);
         #TODO: tvdb caching
-        #$cache = new FilesystemCache('/tmp/cache');
-        #$httpClient = new CacheClient($cache, 600);
+        #$cache = new FilesystemCache($this->settings['CACHE_DIR']);
+        #$httpClient = new CacheClient($cache, (int) $this->settings['CACHE_TTL']);
         #$his->tvdb->setHttpClient($httpClient);
     }
 

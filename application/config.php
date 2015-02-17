@@ -18,5 +18,8 @@ $db_config = array(
 $settings = array(
     'CP_API' => 'http://localhost:5050/api/<API>/',
     'SB_API' => 'http://localhost:8081/api/<API>/?cmd=',
-    'TVDB_API' => '<API>',
+    'TVDB_API' => '<API>',      #Your TheTvDB API key
+
+    'CACHE_DIR' => 'cache/',    #cache directory for TheTvDB
+    'CACHE_TTL' => 3600,        #Cache time-to-live in seconds, default 1 hour
 );
