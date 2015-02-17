@@ -19,7 +19,6 @@ If you want to contribute, application/ is the folder you need.
 - Fix subtitles for TV Shows in Watch.php
 - Add recent episodes to dashboard
 - Provide SQL setup script
-- Move hardcoded strings to language files
 - Add administrator panel (user management, statistics, ...)
 
 # Screenshots
