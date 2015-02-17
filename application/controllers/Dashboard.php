@@ -19,7 +19,7 @@
        $this->template->setPagetitle($this->lang['dashboard'] . ' - ' . $this->lang['title']);
     }
     
-    function checkPrivilege()
+    private function checkPrivilege()
     {
         if (!isset($_SESSION['user'])){
             $this->setFlashmessage($this->lang['accessdenied'], 'danger');
@@ -30,9 +30,8 @@
         }
     }
 
-    public static function getLastMovies($limit=10){
-        global $settings;
-        return json_decode(file_get_contents($settings['CP_API'] . 'media.list?status=done&offset=' . urlencode($limit)))->movies;
+    private function getLastMovies($limit=10){
+        return json_decode(file_get_contents($this->settings['CP_API'] . 'media.list?status=done&offset=' . urlencode($limit)))->movies;
     }
 
     public function index()

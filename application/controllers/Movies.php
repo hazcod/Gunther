@@ -20,12 +20,9 @@ class Movies extends Core_controller
         $this->template->langs = $this->langs_m->getLangs();
         //set page title
         $this->template->setPagetitle($this->lang['movies'] . ' - ' . $this->lang['']);  
-
-        global $settings;
-        $this->settings = $settings;
     }
 
-    function checkPrivilege()
+    private function checkPrivilege()
     {
         if (!isset($_SESSION['user'])){
             $this->setFlashmessage($this->lang['accessdenied'], 'danger');
@@ -36,16 +33,16 @@ class Movies extends Core_controller
         }
     }
 
-    public function getAllMovies(){
+    private function getAllMovies(){
         return json_decode(file_get_contents($this->settings['CP_API'] . 'media.list'))->movies;
     }
 
-    public function getDoneMovies(){
+    private function getDoneMovies(){
         return json_decode(file_get_contents($this->settings['CP_API'] . 'media.list?status=done'))->movies;
     }
 
 
-    public function getBusyMovies(){
+    private function getBusyMovies(){
         return json_decode(file_get_contents($this->settings['CP_API'] . 'media.list?status=active'))->movies;
     }
 
@@ -57,20 +54,20 @@ class Movies extends Core_controller
         } 
     }
 
-    public function findExistingMovie($title){
+    private function findExistingMovie($title){
         return json_decode(file_get_contents($this->settings['CP_API'] . 'media.list?search=' . urlencode($title)))->movies;
     }
 
-    public function findMovies($title){
+    private function findMovies($title){
         return json_decode(file_get_contents($this->settings['CP_API'] . 'movie.add?title=' . urlencode($title)));
     }
 
-    public function getMediaInfo($title){
+    private function getMediaInfo($title){
         $url = "http://www.omdbapi.com/?type=movie&s=" . urlencode($title);
         return json_decode(file_get_contents($url))->Search;
     }
 
-    public function addMovie($id){
+    private function addMovie($id){
         return json_decode(file_get_contents($this->settings['CP_API'] . 'movie.add?identifier=' . urlencode($id)))->success;
     }
 

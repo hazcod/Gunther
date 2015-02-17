@@ -14,18 +14,15 @@ class Watch extends Core_controller
         //load models
         $this->menu_m = Load::model('menu_m');
         $this->langs_m = Load::model('langs_m');
-	   $this->user_m = Load::model('user_m');
+        $this->user_m = Load::model('user_m');
 
         $this->template->menuitems = $this->menu_m->getUserMenu();
         $this->template->langs = $this->langs_m->getLangs();
         //set page title
         $this->template->setPagetitle('Gunther');	
-
-        global $settings;
-        $this->settings = $settings;
     }
 
-    function checkPrivilege()
+    private function checkPrivilege()
     {
         if (!isset($_SESSION['user'])){
             $this->setFlashmessage($this->lang['accessdenied'], 'danger');
@@ -36,9 +33,8 @@ class Watch extends Core_controller
         }
     }
 
-    private function streamVideo($id){
+    private function streamMovie($id){
         $movie = $this->getMovie($id); 
-        #echo var_dump($movie);
         $stream = new VideoStream($movie->releases[0]->files->movie[0]);
         return $stream->start();
     }
@@ -48,7 +44,7 @@ class Watch extends Core_controller
         $serie_id = $parts[0];
         $season_id = $parts[1];
         $episode_id = $parts[2];
-        $serie = json_decode(file_get_contents($this->settings['SB_API'] . 'episode&tvdbid=' . urlencode($serie_id) . '&season=' . $season_id . '&episode=' . $episode_id . '&full_path=1'))->data;
+        $serie = $this->getShow($serie_id, $season_id, $episode_id);
         $stream = new VideoStream($serie->location);
         return $stream->start();
     }
@@ -63,31 +59,68 @@ class Watch extends Core_controller
                 if (strcmp($prefix, 'tt') == 0){
                     $id = substr($id, 2);
                 }
-                return $this->streamVideo($id);
+                return $this->streamMovie($id);
             }
         } 
    }
 
-   public function sub($id=false, $lang=false){
-    	$movie = $this->getMovie($id);
+   private function getMovieSub($id, $lang){
+        $movie = $this->getMovie($id);
         $subfile = false;
         foreach ($movie->releases[0]->files->subtitle as $sub){
             if ($lang == substr($sub, strpos(substr($sub,0,-4), '.')+1, -4)){
-	           $subfile = $sub;
+               $subfile = $sub;
             }
         }
-        header('Content-Disposition: attachment; filename="' . basename($subfile) . '"');
-        header('Content-Type: text/plain'); # Don't use application/force-download - it's not a real MIME type, and the Content-Disposition header is sufficient
-        header('Content-Length: ' . strlen($subfile));
-        header('Connection: close');
-        echo file_get_contents($subfile);
+        return $subfile;
    }
 
-   public function getMovie($id=false){
+   private function getShowSub($id, $lang){
+        $parts = explode('-', $id);
+        $serie_id = $parts[0];
+        $season_id = $parts[1];
+        $episode_id = $parts[2];
+        $episode = $this->getShow($serie_id, $season_id, $episode_id);
+        #TODO; get subs
+
+        $subfile = false;
+        return $subfile; 
+   }
+
+   public function sub($id=false, $lang=false){
+        if ($this->checkPrivilege() == true) {
+            $prefix = substr($id, 0, 2);
+            if (strcmp($prefix, 'ss') == 0){
+                #custom id, so tv show
+                $subfile = $this->getShowSub($id, $lang);
+            } else {
+                if (strcmp($prefix, 'tt') == 0){
+                    $id = substr($id, 2);
+                }
+                $subfile = $this->getMovieSub($id, $lang);
+            }
+            return $this->offerFile($subfile);
+        }
+   }
+
+   private function getMovie($id=false){
 	 return json_decode(file_get_contents($this->settings['CP_API'] . 'media.get?id=' . $id))->media;
    }
 
-   public function watchMovie($id){
+   private function getShow($serie_id, $season_id, $episode_id){
+        return json_decode(file_get_contents($this->settings['SB_API'] . 'episode&tvdbid=' . urlencode($serie_id) . '&season=' . $season_id . '&episode=' . $episode_id . '&full_path=1'))->data;
+   }
+
+   private function offerFile($file){
+        header('Content-Disposition: attachment; filename="' . basename($file) . '"');
+        header('Content-Type: text/plain'); # Don't use application/force-download - it's not a real MIME type, and the Content-Disposition header is sufficient
+        header('Content-Length: ' . strlen($file));
+        header('Connection: close');
+        return file_get_contents($file);
+   }
+
+
+   private function watchMovie($id){
         $movie = $this->getMovie($id);
         $filepath = $movie->releases[0]->files->movie[0];
         $this->template->file = $id;
@@ -107,12 +140,12 @@ class Watch extends Core_controller
         $this->template->render('media/watch');
    }
 
-   public function watchShow($id){
+   private function watchShow($id){
         $parts = explode('-', $id);
         $serie_id = $parts[0];
         $season_id = $parts[1];
         $episode_id = $parts[2];
-        $episode = json_decode(file_get_contents($this->settings['SB_API'] . 'episode&tvdbid=' . urlencode($serie_id) . '&season=' . $season_id . '&episode=' . $episode_id . '&full_path=1'))->data;
+        $episode = $this->getShow($serie_id, $season_id, $episode_id);
         $this->template->file = $episode->location;
         $this->template->type = $this->getMimeType($episode->location);
         $this->template->codec = $this->getCodecInfo($episode->location)['videoCodec'] . ',' . $this->getCodecInfo($episode->location)['audioCodec'];
@@ -146,7 +179,7 @@ class Watch extends Core_controller
         } 
     }
 
-    function getCodecInfo($inputFile)
+    private function getCodecInfo($inputFile)
     {
         $cmdLine = '/usr/bin/mediainfo --Output=XML ' . escapeshellarg($inputFile);
 

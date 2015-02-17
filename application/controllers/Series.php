@@ -1,4 +1,5 @@
 <?php
+
 include __DIR__ . '/../includes/TvDb/Http/HttpClient.php';
 include __DIR__ . '/../includes/TvDb/Http/CurlClient.php';
 include __DIR__ . '/../includes/TvDb/CurlException.php';
@@ -29,16 +30,14 @@ class Series extends Core_controller
         //set page title
         $this->template->setPagetitle($this->lang['series'] . ' - ' . $this->lang['title']);  
 
-        global $settings;
-        $this->settings = $settings;
-
         $this->tvdb = new TvDbClient('http://thetvdb.com', $settings['TVDB_API']);
+        #TODO: tvdb caching
         #$cache = new FilesystemCache('/tmp/cache');
         #$httpClient = new CacheClient($cache, 600);
         #$his->tvdb->setHttpClient($httpClient);
     }
 
-    function checkPrivilege()
+    private function checkPrivilege()
     {
         if (!isset($_SESSION['user'])){
             $this->setFlashmessage($this->lang['accessdenied'], 'danger');
@@ -49,7 +48,7 @@ class Series extends Core_controller
         }
     }
 
-    public function getAllShows(){
+    private function getAllShows(){
         $result = array();
         $data = json_decode(file_get_contents($this->settings['SB_API'] . 'shows'))->data;
         foreach ($data as $id_=>$id) {
@@ -58,7 +57,7 @@ class Series extends Core_controller
         return $result;
     }
 
-    public function getShowsWith($part){
+    private function getShowsWith($part){
         $result = array();
         $all = $this->getAllShows();
         if (strcmp($part, '') == 0){
@@ -73,7 +72,7 @@ class Series extends Core_controller
         return $result;
     }
 
-    public function getMediaInfo($title){
+    private function getMediaInfo($title){
         $url = "http://www.omdbapi.com/?type=series&s=" . urlencode($title);
         $r = json_decode(file_get_contents($url));
         if ($r){
@@ -134,7 +133,7 @@ class Series extends Core_controller
         }
      }
 
-    public function getEpisode($serie_id, $season_id, $episode_id){
+    private function getEpisode($serie_id, $season_id, $episode_id){
         return json_decode(file_get_contents($this->settings['SB_API'] . 'episode&tvdbid=' . urlencode($serie_id) . '&season=' . $season_id . '&episode=' . $episode_id . '&full_path=1'))->data;
     }
 

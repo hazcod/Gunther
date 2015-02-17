@@ -18,6 +18,9 @@ abstract class Core_controller
         include(APPLICATION_PATH . 'languages/lang.'.$_SESSION['lang'].'.php');
         $this->lang = getLang($controllername);
         $this->template->lang = $this->lang;
+
+        global $settings;
+        $this->settings = $settings;
     }
 
     public function __set($name, $value)
