@@ -4,7 +4,7 @@ class Home extends Core_controller
 {
     public function __construct()
     {
-        parent::__construct('home');
+        parent::__construct();
         //set our partials in the template
         $this->template->setPartial('navbar')
             ->setPartial('headermeta')
@@ -15,7 +15,7 @@ class Home extends Core_controller
         $this->langs_m = Load::model('langs_m');
         $this->user_m = Load::model('user_m');
 
-        $this->template->menuitems = $this->menu_m->getStartMenu();
+        $this->template->menuitems = $this->menu_m->getStartMenu($this->lang);
         $this->template->langs = $this->langs_m->getLangs();
         //set page title
         $this->template->setPagetitle($this->lang['title']);	

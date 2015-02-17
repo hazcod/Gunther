@@ -1,26 +1,45 @@
 <?php 
-if (!isset($_SESSION['lang'])){
-    $_SESSION['lang'] = 'en'; //default
-}
 
 abstract class Core_controller
 {
     protected $template;
     protected $data = array();
 
-    public function __construct($controllername)
+    public function __construct($protected=false)
     {
         $this->template = new Template();
         $this->template->flashmessage = $this->getFlashMessage();
 
         $this->form = Form::getInstance();
         
-        include(APPLICATION_PATH . 'languages/lang.'.$_SESSION['lang'].'.php');
-        $this->lang = getLang($controllername);
-        $this->template->lang = $this->lang;
-
         global $settings;
         $this->settings = $settings;
+
+        if (!isset($_SESSION['lang'])){
+            $_SESSION['lang'] = $settings['DEFAULT_LANG'];
+        }
+
+        include(APPLICATION_PATH . 'languages/lang.'.$_SESSION['lang'].'.php');
+        $this->lang = getLang();
+        $this->template->lang = $this->lang;
+
+        include(APPLICATION_PATH . 'includes/MediaModel.php');
+        $this->mediamodel = new MediaModel($settings);
+
+        if ($protected == true){
+            $this->checkPrivilege();
+        }
+    }
+
+    public function checkPrivilege()
+    {
+        if (!isset($_SESSION['user'])){
+            $this->setFlashmessage($this->lang['accessdenied'], 'danger');
+            $this->redirect('home/index');
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public function __set($name, $value)
@@ -71,10 +90,10 @@ abstract class Core_controller
     public function redirect($newlocation = '')
     {
         if (!headers_sent($filename, $linenum)) {
-		header('Location: ' .  URL::base_uri($newlocation));
-        	exit();
-	} else {
-		echo "Headers already sent in $filename on line $linenum\n";
-	}
+            header('Location: ' .  URL::base_uri($newlocation));
+            exit();
+        } else {
+            echo "Headers already sent in $filename on line $linenum\n";
+        }
     }
 }

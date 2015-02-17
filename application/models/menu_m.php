@@ -2,32 +2,32 @@
 
 class Menu_m extends Core_db
 {  
-    public function getStartmenu()
+    public function getStartmenu($lang)
     {
         $menuitems = array(
             array(
                 'link' => 'home/index',
-                'description' => $this->lang['login'],
+                'description' => $lang['login'],
             ),
         );
         return $menuitems;
     }
 
 
-      public function getUsermenu()
+      public function getUsermenu($lang)
     {
         $menuitems = array(
             array(
                 'link' => 'home/index',
-                'description' => $this->lang['dashboard'],
+                'description' => $lang['dashboard'],
             ),
             array(
                 'link' => 'movies/index',
-                'description' => $this->lang['movies'],
+                'description' => $lang['movies'],
             ),
             array(
                 'link' => 'series/index',
-                'description' => $this->lang['series'],
+                'description' => $lang['series'],
             ),
             array(
                 'link' => array(
@@ -50,7 +50,7 @@ class Menu_m extends Core_db
                                    'description' => 'iOS'
                             ),
                         ),
-                'description' => $this->lang['help'],
+                'description' => $lang['help'],
             ),
         );
         return $menuitems;

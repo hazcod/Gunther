@@ -1,6 +1,6 @@
 <?php
 
-function getLang($controller){
+function getLang(){
     //Change this to yes if this is for a language that reads from the right to the left.
     $lang['rtl'] = 'no'; #add bootstrap-rtl.css if you want this
 
@@ -33,7 +33,7 @@ function getLang($controller){
     $lang['searchmovie']  = 'Search for a movie';
     $lang['busymovies']   = 'Inactive Movies';
     $lang['addmovie']     = 'Add Movie';
-    $lang['title']        = 'title';
+    $lang['movtitle']     = 'title';
     $lang['nomovies']     = 'No movies found.';
 
     $lang['nojs']         = 'To view this video, enable JavaScript in your browser or upgrade to one that supports HTML5.';

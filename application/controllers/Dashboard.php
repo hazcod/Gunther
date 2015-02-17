@@ -3,7 +3,7 @@
 
     public function __construct()
     {
-        parent::__construct('dashboard');
+        parent::__construct(true);
 
         $this->template->setPartial('navbar')
             ->setPartial('headermeta')
@@ -15,30 +15,15 @@
         $this->user_m = Load::model('user_m');
         $this->template->menuitems = $this->menu_m->getUserMenu($this->lang);
         $this->template->langs = $this->langs_m->getLangs();
-        
-       $this->template->setPagetitle($this->lang['dashboard'] . ' - ' . $this->lang['title']);
-    }
-    
-    private function checkPrivilege()
-    {
-        if (!isset($_SESSION['user'])){
-            $this->setFlashmessage($this->lang['accessdenied'], 'danger');
-            $this->redirect('home/index');
-            return false;
-        } else {
-            return true;
-        }
-    }
 
-    private function getLastMovies($limit=10){
-        return json_decode(file_get_contents($this->settings['CP_API'] . 'media.list?status=done&offset=' . urlencode($limit)))->movies;
+        $this->template->setPagetitle($this->lang['dashboard'] . ' - ' . $this->lang['title']);
     }
 
     public function index()
     { 
         if ($this->checkPrivilege() == true){
             $this->template->user = $this->user_m->getUserByLogin($_SESSION['user']);
-            $this->template->movies = $this->getLastMovies(10);
+            $this->template->movies = $this->mediamodel->getLastMovies(10);
             $this->template->render('dashboard/index');
         }
     }

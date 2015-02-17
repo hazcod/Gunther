@@ -14,7 +14,7 @@
 	<div class="well">
 		<form action="/series/search" method="POST">
 			<div class="input-group input-group-lg">
-			  <span class="input-group-addon" id="sizing-addon1"><?= $this->lang['title']; ?></span>
+			  <span class="input-group-addon" id="sizing-addon1"><?= $this->lang['movtitle']; ?></span>
 			  <input id="movieinput" name="title" type="text" class="form-control" placeholder="Game of Thrones" aria-describedby="sizing-addon1" autofocus value="<? if ($this->searchterm){ echo $this->searchterm; } ?>">
 			</div>
 		</form>

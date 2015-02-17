@@ -5,7 +5,7 @@ class Watch extends Core_controller
 
     public function __construct()
     {
-        parent::__construct('watch');
+        parent::__construct(true);
         //set our partials in the template
         $this->template->setPartial('navbar')
             ->setPartial('headermeta')
@@ -16,25 +16,14 @@ class Watch extends Core_controller
         $this->langs_m = Load::model('langs_m');
         $this->user_m = Load::model('user_m');
 
-        $this->template->menuitems = $this->menu_m->getUserMenu();
+        $this->template->menuitems = $this->menu_m->getUserMenu($this->lang);
         $this->template->langs = $this->langs_m->getLangs();
         //set page title
-        $this->template->setPagetitle('Gunther');	
-    }
-
-    private function checkPrivilege()
-    {
-        if (!isset($_SESSION['user'])){
-            $this->setFlashmessage($this->lang['accessdenied'], 'danger');
-            $this->redirect('home/index');
-            return false;
-        } else {
-            return true;
-        }
+        $this->template->setPagetitle($this->lang['title']);	
     }
 
     private function streamMovie($id){
-        $movie = $this->getMovie($id); 
+        $movie = $this->mediamodel->getMovie($id); 
         $stream = new VideoStream($movie->releases[0]->files->movie[0]);
         return $stream->start();
     }
@@ -44,28 +33,26 @@ class Watch extends Core_controller
         $serie_id = $parts[0];
         $season_id = $parts[1];
         $episode_id = $parts[2];
-        $serie = $this->getShow($serie_id, $season_id, $episode_id);
+        $serie = $this->mediamodel->getShow($serie_id, $season_id, $episode_id);
         $stream = new VideoStream($serie->location);
         return $stream->start();
     }
 
    public function stream($id=false){
-        if ($this->checkPrivilege() == true) {
-            $prefix = substr($id, 0, 2);
-            if (strcmp($prefix, 'ss') == 0){
-                #custom id, so tv show
-                return $this->streamShow(substr($id, 2));
-            } else {
-                if (strcmp($prefix, 'tt') == 0){
-                    $id = substr($id, 2);
-                }
-                return $this->streamMovie($id);
+        $prefix = substr($id, 0, 2);
+        if (strcmp($prefix, 'ss') == 0){
+            #custom id, so tv show
+            return $this->streamShow(substr($id, 2));
+        } else {
+            if (strcmp($prefix, 'tt') == 0){
+                $id = substr($id, 2);
             }
-        } 
+            return $this->streamMovie($id);
+        }
    }
 
    private function getMovieSub($id, $lang){
-        $movie = $this->getMovie($id);
+        $movie = $this->mediamodel->getMovie($id);
         $subfile = false;
         foreach ($movie->releases[0]->files->subtitle as $sub){
             if ($lang == substr($sub, strpos(substr($sub,0,-4), '.')+1, -4)){
@@ -80,7 +67,7 @@ class Watch extends Core_controller
         $serie_id = $parts[0];
         $season_id = $parts[1];
         $episode_id = $parts[2];
-        $episode = $this->getShow($serie_id, $season_id, $episode_id);
+        $episode = $this->mediamodel->getShow($serie_id, $season_id, $episode_id);
         #TODO; get subs
 
         $subfile = false;
@@ -88,27 +75,17 @@ class Watch extends Core_controller
    }
 
    public function sub($id=false, $lang=false){
-        if ($this->checkPrivilege() == true) {
-            $prefix = substr($id, 0, 2);
-            if (strcmp($prefix, 'ss') == 0){
-                #custom id, so tv show
-                $subfile = $this->getShowSub($id, $lang);
-            } else {
-                if (strcmp($prefix, 'tt') == 0){
-                    $id = substr($id, 2);
-                }
-                $subfile = $this->getMovieSub($id, $lang);
+        $prefix = substr($id, 0, 2);
+        if (strcmp($prefix, 'ss') == 0){
+            #custom id, so tv show
+            $subfile = $this->getShowSub($id, $lang);
+        } else {
+            if (strcmp($prefix, 'tt') == 0){
+                $id = substr($id, 2);
             }
-            return $this->offerFile($subfile);
+            $subfile = $this->getMovieSub($id, $lang);
         }
-   }
-
-   private function getMovie($id=false){
-	 return json_decode(file_get_contents($this->settings['CP_API'] . 'media.get?id=' . $id))->media;
-   }
-
-   private function getShow($serie_id, $season_id, $episode_id){
-        return json_decode(file_get_contents($this->settings['SB_API'] . 'episode&tvdbid=' . urlencode($serie_id) . '&season=' . $season_id . '&episode=' . $episode_id . '&full_path=1'))->data;
+        return $this->offerFile($subfile);
    }
 
    private function offerFile($file){
@@ -121,11 +98,11 @@ class Watch extends Core_controller
 
 
    private function watchMovie($id){
-        $movie = $this->getMovie($id);
+        $movie = $this->mediamodel->getMovie($id);
         $filepath = $movie->releases[0]->files->movie[0];
         $this->template->file = $id;
-        $this->template->type = $this->getMimeType($filepath);
-        $this->template->codec= $this->getCodecInfo($filepath)['videoCodec'];
+        $this->template->type = $this->mediamodel->getMimeType($filepath);
+        $this->template->codec= $this->mediamodel->getCodecInfo($filepath)['videoCodec'];
         $subs = array();
         foreach ($movie->releases[0]->files->subtitle as $sub){
             array_push($subs, array(
@@ -145,10 +122,10 @@ class Watch extends Core_controller
         $serie_id = $parts[0];
         $season_id = $parts[1];
         $episode_id = $parts[2];
-        $episode = $this->getShow($serie_id, $season_id, $episode_id);
+        $episode = $this->mediamodel->getEpisode($serie_id, $season_id, $episode_id);
         $this->template->file = $episode->location;
-        $this->template->type = $this->getMimeType($episode->location);
-        $this->template->codec = $this->getCodecInfo($episode->location)['videoCodec'] . ',' . $this->getCodecInfo($episode->location)['audioCodec'];
+        $this->template->type = $this->mediamodel->getMimeType($episode->location);
+        $this->template->codec = $this->mediamodel->getCodecInfo($episode->location)['videoCodec'] . ',' . $this->mediamodel->getCodecInfo($episode->location)['audioCodec'];
         $this->template->streamstr = 'ss' . $id;
         $subs = array();
         foreach (glob(basename($episode->location . '*.srt')) as $sub){
@@ -165,49 +142,18 @@ class Watch extends Core_controller
 
     public function index($id=false)
     {
-        if ($this->checkPrivilege() == true) {
-            $prefix = substr($id, 0, 2);
-            if (strcmp($prefix, 'ss') == 0){
-                #custom id, so tv show
-                $this->watchShow(substr($id, 2));
-            } else {
-                if (strcmp($prefix, 'tt') == 0){
-                    $id = substr($id, 2);
-                }
-                $this->watchMovie($id);
+        $prefix = substr($id, 0, 2);
+        if (strcmp($prefix, 'ss') == 0){
+            #custom id, so tv show
+            $this->watchShow(substr($id, 2));
+        } else {
+            if (strcmp($prefix, 'tt') == 0){
+                $id = substr($id, 2);
             }
-        } 
-    }
-
-    private function getCodecInfo($inputFile)
-    {
-        $cmdLine = '/usr/bin/mediainfo --Output=XML ' . escapeshellarg($inputFile);
-
-        exec($cmdLine, $output, $retcode);
-
-        try
-        {
-            $xml = new SimpleXMLElement(join("\n",$output));
-            $videoCodec = $xml->xpath('//track[@type="Video"]/Format');
-            $audioCodec = $xml->xpath('//track[@type="Audio"]/Format');
+            $this->watchMovie($id);
         }
-        catch(Exception $e)
-        {
-            return null;
-        }
-
-        return array(
-            'videoCodec' => (string)$videoCodec[0],
-            'audioCodec' => (string)$audioCodec[0],
-        );
     }
 
-    function getMimeType($inputFile){
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $result = finfo_file($finfo, $inputFile);
-        finfo_close($finfo);
-        return $result;
-    }
 
 }
 
