@@ -7,7 +7,7 @@ class Menu_m extends Core_db
         $menuitems = array(
             array(
                 'link' => 'home/index',
-                'description' => 'Login',
+                'description' => $this->lang['login'],
             ),
         );
         return $menuitems;
@@ -19,15 +19,15 @@ class Menu_m extends Core_db
         $menuitems = array(
             array(
                 'link' => 'home/index',
-                'description' => 'Dashboard',
+                'description' => $this->lang['dashboard'],
             ),
             array(
                 'link' => 'movies/index',
-                'description' => 'Movies',
+                'description' => $this->lang['movies'],
             ),
             array(
                 'link' => 'series/index',
-                'description' => 'Series',
+                'description' => $this->lang['series'],
             ),
             array(
                 'link' => array(
@@ -40,6 +40,9 @@ class Menu_m extends Core_db
                             array('link' => 'help/synology',
                                    'description' => 'Synology'
                             ),
+                            array('link' => 'help/kodi',
+                                   'description' => 'XBMC/Kodi'
+                            ),
                             array('link' => 'help/android',
                                    'description' => 'Android'
                             ),
@@ -47,50 +50,16 @@ class Menu_m extends Core_db
                                    'description' => 'iOS'
                             ),
                         ),
-                'description' => 'Help',
-            ),
-        );
-        return $menuitems;
-    }  
-    
-    public function getBeheerderMenu($lang)
-    {
-        $menuitems = array(
-            array(
-                'link' => 'admin/index',
-                'description' => $lang['adminindex'],
-            ), 
-            array( 'link' => array(
-                                    array(
-                                        'link' => 'admin/lists',
-                                        'description' => $lang['adminlists'],
-                                    ),
-                                    array(
-                                        'link' => 'admin/data',
-                                        'description' => $lang['admindata'],
-                                    ),
-                              ),
-                   'description' => $lang['manage'],
-            ),
-            array( 'link' => array(
-                                    array(
-                                        'link' => 'admin/langs',
-                                        'description' => $lang['adminlangs'],
-                                    ),
-                                    array(
-                                        'link' => 'admin/templates',
-                                        'description' => 'Templates',
-                                    ),
-                                    array(
-                                        'link' => 'admin/parameters',
-                                        'description' => $lang['parameters'],
-                                    )
-                              ),
-                   'description' => $lang['settings'],
+                'description' => $this->lang['help'],
             ),
         );
         return $menuitems;
     }
+
+    public function getAdminmenu(){
+        $menuitems = array();
+        return $menuitems;
+    }  
     
 
 }

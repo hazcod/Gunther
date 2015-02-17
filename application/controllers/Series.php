@@ -27,7 +27,7 @@ class Series extends Core_controller
         $this->template->menuitems = $this->menu_m->getUserMenu();
         $this->template->langs = $this->langs_m->getLangs();
         //set page title
-        $this->template->setPagetitle('Series - Gunther');  
+        $this->template->setPagetitle($this->lang['series'] . ' - ' . $this->lang['title']);  
 
         global $settings;
         $this->settings = $settings;
@@ -73,14 +73,6 @@ class Series extends Core_controller
         return $result;
     }
 
-    public function busy(){
-        if ($this->checkPrivilege() == true) {
-         $this->template->setPagetitle('Inactive Movies - Gunther');
-            $this->template->movies = $this->getBusyMovies();
-            $this->template->render('media/movies.busy');
-        } 
-    }
-
     public function getMediaInfo($title){
         $url = "http://www.omdbapi.com/?type=series&s=" . urlencode($title);
         $r = json_decode(file_get_contents($url));
@@ -112,7 +104,7 @@ class Series extends Core_controller
                 if ($this->isShowInList($existing, $id) == false){
                     array_push($arr, $this->tvdb->getSerieByRemoteId(array('imdbid' => $id)));
                 } else {
-                    $this->setCurrentflashmessage('TV Shows that are already in the library have been hidden.', 'info');
+                    $this->setCurrentflashmessage($this->lang['hiddenshows'], 'info');
                 }
             }
             $this->template->results = $arr;
@@ -128,12 +120,12 @@ class Series extends Core_controller
 
     public function add($id=false){
         if ($this->checkPrivilege() == true) {
-            $this->template->setPagetitle('Add TV Show - Gunther');
+            $this->template->setPagetitle($this->lang['addshow'] . ' - ' . $this->lang['title']);
             if ($id){
                 if (strcmp($this->addSeries($id)->result, "success") == 0){
-                    $this->setflashmessage('TV Show has been added.', 'info');
+                    $this->setflashmessage($this->lang['showadded'], 'info');
                 } else {
-                    $this->setflashmessage('There was an error adding this TV Show.', 'danger');
+                    $this->setflashmessage($this->lang['showadderr'], 'danger');
                 }
                 $this->redirect('series/index');
              } else {
@@ -166,7 +158,7 @@ class Series extends Core_controller
                 $nr++;
             }
             $this->template->seasons = $seasons;
-            $this->template->setPagetitle($this->template->show->name . ' - Gunther');
+            $this->template->setPagetitle($this->template->show->name . ' - ' . $this->lang['title']);
             $this->template->render('media/series.episodes');
         }
     }

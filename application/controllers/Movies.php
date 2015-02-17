@@ -11,7 +11,7 @@ class Movies extends Core_controller
             ->setPartial('headermeta')
             ->setPartial('footer')
             ->setPartial('flashmessage');
-        //load models
+        //load mcrypt_module_self_test(algorithm)
         $this->menu_m = Load::model('menu_m');
         $this->langs_m = Load::model('langs_m');
         $this->user_m = Load::model('user_m');
@@ -19,7 +19,7 @@ class Movies extends Core_controller
         $this->template->menuitems = $this->menu_m->getUserMenu();
         $this->template->langs = $this->langs_m->getLangs();
         //set page title
-        $this->template->setPagetitle('Movies - Gunther');  
+        $this->template->setPagetitle($this->lang['movies'] . ' - ' . $this->lang['']);  
 
         global $settings;
         $this->settings = $settings;
@@ -51,7 +51,7 @@ class Movies extends Core_controller
 
     public function busy(){
         if ($this->checkPrivilege() == true) {
-         $this->template->setPagetitle('Inactive Movies - Gunther');
+         $this->template->setPagetitle($this->lang['inactivemov'] . ' - ' . $this->lang['title']);
             $this->template->movies = $this->getBusyMovies();
             $this->template->render('media/movies.busy');
         } 
@@ -95,23 +95,23 @@ class Movies extends Core_controller
                 if ($this->isMovieInList($existing, $id) == false){
                     array_push($arr, $result);
                 } else {
-                    $this->setCurrentflashmessage('Movies that are already in the library have been hidden.', 'info');
+                    $this->setCurrentflashmessage($this->lang['hiddenmov'], 'info');
                 }
             }
             $this->template->results = $arr;
-            $this->template->setPagetitle('Search: ' . $formdata->title . ' - Gunther');
+            $this->template->setPagetitle($this->lang['search'] . ': ' . $formdata->title . ' - Gunther');
             $this->template->render('media/movies.add');
         }
     }
 
     public function add($id=false){
         if ($this->checkPrivilege() == true) {
-            $this->template->setPagetitle('Add movie - Gunther');
+            $this->template->setPagetitle($this->lang['addmovie'] . ' - ' . $this->lang['title']);
             if ($id){
                 if ($this->addMovie($id) == true){
-                    $this->setflashmessage('Movie has been added.', 'info');
+                    $this->setflashmessage($this->lang['movieadded'], 'info');
                 } else {
-                    $this->setflashmessage('There was an error adding this movie.', 'danger');
+                    $this->setflashmessage($this->lang['movadderr'], 'danger');
                 }
                 $this->redirect('movies/index');
              } else {

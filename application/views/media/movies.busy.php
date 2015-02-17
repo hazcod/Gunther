@@ -1,7 +1,7 @@
 <div class="col-md-8 col-md-offset-2">
 	<ul class="breadcrumb">
-	  <li>Gunther</li>
-	  <li class="active">Inactive Movies</li>
+	  <li><?= $this->lang['title']; ?></li>
+	  <li class="active"><?= $this->lang['busymovies']; ?></li>
 	  <div class="pull-right">
 		<a href="/movies/add">
 			<i class="fa fa-plus-square-o fa-lg"></i>

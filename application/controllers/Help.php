@@ -5,7 +5,7 @@ class Help extends Core_controller
 
     public function __construct()
     {
-        parent::__construct('movies');
+        parent::__construct('help');
         //set our partials in the template
         $this->template->setPartial('navbar')
             ->setPartial('headermeta')
@@ -17,9 +17,7 @@ class Help extends Core_controller
         $this->user_m = Load::model('user_m');
 
         $this->template->menuitems = $this->menu_m->getUserMenu();
-        $this->template->langs = $this->langs_m->getLangs();
-        //set page title
-        $this->template->setPagetitle('Movies - Gunther');	
+        $this->template->langs = $this->langs_m->getLangs();	
     }
 
     public function index()
@@ -28,27 +26,32 @@ class Help extends Core_controller
     }
 
     public function windows(){
-        $this->template->setPagetitle('How-To Windows - Gunther');
+        $this->template->setPagetitle($this->lang['htwindows'] . ' - ' . $this->lang['title']);
         $this->template->render('help/windows');
     }
 
     public function mac(){
-        $this->template->setPagetitle('How-To Mac - Gunther');
+        $this->template->setPagetitle($this->lang['htmac'] . ' - ' . $this->lang['title']);
         $this->template->render('help/mac');
     }
 
     public function synology(){
-        $this->template->setPagetitle('How-To Synology - Gunther');
+        $this->template->setPagetitle($this->lang['htsynology'] . ' - ' . $this->lang['title']);
         $this->template->render('help/synology');
     }
 
+    public function kodi(){
+        $this->template->setPagetitle($this->lang['htkodi'] . ' - ' . $this->lang['title']);
+        $this->template->render('help/kodi');
+    }
+
     public function android(){
-        $this->template->setPagetitle('How-To Android - Gunther');
+        $this->template->setPagetitle($this->lang['htandroid'] . ' - ' . $this->lang['title']);
         $this->template->render('help/android');
     }
 
     public function ios(){
-        $this->template->setPagetitle('How-To iOS - Gunther');
+        $this->template->setPagetitle($this->lang['htios'] . ' - ' . $this->lang['title']);
         $this->template->render('help/ios');
     }
 

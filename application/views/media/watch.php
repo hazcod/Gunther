@@ -7,7 +7,7 @@
 				<track src="/watch/sub/<?= $this->file; ?>/<?= $sub['lang'] ?>" srclang="<?= $sub['lang']; ?>" label="<?= $sub['label']; ?>"/>
 			<? endforeach; ?>
 
-		    <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video..</p>
+		    <p class="vjs-no-js"><?= $this->lang['nojs']; ?></p>
 		  </video>
 	</div>
 </div>

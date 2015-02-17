@@ -1,7 +1,7 @@
 <div class="col-sm-8 col-sm-offset-2">
 	<ul class="breadcrumb">
-	  <li>Gunther</li>
-	  <li class="active">Add TV Show</li>
+	  <li><?= $this->lang['title']; ?></li>
+	  <li class="active"><?= $this->lang['addshow']; ?></li>
 	  <div class="pull-right">
           <a href="/movies/index">
 			<i class="fa fa-th-list fa-lg"></i>
@@ -14,7 +14,7 @@
 	<div class="well">
 		<form action="/series/search" method="POST">
 			<div class="input-group input-group-lg">
-			  <span class="input-group-addon" id="sizing-addon1">title</span>
+			  <span class="input-group-addon" id="sizing-addon1"><?= $this->lang['title']; ?></span>
 			  <input id="movieinput" name="title" type="text" class="form-control" placeholder="Game of Thrones" aria-describedby="sizing-addon1" autofocus value="<? if ($this->searchterm){ echo $this->searchterm; } ?>">
 			</div>
 		</form>

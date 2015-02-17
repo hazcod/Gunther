@@ -1,7 +1,7 @@
 <div class="col-sm-8 col-sm-offset-2">
 	<ul class="breadcrumb">
-	  <li>Gunther</li>
-	  <li class="active">Series</li>
+	  <li><?= $this->lang['title']; ?></li>
+	  <li class="active"><?= $this->lang['series']; ?></li>
 	  <div class="pull-right">
 		<a href="/series/add">
 			<i class="fa fa-plus-square-o fa-lg"></i>
@@ -14,7 +14,7 @@
 
 	<form method="post" action="/series/index">
     <div class="input-group">
-      <input type="text" class="form-control" placeholder="Search for a TV show" name="search" value="<? if ($this->searchterm){ echo $this->searchterm; } ?>">
+      <input type="text" class="form-control" placeholder="<?= $this->lang['searchshow']; ?>" name="search" value="<? if ($this->searchterm){ echo $this->searchterm; } ?>">
       <span class="input-group-btn">
         <button class="btn btn-default" type="submit"><i class="fa fa-search fa-lg"></i></button>
         <a href="/series/index" class="btn btn-default" type="button"><i class="fa fa-list fa-lg"></i></a>
@@ -24,7 +24,7 @@
 
     <br>
 	
-	<? if ($this->shows): ?>
+	<? if (sizeof($this->shows) > 0): ?>
 	<? foreach ($this->shows as $show): ?>
 	<div class="col-sm-2" style="margin-top:10px;">
 		<a href="/series/episodes/<?= $show->id; ?>">
@@ -33,6 +33,6 @@
 	</div>
 	<? endforeach; ?>
 	<? else: ?>
-	<p>No shows found.</p>
+	<p><?= $this->lang['noshows']; ?></p>
 	<? endif; ?>
 </div>
