@@ -13,7 +13,7 @@ If you want to contribute, application/ is the folder you need.
     Table users with: id, login, password, datejoined
     Table langs with: id, name, flag
 3. Add a user in the SQL table users, the password should be a SHA1 hash with the correct salt.[Home controller](/application/controllers/Home.php)
-4. Change your API key in the Controllers.
+4. Change your API key in [/application.config.php](config.php).
 
 # TODO
 - Add recent episodes to dashboard
