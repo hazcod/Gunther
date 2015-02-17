@@ -12,7 +12,7 @@
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <a href="<?= URL::base_uri();?>home" class="navbar-brand">Gunther</a>
+      <a href="<?= URL::base_uri();?>home" class="navbar-brand"><?= $this->lang['title']; ?></a>
       <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -53,7 +53,7 @@
           <li class="dropdown">
             <a href="" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?= $_SESSION['user']; ?><b class="caret"></b>
             <ul class="dropdown-menu">
-              <li><a href="/home/logout"><i class="fa fa-close"></i> Logout</a></li>
+              <li><a href="/home/logout"><i class="fa fa-close"></i> <?= $this->lang['logout']; ?></a></li>
             </ul>
           </li>
         <? endif; ?>

@@ -6,6 +6,7 @@ function getLang($controller){
 
     $lang['title'] = 'Gunther';
     
+    $lang['logout']	  = 'Logout';
     $lang['login']        = 'Login';
     $lang['wronglogin']   = 'Your username & password combination is invalid.';
     $lang['invalidlogin'] = 'Your username must be at least 4 characters.';
