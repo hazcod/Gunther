@@ -16,10 +16,8 @@ If you want to contribute, application/ is the folder you need.
 4. Change your API key in the Controllers.
 
 # TODO
+- Add recent episodes to dashboard
 - Provide SQL setup script
-- Add Series overview
-- Add serie episode overview
-- Finish add movie
 - Add administrator panel (user management, statistics, ...)
 
 # Screenshots
