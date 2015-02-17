@@ -30,10 +30,16 @@
         }
     }
 
+    public static function getLastMovies($limit=10){
+        global $settings;
+        return json_decode(file_get_contents($settings['CP_API'] . 'media.list?status=done&offset=' . urlencode($limit)))->movies;
+    }
+
     public function index()
     { 
         if ($this->checkPrivilege() == true){
             $this->template->user = $this->user_m->getUserByLogin($_SESSION['user']);
+            $this->template->movies = $this->getLastMovies(10);
             $this->template->render('dashboard/index');
         }
     }

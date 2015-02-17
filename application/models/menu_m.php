@@ -29,6 +29,26 @@ class Menu_m extends Core_db
                 'link' => 'series/index',
                 'description' => 'Series',
             ),
+            array(
+                'link' => array(
+                            array('link' => 'help/windows',
+                                   'description' => 'Windows'
+                            ),
+                            array('link' => 'help/mac',
+                                   'description' => 'Mac'
+                            ),
+                            array('link' => 'help/synology',
+                                   'description' => 'Synology'
+                            ),
+                            array('link' => 'help/android',
+                                   'description' => 'Android'
+                            ),
+                            array('link' => 'help/ios',
+                                   'description' => 'iOS'
+                            ),
+                        ),
+                'description' => 'Help',
+            ),
         );
         return $menuitems;
     }  

@@ -49,6 +49,9 @@
             });
         </script>
         <script type="text/javascript" src="<?= URL::base_uri(); ?>js/video.js"></script>
+        <script type="text/javascript">
+
+        </script>
     </body>
 </html>
 

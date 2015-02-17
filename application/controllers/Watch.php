@@ -2,7 +2,6 @@
 
 class Watch extends Core_controller
 {
-   var $api = "http://localhost:5050/api/40389981c6a54cb4a3b813a4961e249d/";
 
     public function __construct()
     {
@@ -21,6 +20,9 @@ class Watch extends Core_controller
         $this->template->langs = $this->langs_m->getLangs();
         //set page title
         $this->template->setPagetitle('Gunther');	
+
+        global $settings;
+        $this->settings = $settings;
     }
 
     function checkPrivilege()
@@ -34,54 +36,113 @@ class Watch extends Core_controller
         }
     }
 
+    private function streamVideo($id){
+        $movie = $this->getMovie($id); 
+        #echo var_dump($movie);
+        $stream = new VideoStream($movie->releases[0]->files->movie[0]);
+        return $stream->start();
+    }
+
+    private function streamShow($id){
+        $parts = explode('-', $id);
+        $serie_id = $parts[0];
+        $season_id = $parts[1];
+        $episode_id = $parts[2];
+        $serie = json_decode(file_get_contents($this->settings['SB_API'] . 'episode&tvdbid=' . urlencode($serie_id) . '&season=' . $season_id . '&episode=' . $episode_id . '&full_path=1'))->data;
+        $stream = new VideoStream($serie->location);
+        return $stream->start();
+    }
+
    public function stream($id=false){
         if ($this->checkPrivilege() == true) {
-            $movie = $this->getMovie($id);
-		 
-            $stream = new VideoStream($movie->releases[0]->files->movie[0]);
-            $stream->start();
+            $prefix = substr($id, 0, 2);
+            if (strcmp($prefix, 'ss') == 0){
+                #custom id, so tv show
+                return $this->streamShow(substr($id, 2));
+            } else {
+                if (strcmp($prefix, 'tt') == 0){
+                    $id = substr($id, 2);
+                }
+                return $this->streamVideo($id);
+            }
         } 
    }
 
    public function sub($id=false, $lang=false){
-	$movie = $this->getMovie($id);
-     $subfile = false;
-foreach ($movie->releases[0]->files->subtitle as $sub){
-                if ($lang == substr($sub, strpos(substr($sub,0,-4), '.')+1, -4)){
-	$subfile = $sub;
-}
+    	$movie = $this->getMovie($id);
+        $subfile = false;
+        foreach ($movie->releases[0]->files->subtitle as $sub){
+            if ($lang == substr($sub, strpos(substr($sub,0,-4), '.')+1, -4)){
+	           $subfile = $sub;
             }
-	header('Content-Disposition: attachment; filename="' . basename($subfile) . '"');
-header('Content-Type: text/plain'); # Don't use application/force-download - it's not a real MIME type, and the Content-Disposition header is sufficient
-header('Content-Length: ' . strlen($str));
-header('Connection: close');
-echo file_get_contents($subfile);
+        }
+        header('Content-Disposition: attachment; filename="' . basename($subfile) . '"');
+        header('Content-Type: text/plain'); # Don't use application/force-download - it's not a real MIME type, and the Content-Disposition header is sufficient
+        header('Content-Length: ' . strlen($subfile));
+        header('Connection: close');
+        echo file_get_contents($subfile);
    }
 
    public function getMovie($id=false){
-	 return json_decode(file_get_contents($this->api . 'media.get?id=' . $id))->media;
+	 return json_decode(file_get_contents($this->settings['CP_API'] . 'media.get?id=' . $id))->media;
+   }
+
+   public function watchMovie($id){
+        $movie = $this->getMovie($id);
+        $filepath = $movie->releases[0]->files->movie[0];
+        $this->template->file = $id;
+        $this->template->type = $this->getMimeType($filepath);
+        $this->template->codec= $this->getCodecInfo($filepath)['videoCodec'];
+        $subs = array();
+        foreach ($movie->releases[0]->files->subtitle as $sub){
+            array_push($subs, array(
+                    'file' => $sub,
+                    'lang' => substr($sub, strpos(substr($sub,0,-4), '.')+1, -4),
+                    'label'=> substr($sub, strpos(substr($sub,0,-4), '.')+1, -4),
+                ));
+        }
+        $this->template->streamstr = $id;
+        $this->template->subs = $subs;
+        $this->template->setPagetitle($movie->info->original_title . ' - Gunther');
+        $this->template->render('media/watch');
+   }
+
+   public function watchShow($id){
+        $parts = explode('-', $id);
+        $serie_id = $parts[0];
+        $season_id = $parts[1];
+        $episode_id = $parts[2];
+        $episode = json_decode(file_get_contents($this->settings['SB_API'] . 'episode&tvdbid=' . urlencode($serie_id) . '&season=' . $season_id . '&episode=' . $episode_id . '&full_path=1'))->data;
+        $this->template->file = $episode->location;
+        $this->template->type = $this->getMimeType($episode->location);
+        $this->template->codec = $this->getCodecInfo($episode->location)['videoCodec'];
+        $this->template->streamstr = 'ss' . $id;
+        $subs = array();
+        foreach (glob(basename($episode->location . '*.srt')) as $sub){
+            array_push($subs, array(
+                    'file' => $sub,
+                    'lang' => substr($sub, strpos(substr($sub,0,-4), '.')+1, -4),
+                    'label'=> substr($sub, strpos(substr($sub,0,-4), '.')+1, -4),
+                ));
+        }
+        $this->template->subs = $subs;
+        $this->template->setPagetitle($episode->name . ' - Gunther');
+        $this->template->render('media/watch');
    }
 
     public function index($id=false)
     {
         if ($this->checkPrivilege() == true) {
-		 $movie = $this->getMovie($id);  
-		 $filepath = $movie->releases[0]->files->movie[0];
-            $this->template->file = $id;
-            $this->template->videotype = mime_content_type($filepath);
-            $this->template->codec= $this->getCodecInfo($filepath)['videoCodec'];
-            $subs = array();
-            foreach ($movie->releases[0]->files->subtitle as $sub){
-                array_push($subs, array(
-                        'file' => $sub,
-                        'lang' => substr($sub, strpos(substr($sub,0,-4), '.')+1, -4),
-                        'label'=> substr($sub, strpos(substr($sub,0,-4), '.')+1, -4),
-                    ));
+            $prefix = substr($id, 0, 2);
+            if (strcmp($prefix, 'ss') == 0){
+                #custom id, so tv show
+                $this->watchShow(substr($id, 2));
+            } else {
+                if (strcmp($prefix, 'tt') == 0){
+                    $id = substr($id, 2);
+                }
+                $this->watchMovie($id);
             }
-
-            $this->template->subs = $subs;
-            $this->template->setPagetitle($movie->info->original_title . ' - Gunther');
-            $this->template->render('media/watch');
         } 
     }
 
@@ -106,6 +167,13 @@ echo file_get_contents($subfile);
             'videoCodec' => (string)$videoCodec[0],
             'audioCodec' => (string)$audioCodec[0],
         );
+    }
+
+    function getMimeType($inputFile){
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $result = finfo_file($finfo, $inputFile);
+        finfo_close($finfo);
+        return $result;
     }
 
 }

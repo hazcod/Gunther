@@ -28,13 +28,11 @@
 	<div class="well">
 		<div class="list-group">
 		<? foreach ($this->results as $movie): ?>
-		<?= var_dump($movie); ?>
-		  <a href="#" class="list-group-item">
-		    <h4 class="list-group-item-heading">Movie 1</h4>
-		    <p class="list-group-item-text">...</p>
+		  <a href="/movies/add/<?= $movie->imdbID; ?>" class="list-group-item">
+		    <h4 class="list-group-item-heading"><?= $movie->Title . ' (' . $movie->Year . ')'; ?></h4>
 		  </a>
-		</div>
 		<? endforeach; ?>
+		</div>
 	</div>
 	<? endif; ?>
 </div>

@@ -1,28 +1,27 @@
-<div class="col-md-6 col-md-offset-3">
-        <ul class="breadcrumb">
-          <li>Gunther</li>
-          <li class="active">Dashboard</li>
-        </ul>
+<?php
+// booting up
+session_start();
 
-        <br>
+define('APPLICATION_PATH', 'application/');
+define('FRAMEWORK_PATH', 'system/');
 
-        <h3>Recently added Movies</h3><hr>
-        <div class="slider-movies">
-            <? foreach ($this->movies as $movie): ?>
-            <a href="/watch/index/<?= $movie->info->imdb; ?>">
-	           <img class="owl-lazy" alt="<?= $movie->info->original_title; ?>" data-src="<?= $movie->info->images->poster[0]; ?>" />
-            </a>
-            <? endforeach; ?>
-        </div>
+// libraries and helpers
+require_once(FRAMEWORK_PATH . 'Load.php');
+require_once(FRAMEWORK_PATH . 'URL.php');
+require_once(FRAMEWORK_PATH . 'DB.php');
+require_once(FRAMEWORK_PATH . 'Controller.php');
+require_once(FRAMEWORK_PATH . 'Template.php');
+require_once(FRAMEWORK_PATH . 'Form.php');
 
-        <br>
-        
-        <h3>Recently added TV episodes</h3><hr>
-        <div class="slider-series">
-	        <img class="owl-lazy" data-src="http://ia.media-imdb.com/images/M/MV5BMTg5MjgzNTQyNl5BMl5BanBnXkFtZTgwNTgzNTEyNDE@._V1_SX214_AL_.jpg" />
-	        <img class="owl-lazy" data-src="http://ia.media-imdb.com/images/M/MV5BMTg5MjgzNTQyNl5BMl5BanBnXkFtZTgwNTgzNTEyNDE@._V1_SX214_AL_.jpg" />
-	        <img class="owl-lazy" data-src="http://ia.media-imdb.com/images/M/MV5BMTg5MjgzNTQyNl5BMl5BanBnXkFtZTgwNTgzNTEyNDE@._V1_SX214_AL_.jpg" />
-	        <img class="owl-lazy" data-src="http://ia.media-imdb.com/images/M/MV5BMTg5MjgzNTQyNl5BMl5BanBnXkFtZTgwNTgzNTEyNDE@._V1_SX214_AL_.jpg" />
-	        <img class="owl-lazy" data-src="http://ia.media-imdb.com/images/M/MV5BMTg5MjgzNTQyNl5BMl5BanBnXkFtZTgwNTgzNTEyNDE@._V1_SX214_AL_.jpg" />
-        </div>
-</div>
+// abstract classes
+require_once(FRAMEWORK_PATH . 'Core_controller.php');
+require_once(FRAMEWORK_PATH . 'Core_db.php');
+
+// application config and abstract classes
+require_once(APPLICATION_PATH . 'config.php');
+
+// initialising front controller
+$controller = new Controller();
+
+// run forest, run.
+$controller->run();

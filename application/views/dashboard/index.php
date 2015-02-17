@@ -8,11 +8,11 @@
 
         <h3>Recently added Movies</h3><hr>
         <div class="slider-movies">
-	        <img class="owl-lazy" data-src="http://ia.media-imdb.com/images/M/MV5BMTg5MjgzNTQyNl5BMl5BanBnXkFtZTgwNTgzNTEyNDE@._V1_SX214_AL_.jpg" />
-	        <img class="owl-lazy" data-src="http://ia.media-imdb.com/images/M/MV5BMTg5MjgzNTQyNl5BMl5BanBnXkFtZTgwNTgzNTEyNDE@._V1_SX214_AL_.jpg" />
-	        <img class="owl-lazy" data-src="http://ia.media-imdb.com/images/M/MV5BMTg5MjgzNTQyNl5BMl5BanBnXkFtZTgwNTgzNTEyNDE@._V1_SX214_AL_.jpg" />
-	        <img class="owl-lazy" data-src="http://ia.media-imdb.com/images/M/MV5BMTg5MjgzNTQyNl5BMl5BanBnXkFtZTgwNTgzNTEyNDE@._V1_SX214_AL_.jpg" />
-	        <img class="owl-lazy" data-src="http://ia.media-imdb.com/images/M/MV5BMTg5MjgzNTQyNl5BMl5BanBnXkFtZTgwNTgzNTEyNDE@._V1_SX214_AL_.jpg" />
+            <? foreach ($this->movies as $movie): ?>
+            <a href="/watch/index/<?= $movie->info->imdb; ?>">
+	           <img class="owl-lazy" alt="<?= $movie->info->original_title; ?>" data-src="<?= $movie->info->images->poster[0]; ?>" />
+            </a>
+            <? endforeach; ?>
         </div>
 
         <br>

@@ -2,7 +2,6 @@
 
 class Movies extends Core_controller
 {
-   var $api = "http://localhost:5050/api/40389981c6a54cb4a3b813a4961e249d/";
 
     public function __construct()
     {
@@ -20,7 +19,10 @@ class Movies extends Core_controller
         $this->template->menuitems = $this->menu_m->getUserMenu();
         $this->template->langs = $this->langs_m->getLangs();
         //set page title
-        $this->template->setPagetitle('Movies - Gunther');	
+        $this->template->setPagetitle('Movies - Gunther');  
+
+        global $settings;
+        $this->settings = $settings;
     }
 
     function checkPrivilege()
@@ -35,64 +37,98 @@ class Movies extends Core_controller
     }
 
     public function getAllMovies(){
-        return json_decode(file_get_contents($this->api . 'media.list'))->movies;
+        return json_decode(file_get_contents($this->settings['CP_API'] . 'media.list'))->movies;
     }
 
     public function getDoneMovies(){
-        return json_decode(file_get_contents($this->api . 'media.list?status=done'))->movies;
+        return json_decode(file_get_contents($this->settings['CP_API'] . 'media.list?status=done'))->movies;
     }
 
 
     public function getBusyMovies(){
-        return json_decode(file_get_contents($this->api . 'media.list?status=active'))->movies;
+        return json_decode(file_get_contents($this->settings['CP_API'] . 'media.list?status=active'))->movies;
     }
 
     public function busy(){
         if ($this->checkPrivilege() == true) {
-		 $this->template->setPagetitle('Inactive Movies - Gunther');
+         $this->template->setPagetitle('Inactive Movies - Gunther');
             $this->template->movies = $this->getBusyMovies();
             $this->template->render('media/movies.busy');
         } 
     }
 
-	public function findExistingMovie($title){
-        return json_decode(file_get_contents($this->api . 'media.list?search=' . $title))->movies;
-	}
+    public function findExistingMovie($title){
+        return json_decode(file_get_contents($this->settings['CP_API'] . 'media.list?search=' . urlencode($title)))->movies;
+    }
 
-	public function findMovies($title){
-		return json_decode(false);
-	}
+    public function findMovies($title){
+        return json_decode(file_get_contents($this->settings['CP_API'] . 'movie.add?title=' . urlencode($title)));
+    }
+
+    public function getMediaInfo($title){
+        $url = "http://www.omdbapi.com/?type=movie&s=" . urlencode($title);
+        return json_decode(file_get_contents($url))->Search;
+    }
+
+    public function addMovie($id){
+        return json_decode(file_get_contents($this->settings['CP_API'] . 'movie.add?identifier=' . urlencode($id)))->success;
+    }
+
+    private function isMovieInList($list, $id){
+        $result = false;
+        foreach ($list as $movie){
+            if (strcmp($movie->info->imdb,$id) == 0){
+                $result = true;
+            }
+        }
+        return $result;
+    }
 
      public function search(){
-		if ($this->checkPrivilege() == true) {
-			$formdata = $this->form->getPost();
-			$this->template->searchterm = $formdata->title;
-			$existing = $this->findExistingMovie($formdata->title);
-			$arr=array();
-			for ($this->findMovies($formdata->title) as $result){
-				//TODO: if $result is not in $existing, append to $arr
-			}
-			$this->template->results = $arr;
-			$this->template->setPagetitle('Search: ' . $formdata->title);
-			$this->template->render('media/movies.add');
-		}
-	}
-
-	public function add(){
         if ($this->checkPrivilege() == true) {
-			$this->template->setPagetitle('Add movie - Gunther');
-		 	if ($_POST){
+            $formdata = $this->form->getPost();
+            $this->template->searchterm = $formdata->title;
+            $existing = $this->getAllMovies();
+            $arr=array();
+            foreach ($this->getMediaInfo($formdata->title) as $result){
+                $id = $result->imdbID;
+                if ($this->isMovieInList($existing, $id) == false){
+                    array_push($arr, $result);
+                } else {
+                    $this->setCurrentflashmessage('Movies that are already in the library have been hidden.', 'info');
+                }
+            }
+            $this->template->results = $arr;
+            $this->template->setPagetitle('Search: ' . $formdata->title . ' - Gunther');
+            $this->template->render('media/movies.add');
+        }
+    }
 
-			 } else {
-	            $this->template->render('media/movies.add');
-			 }
+    public function add($id=false){
+        if ($this->checkPrivilege() == true) {
+            $this->template->setPagetitle('Add movie - Gunther');
+            if ($id){
+                if ($this->addMovie($id) == true){
+                    $this->setflashmessage('Movie has been added.', 'info');
+                } else {
+                    $this->setflashmessage('There was an error adding this movie.', 'danger');
+                }
+                $this->redirect('movies/index');
+             } else {
+                $this->template->render('media/movies.add');
+             }
         }
      }
 
-    public function index()
-    {
+    public function index(){
         if ($this->checkPrivilege() == true) {
-            $this->template->movies = $this->getDoneMovies();
+            if ($_POST){
+                $formdata = $this->form->getPost();
+                $this->template->searchterm = $formdata->search;
+                $this->template->movies = $this->findExistingMovie($formdata->search);
+            } else {
+                $this->template->movies = $this->getDoneMovies();
+            }
             $this->template->render('media/movies');
         } 
     }
