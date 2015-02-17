@@ -12,7 +12,7 @@ If you want to contribute, application/ is the folder you need.
 2. Create the following tables on the SQL server; (sql script to be done)
     Table users with: id, login, password, datejoined
     Table langs with: id, name, flag
-3. Add a user in the SQL table users.
+3. Add a user in the SQL table users, the password should be a SHA1 hash with the correct salt.[Home controller](/application/controllers/Home.php)
 4. Change your API key in the Controllers.
 
 # TODO
