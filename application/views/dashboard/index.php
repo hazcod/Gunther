@@ -19,10 +19,15 @@
         
         <h3><?= $this->lang['recentepi']; ?></h3><hr>
         <div class="slider-series">
-	        <img class="owl-lazy" data-src="http://ia.media-imdb.com/images/M/MV5BMTg5MjgzNTQyNl5BMl5BanBnXkFtZTgwNTgzNTEyNDE@._V1_SX214_AL_.jpg" />
-	        <img class="owl-lazy" data-src="http://ia.media-imdb.com/images/M/MV5BMTg5MjgzNTQyNl5BMl5BanBnXkFtZTgwNTgzNTEyNDE@._V1_SX214_AL_.jpg" />
-	        <img class="owl-lazy" data-src="http://ia.media-imdb.com/images/M/MV5BMTg5MjgzNTQyNl5BMl5BanBnXkFtZTgwNTgzNTEyNDE@._V1_SX214_AL_.jpg" />
-	        <img class="owl-lazy" data-src="http://ia.media-imdb.com/images/M/MV5BMTg5MjgzNTQyNl5BMl5BanBnXkFtZTgwNTgzNTEyNDE@._V1_SX214_AL_.jpg" />
-	        <img class="owl-lazy" data-src="http://ia.media-imdb.com/images/M/MV5BMTg5MjgzNTQyNl5BMl5BanBnXkFtZTgwNTgzNTEyNDE@._V1_SX214_AL_.jpg" />
+            <? foreach ($this->episodes as $episode): ?>
+            <a href="/watch/index/ss<?= $episode->serieId . '-' . $episode->season . '-' . $episode->number; ?>">
+            <div class="fix">
+                <img class="imgscale owl-lazy" data-src="http://thetvdb.com/banners/<?= $episode->thumbnail; ?>" alt="<?= $episode->name; ?>" />
+                <div class="desc">
+                    <?= 'S' . $episode->season . 'E' . $episode->number . ': ' . $episode->name; ?>
+                </div>
+            </div>
+            </a>
+            <? endforeach; ?>
         </div>
 </div>

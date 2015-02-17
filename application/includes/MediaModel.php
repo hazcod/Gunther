@@ -72,6 +72,15 @@
 	        return $result;
 	    }
 
+	    public function getLatestEpisodes($limit=10){
+	    	$result = array();
+	    	$data = json_decode(file_get_contents($this->settings['SB_API'] . 'history&limit=' . urlencode($limit)))->data;
+	    	foreach ($data as $log){
+	    		array_push($result, $this->tvdb->getEpisode($log->tvdbid, $log->season, $log->episode));
+	    	}
+	    	return $result;
+	    }
+
 	    public function getShowsWith($part){
 	        $result = array();
 	        $all = $this->getAllShows();
