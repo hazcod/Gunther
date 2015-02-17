@@ -18,7 +18,7 @@ class Home extends Core_controller
         $this->template->menuitems = $this->menu_m->getStartMenu();
         $this->template->langs = $this->langs_m->getLangs();
         //set page title
-        $this->template->setPagetitle('Gunther');	
+        $this->template->setPagetitle($this->lang['title']);	
     }
 
     public function index()

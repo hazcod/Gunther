@@ -16,7 +16,7 @@
         $this->template->menuitems = $this->menu_m->getUserMenu($this->lang);
         $this->template->langs = $this->langs_m->getLangs();
         
-       $this->template->setPagetitle('Dashboard - Gunther');
+       $this->template->setPagetitle($this->lang['dashboard'] . ' - ' . $this->lang['title']);
     }
     
     function checkPrivilege()

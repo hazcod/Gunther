@@ -2,25 +2,24 @@
 
 function getLang($controller){
     //Change this to yes if this is for a language that reads from the right to the left.
-    $lang['rtl'] = 'no';
-    switch ($controller) {  
-       //login page  
-      case 'start':
-        $lang['wronglogin']      = 'Your username & password combination is invalid.'; break;
-        $lang['invalidlogin']      = 'Your username must be at least 4 characters.'; break;
-        $lang['loggedout']       = 'You have been successfully logged out.'; break;
-        break;
+    $lang['rtl'] = 'no'; #add bootstrap-rtl.css if you want this
 
-      case 'dashboard':
-       $lang['accessdenied'] = 'You do not have access to this page.'; break;
-       #$lang['loggedout'] = 'You have been succcessfully logged out.'; break;
+    $lang['title'] = 'Gunther';
+    
+    $lang['wronglogin']   = 'Your username & password combination is invalid.';
+    $lang['invalidlogin'] = 'Your username must be at least 4 characters.';
+    $lang['loggedout']    = 'You have been successfully logged out.';
+    $lang['accessdenied'] = 'You do not have access to this page.';
+    $lang['loginto']      = 'Login to continue.';
+    $lang['username']     = 'Username';
+    $lang['email']        = 'Email address';
+    $lang['username']     = 'Username';
+    $lang['password']     = 'Password';
+    $lang['signin']       = 'Sign in';
 
+    $lang['dashboard']    = 'Dashboard';
+    $lang['recentmovies'] = 'Recently added Movies';
+    $lang['recentepi']    = 'Recently added TV Episodes';
 
-      case 'admin':
-        $lang['accessdenied'] = 'You do not have access to this page.'; break;
-      
-      default: error_log('Lang info not found for controller ' . $controller);
-
-    }
     return $lang;
 }
