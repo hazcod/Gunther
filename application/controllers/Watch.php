@@ -115,7 +115,7 @@ class Watch extends Core_controller
         $episode = json_decode(file_get_contents($this->settings['SB_API'] . 'episode&tvdbid=' . urlencode($serie_id) . '&season=' . $season_id . '&episode=' . $episode_id . '&full_path=1'))->data;
         $this->template->file = $episode->location;
         $this->template->type = $this->getMimeType($episode->location);
-        $this->template->codec = $this->getCodecInfo($episode->location)['videoCodec'];
+        $this->template->codec = $this->getCodecInfo($episode->location)['videoCodec'] . ',' . $this->getCodecInfo($episode->location)['audioCodec'];
         $this->template->streamstr = 'ss' . $id;
         $subs = array();
         foreach (glob(basename($episode->location . '*.srt')) as $sub){
@@ -126,7 +126,7 @@ class Watch extends Core_controller
                 ));
         }
         $this->template->subs = $subs;
-        $this->template->setPagetitle($episode->name . ' - Gunther');
+        $this->template->setPagetitle($episode->name . ' - ' . $this->lang['title']);
         $this->template->render('media/watch');
    }
 
