@@ -16,6 +16,7 @@ If you want to contribute, application/ is the folder you need.
 4. Change your API key in [config.php](/application/config.php).
 
 # TODO
+- Fix subtitles for TV Shows in Watch.php
 - Add recent episodes to dashboard
 - Provide SQL setup script
 - Move hardcoded strings to language files
