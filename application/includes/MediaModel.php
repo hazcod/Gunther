@@ -1,24 +1,29 @@
 <?php
+
+	include __DIR__ . '/TvDb/Http/HttpClient.php';
+	include __DIR__ . '/TvDb/Http/CurlClient.php';
+	include __DIR__ . '/TvDb/CurlException.php';
+	include __DIR__ . '/TvDb/Client.php';
+	include __DIR__ . '/TvDb/Serie.php';
+	include __DIR__ . '/TvDb/Banner.php';
+	include __DIR__ . '/TvDb/Episode.php';
+	include __DIR__ . '/TvDb/Http/Cache/Cache.php';
+	include __DIR__ . '/TvDb/Http/Cache/FilesystemCache.php';
+	include __DIR__ . '/TvDb/Http/CacheClient.php';
 	
-	include __DIR__ . '/../includes/TvDb/Http/HttpClient.php';
-	include __DIR__ . '/../includes/TvDb/Http/CurlClient.php';
-	include __DIR__ . '/../includes/TvDb/CurlException.php';
-	include __DIR__ . '/../includes/TvDb/Client.php';
-	include __DIR__ . '/../includes/TvDb/Serie.php';
-	include __DIR__ . '/../includes/TvDb/Banner.php';
-	include __DIR__ . '/../includes/TvDb/Episode.php';
-	use Moinax\TvDb\Client as TvDbClient;
+	use Moinax\TvDb\Http\Cache\FilesystemCache;
+	use Moinax\TvDb\Http\CacheClient;
+	use Moinax\TvDb\Client;
 
 	class MediaModel
 	{
 		public function __construct($settings)
 		{
 			$this->settings = $settings;
-	        $this->tvdb = new TvDbClient($settings['TVDB_URL'], $settings['TVDB_API']);
-	        #TODO: tvdb caching
-	        #$cache = new FilesystemCache($this->settings['CACHE_DIR']);
-	        #$httpClient = new CacheClient($cache, (int) $this->settings['CACHE_TTL']);
-	        #$his->tvdb->setHttpClient($httpClient);
+	        $this->tvdb = new Client($settings['TVDB_URL'], $settings['TVDB_API']);
+	        $cache = new FilesystemCache($this->settings['CACHE_DIR']);
+	        $httpClient = new CacheClient($cache, (int) $this->settings['CACHE_TTL']);
+	        $this->tvdb->setHttpClient($httpClient);
 		}
 
 
