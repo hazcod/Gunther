@@ -1,6 +1,7 @@
 <div class="col-sm-8 col-sm-offset-2">
 	<ul class="breadcrumb">
 	  <li><?= $this->lang['title']; ?></li>
+	  <li><?= $this->lang['series']; ?></li>
 	  <li class="active"><?= $this->show->name; ?></li>
 	  <div class="pull-right">
 		<a href="/series/add">
