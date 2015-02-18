@@ -6,7 +6,7 @@
 	  <div class="pull-right">
 		<a href="/series/add">
 			<i class="fa fa-plus-square-o fa-lg"></i>
-          </div>
+          </a>
         </div>
 	</ul>
 
