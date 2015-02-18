@@ -9,10 +9,7 @@ If you want to contribute, application/ is the folder you need.
 
 # Installation
 1. Setup a database and web server. I supplied a sample apache2 site config in [apache2-site](/apache2-site-example)
-2. Create the following tables on the SQL server; (sql script to be done)
-    Table users with: id, login, password, datejoined
-    Table langs with: id, name, flag
-3. Add a user in the SQL table users, the password should be a SHA1 hash with the correct salt.[Home controller](/application/controllers/Home.php)
+2. Import the [database setup file](/setup_database.sql).
 4. Change your API key in [config.php](/application/config.php).
 
 # TODO
