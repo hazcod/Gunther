@@ -32,8 +32,8 @@ abstract class Core_controller
             $this->checkPrivilege();
         }
 
+        $this->user_m = Load::model('user_m');
         if (isset($_SESSION['user'])){
-            $this->user_m = Load::model('user_m');
             $this->user = $this->user_m->getUserByLogin($_SESSION['user']);
         }
 
