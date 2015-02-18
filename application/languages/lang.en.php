@@ -56,5 +56,7 @@ function getLang(){
 
     $lang['help']         = 'Help';
 
+    $lang['admin']        = 'Administrator';
+
     return $lang;
 }

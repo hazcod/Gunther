@@ -1,7 +1,17 @@
 <?php
 
 class Menu_m extends Core_db
-{  
+{
+
+    public function getMenu($user, $lang){
+        if (isset($user)){
+            return $this->getUsermenu($lang, (strcmp('admin', $user->role) == 0));
+        } else {
+            return $this->getStartmenu($lang);
+        }
+    }
+
+
     public function getStartmenu($lang)
     {
         $menuitems = array(
@@ -14,7 +24,7 @@ class Menu_m extends Core_db
     }
 
 
-      public function getUsermenu($lang)
+      public function getUsermenu($lang,$admin=false)
     {
         $menuitems = array(
             array(
@@ -53,6 +63,12 @@ class Menu_m extends Core_db
                 'description' => $lang['help'],
             ),
         );
+        if ($admin == true){
+            array_push($menuitems, array(
+                                'link' => 'admin/index',
+                                'description' => $lang['admin'],
+                        ));
+        }
         return $menuitems;
     }
 

@@ -11,12 +11,6 @@ class Dashboard extends Core_controller
             ->setPartial('headermeta')
             ->setPartial('footer')
             ->setPartial('flashmessage');
-        
-        $this->langs_m = Load::model('langs_m');        
-        $this->menu_m = Load::model('menu_m');
-        $this->user_m = Load::model('user_m');
-        $this->template->menuitems = $this->menu_m->getUserMenu($this->lang);
-        $this->template->langs = $this->langs_m->getLangs();
 
         $this->template->setPagetitle($this->lang['dashboard'] . ' - ' . $this->lang['title']);
     }

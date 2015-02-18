@@ -11,13 +11,7 @@ class Movies extends Core_controller
             ->setPartial('headermeta')
             ->setPartial('footer')
             ->setPartial('flashmessage');
-        //load mcrypt_module_self_test(algorithm)
-        $this->menu_m = Load::model('menu_m');
-        $this->langs_m = Load::model('langs_m');
-        $this->user_m = Load::model('user_m');
 
-        $this->template->menuitems = $this->menu_m->getUserMenu($this->lang);
-        $this->template->langs = $this->langs_m->getLangs();
         //set page title
         $this->template->setPagetitle($this->lang['movies'] . ' - ' . $this->lang['title']);  
     }

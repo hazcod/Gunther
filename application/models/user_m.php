@@ -27,8 +27,8 @@ class User_m extends Core_db
         $result = false;
         $query = "
             SELECT *
-            FROM users
-		 WHERE login = ?;
+            FROM users u, roles r
+            WHERE (u.role = r.id) AND (login = ?);
         ";
         $hash = $this->db->query($query, $login)->getRow();
         return $result;

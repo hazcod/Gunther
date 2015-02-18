@@ -11,13 +11,6 @@ class Help extends Core_controller
             ->setPartial('headermeta')
             ->setPartial('footer')
             ->setPartial('flashmessage');
-        //load models
-        $this->menu_m = Load::model('menu_m');
-        $this->langs_m = Load::model('langs_m');
-        $this->user_m = Load::model('user_m');
-
-        $this->template->menuitems = $this->menu_m->getUserMenu($this->lang);
-        $this->template->langs = $this->langs_m->getLangs();	
     }
 
     public function index()

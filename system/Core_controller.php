@@ -31,6 +31,15 @@ abstract class Core_controller
         if ($protected == true){
             $this->checkPrivilege();
         }
+
+        $this->user_m = Load::model('user_m');
+        $this->user = $this->user_m->getUserByLogin($_SESSION['user']);
+
+        $this->menu_m = Load::model('menu_m');
+        $this->template->menuitems = $this->menu_m->getMenu($this->user, $this->lang);
+
+        $this->langs_m = Load::model('langs_m');
+        $this->template->langs = $this->langs_m->getLangs();
     }
 
     public function checkPrivilege()
@@ -41,6 +50,14 @@ abstract class Core_controller
             return false;
         } else {
             return true;
+        }
+    }
+
+    public function isAdminUser($user){
+        if (strcmp($user->role, 'admin') == 0){
+            return true;
+        } else {
+            return false;
         }
     }
 
