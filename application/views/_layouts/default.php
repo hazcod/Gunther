@@ -50,7 +50,7 @@
         </script>
         <script type="text/javascript" src="<?= URL::base_uri(); ?>js/video.js"></script>
         <script type="text/javascript">
-
+		_V_.options.flash.swf = "<?= URL::base_uri(); ?>js/video-js.swf";
         </script>
     </body>
 </html>
