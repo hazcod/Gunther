@@ -32,8 +32,10 @@ abstract class Core_controller
             $this->checkPrivilege();
         }
 
-        $this->user_m = Load::model('user_m');
-        $this->user = $this->user_m->getUserByLogin($_SESSION['user']);
+        if (isset($_SESSION['user'])){
+            $this->user_m = Load::model('user_m');
+            $this->user = $this->user_m->getUserByLogin($_SESSION['user']);
+        }
 
         $this->menu_m = Load::model('menu_m');
         $this->template->menuitems = $this->menu_m->getMenu($this->user, $this->lang);
