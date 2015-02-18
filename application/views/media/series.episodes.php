@@ -6,11 +6,7 @@
 	  <div class="pull-right">
 		<a href="/series/add">
 			<i class="fa fa-plus-square-o fa-lg"></i>
-          </a>
-		&nbsp;&nbsp;
-          <a href="/series/busy">
-			<i class="fa fa-clock-o fa-lg"></i>
-		</a>
+          </div>
         </div>
 	</ul>
 
