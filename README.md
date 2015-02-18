@@ -20,7 +20,7 @@ If you want to contribute, application/ is the folder you need.
 # Screenshots
 ![Gunther login screenshot](https://i.imgur.com/RWgQcBR.png "Login screen")
 
-![Gunther dashboard](https://i.imgur.com/YDWSkz7.jpg "Dashboard")
+![Gunther dashboard](https://i.imgur.com/UcSAg08.png "Dashboard")
 
 ![Gunther stream screenshot](https://i.imgur.com/ddidCuk.jpg "Streaming screen")
 
