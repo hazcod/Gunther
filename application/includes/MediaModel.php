@@ -26,6 +26,32 @@
 	        $this->tvdb->setHttpClient($httpClient);
 		}
 
+		#Main caching function
+		private function getJson($url) {
+		    $cacheFile = $this->settings['CACHE_DIR'] . md5($url);
+
+		    if (file_exists($cacheFile)) {
+		        $fh = fopen($cacheFile, 'r');
+		        $cacheTime = trim(fgets($fh));
+
+		        if ($cacheTime > strtotime('-60 minutes')) {
+		            return fread($fh);
+		        } else {
+			        fclose($fh);
+			        unlink($cacheFile);
+			    }
+		    }
+
+		    $json = json_decode(file_get_contents($url));
+
+		    $fh = fopen($cacheFile, 'w');
+		    fwrite($fh, time() . "\n");
+		    fwrite($fh, $json);
+		    fclose($fh);
+
+		    return $json;
+		}
+
 
 		##- DASHBOARD
 		public function getLastMovies($limit=10){
@@ -34,32 +60,32 @@
 
     	##- MOVIES
 	 	public function getAllMovies(){
-	        return json_decode(file_get_contents($this->settings['CP_API'] . 'media.list'))->movies;
+	        return $this->getJson($this->settings['CP_API'] . 'media.list')->movies;
 	    }
 
 	    public function getDoneMovies(){
-	        return json_decode(file_get_contents($this->settings['CP_API'] . 'media.list?status=done'))->movies;
+	        return $this->getJson($this->settings['CP_API'] . 'media.list?status=done')->movies;
 	    }
 
 	    public function getBusyMovies(){
-	        return json_decode(file_get_contents($this->settings['CP_API'] . 'media.list?status=active'))->movies;
+	        return $this->getJson($this->settings['CP_API'] . 'media.list?status=active')->movies;
 	    }
 
 		public function getMovie($id=false){
-		 return json_decode(file_get_contents($this->settings['CP_API'] . 'media.get?id=' . $id))->media;
+		 return $this->getJson($this->settings['CP_API'] . 'media.get?id=' . $id)->media;
 		}
 
 	    public function findExistingMovie($title){
-	        return json_decode(file_get_contents($this->settings['CP_API'] . 'media.list?search=' . urlencode($title)))->movies;
+	        return $this->getJson($this->settings['CP_API'] . 'media.list?search=' . urlencode($title))->movies;
 	    }
 
 	    public function findMovies($title){
-	        return json_decode(file_get_contents($this->settings['CP_API'] . 'movie.add?title=' . urlencode($title)));
+	        return $this->getJson($this->settings['CP_API'] . 'movie.add?title=' . urlencode($title));
 	    }
 
 	    public function getMediaInfo($type, $title){
 	        $url = "http://www.omdbapi.com/?type=" . urlencode($type) . "&s=" . urlencode($title);
-	        return json_decode(file_get_contents($url))->Search;
+	        return $this->getJson($url)->Search;
 	    }
 
 	    public function addMovie($id){
@@ -70,7 +96,7 @@
     	##- SHOWS
 	    public function getAllShows(){
 	        $result = array();
-	        $data = json_decode(file_get_contents($this->settings['SB_API'] . 'shows'))->data;
+	        $data = $this->getJson($this->settings['SB_API'] . 'shows')->data;
 	        foreach ($data as $id_=>$id) {
 	            array_push($result, $this->tvdb->getSerie($id_));
 	        }
@@ -108,7 +134,7 @@
 
 
 	    public function getEpisode($serie_id, $season_id, $episode_id){
-	        return json_decode(file_get_contents($this->settings['SB_API'] . 'episode&tvdbid=' . urlencode($serie_id) . '&season=' . $season_id . '&episode=' . $episode_id . '&full_path=1'))->data;
+	        return $this->getJson($this->settings['SB_API'] . 'episode&tvdbid=' . urlencode($serie_id) . '&season=' . $season_id . '&episode=' . $episode_id . '&full_path=1')->data;
 	    }
 
 
