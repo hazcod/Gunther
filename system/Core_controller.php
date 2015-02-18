@@ -26,6 +26,8 @@ abstract class Core_controller
         include(APPLICATION_PATH . 'includes/MediaModel.php');
         $this->mediamodel = new MediaModel($settings);
 
+        include(APPLICATION_PATH . 'includes/Password.php');
+
         if ($protected == true){
             $this->checkPrivilege();
         }

@@ -37,8 +37,7 @@ class Home extends Core_controller
         $this->form->validateLength('password', 5);
 
         if ($this->form->isFormValid()) {
-            $pass = sha1('pumpkin' . $formdata->password .  'spice');
-            if ($this->user_m->isValid(strtolower($formdata->username), $pass)){
+            if ($this->user_m->isValid(strtolower($formdata->username), $formdata->password)){
                 $_SESSION['user'] = $formdata->username;
                 $this->redirect('dashboard');
             } else {

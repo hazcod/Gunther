@@ -7,7 +7,7 @@ class User_m extends Core_db
         $this->table = 'users';
     }
     
-       public function isValid($login, $password)
+    public function isValid($login, $password)
     {
         $result = false;
         $query = "
@@ -16,7 +16,7 @@ class User_m extends Core_db
 		    WHERE login = ?;
         ";
         $hash = $this->db->query($query, $login)->getRow();
-        if ($hash != false && strcmp($hash->password, $password) == 0) {
+        if ($hash != false && password_verify($password, $hash->password) == true) {
             $result = true;
         }
         return $result;
