@@ -26,6 +26,15 @@
 	        $this->tvdb->setHttpClient($httpClient);
 		}
 
+		#Fill cache function
+		public function fillCache() {
+			$this->getAllMovies();
+			$this->getAllShows();
+			$this->getBusyMovies();
+			$this->getLastMovies();
+			$this->getLatestEpisodes();
+		}
+
 		#Main caching function
 		private function getJson($url) {
 		    $cacheFile = $this->settings['CACHE_DIR'] . md5($url);
@@ -35,7 +44,7 @@
 		        $cacheTime = trim(fgets($fh));
 
 		        if ($cacheTime > strtotime('-60 minutes')) {
-		            return fread($fh);
+		            return fread($fh, filesize($cacheFile));
 		        } else {
 			        fclose($fh);
 			        unlink($cacheFile);
