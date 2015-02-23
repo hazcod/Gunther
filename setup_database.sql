@@ -45,7 +45,7 @@ GRANT ALL PRIVILEGES ON DATBASE gunther to gunther;
 CREATE SCHEMA gunther;
 CREATE DATABASE gunther;
 
-USE gunther;
+SET search_path to gunther;
 
 CREATE TABLE users (
   id SERIAL NOT NULL,
