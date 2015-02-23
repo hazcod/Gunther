@@ -50,7 +50,7 @@ CREATE DATABASE gunther;
 
 # NOW CONNECT TO THE DATABASE
 
-CREATE TABLE gunther.users (
+CREATE TABLE users (
   id SERIAL NOT NULL,
   login VARCHAR(10) NOT NULL,
   password VARCHAR(255) NOT NULL,
@@ -61,14 +61,14 @@ CREATE TABLE gunther.users (
   PRIMARY KEY  (id)
 );
 
-CREATE TABLE gunther.langs (
+CREATE TABLE langs (
   id SERIAL NOT NULL,
   name VARCHAR(15) NOT NULL,
   flag VARCHAR(2) NOT NULL,
   PRIMARY KEY  (id)
 );
 
-CREATE TABLE gunther.roles (
+CREATE TABLE roles (
   id SERIAL NOT NULL,
   name VARCHAR(20) NOT NULL,
   PRIMARY KEY  (id)
