@@ -1,5 +1,5 @@
 #MySQL
-#CREATE SCHEMA gunther;
+
 set search_path to public;
 
 CREATE DATABASE gunther;
@@ -38,16 +38,17 @@ INSERT INTO users (login, password, role) VALUES ('admin', '52f504477e36154a4946
 INSERT INTO langs (name, flag) VALUES ('English', 'en');
 
 CREATE USER gunther WITH PASSWORD '<PASSWORD>';
-GRANT ALL PRIVILEGES ON DATBASE gunther to gunther;
+GRANT ALL PRIVILEGES ON DATABASE gunther to gunther;
 
 
 #===== PosgreSQL
-#CREATE SCHEMA gunther;
+
 SET search_path to public;
 
 CREATE DATABASE gunther;
+USE gunther;
 
-CREATE TABLE users (
+CREATE TABLE gunther.users (
   id SERIAL NOT NULL,
   login VARCHAR(10) NOT NULL,
   password VARCHAR(255) NOT NULL,
@@ -58,14 +59,14 @@ CREATE TABLE users (
   PRIMARY KEY  (id)
 );
 
-CREATE TABLE langs (
+CREATE TABLE gunther.langs (
   id SERIAL NOT NULL,
   name VARCHAR(15) NOT NULL,
   flag VARCHAR(2) NOT NULL,
   PRIMARY KEY  (id)
 );
 
-CREATE TABLE roles (
+CREATE TABLE gunther.roles (
   id SERIAL NOT NULL,
   name VARCHAR(20) NOT NULL,
   PRIMARY KEY  (id)
