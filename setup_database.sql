@@ -43,9 +43,9 @@ GRANT ALL PRIVILEGES ON DATBASE gunther to gunther;
 
 #===== PosgreSQL
 CREATE SCHEMA gunther;
-CREATE DATABASE gunther;
-
 SET search_path to gunther;
+
+CREATE DATABASE gunther;
 
 CREATE TABLE users (
   id SERIAL NOT NULL,
