@@ -46,7 +46,9 @@ GRANT ALL PRIVILEGES ON DATABASE gunther to gunther;
 SET search_path to public;
 
 CREATE DATABASE gunther;
-USE gunther;
+
+
+# NOW CONNECT TO THE DATABASE
 
 CREATE TABLE gunther.users (
   id SERIAL NOT NULL,
