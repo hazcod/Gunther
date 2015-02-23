@@ -1,6 +1,6 @@
 #MySQL
-CREATE SCHEMA gunther;
-set search_path to gunther;
+#CREATE SCHEMA gunther;
+set search_path to public;
 
 CREATE DATABASE gunther;
 
@@ -42,8 +42,8 @@ GRANT ALL PRIVILEGES ON DATBASE gunther to gunther;
 
 
 #===== PosgreSQL
-CREATE SCHEMA gunther;
-SET search_path to gunther;
+#CREATE SCHEMA gunther;
+SET search_path to public;
 
 CREATE DATABASE gunther;
 
