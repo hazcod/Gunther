@@ -82,4 +82,4 @@ INSERT INTO users (login, password, role) VALUES ('admin', '52f504477e36154a4946
 INSERT INTO langs (name, flag) VALUES ('English', 'en');
 
 CREATE USER gunther WITH PASSWORD '<PASSWORD>';
-GRANT ALL PRIVILEGES ON DATABASE gunther to gunther;
+grant all privileges on all tables in schema public to gunther;
