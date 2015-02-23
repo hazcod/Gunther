@@ -4,7 +4,7 @@ date_default_timezone_set('Europe/Brussels');
 
 $db_config = array(
     'driver' => 'mysql',
-    'username' => '<USER>',
+    'username' => 'gunther',
     'password' => '<PASS>',
     'schema' => 'gunther',
     'dsn' => array(
