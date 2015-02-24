@@ -33,11 +33,9 @@ abstract class Core_controller
         }
 
         $this->user_m = Load::model('user_m');
-        if (isset($_SESSION['user'])){
-        //var_dump($_SESSION['user']);    
-	$this->user = $this->user_m->getUserByLogin($_SESSION['user']);
-	//var_dump($this->user);        
-}
+        if (isset($_SESSION['user'])){ 
+        	$this->user = $this->user_m->getUserByLogin($_SESSION['user']);      
+        }
 
         $this->menu_m = Load::model('menu_m');
         $this->template->menuitems = $this->menu_m->getMenu($this->user, $this->lang);
@@ -57,8 +55,8 @@ abstract class Core_controller
         }
     }
 
-    public function isAdminUser($user){
-        if (strcmp($user->role, '1') == 0){
+    public function isAdminUser(){
+        if (strcmp($this->user->role, '1') == 0){
             return true;
         } else {
             return false;
