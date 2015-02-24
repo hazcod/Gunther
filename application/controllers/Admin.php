@@ -16,7 +16,7 @@ class Admin extends Core_controller
     }
 
     public function checkAdminAccess(){
-        if ($this->isAdminUser() = false){
+        if ($this->isAdminUser() == false){
             $this->setFlashmessage($this->lang['accessdenied'],'danger');
             $this->redirect('dashboard/index');
         }
