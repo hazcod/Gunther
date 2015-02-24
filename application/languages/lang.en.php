@@ -40,6 +40,7 @@ function getLang(){
 
     $lang['series']       = 'Series';
     $lang['season']       = 'Season';
+    $lang['seasons']      = 'Seasons';
     $lang['searchshow']   = 'Search for a TV Show';
     $lang['noshows']      = 'No TV Shows found.';
     $lang['addshow']      = 'Add a new TV Show';
