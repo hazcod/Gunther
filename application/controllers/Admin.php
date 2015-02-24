@@ -15,6 +15,13 @@ class Admin extends Core_controller
         $this->template->setPagetitle($this->lang['admin'] . ' - ' . $this->lang['title']);	
     }
 
+    public function checkAdminAccess(){
+        if ($this->isAdminUser() = false){
+            $this->setFlashmessage($this->lang['accessdenied'],'danger');
+            $this->redirect('dashboard/index');
+        }
+    }
+
     public function index()
     {
         if ($this->checkAdminAccess()){
