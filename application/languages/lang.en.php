@@ -59,6 +59,12 @@ function getLang(){
     $lang['help']         = 'Help';
 
     $lang['admin']        = 'Administrator';
+    $lang['users']        = 'Users';
+    $lang['add']          = 'Add';
+    $lang['deluserc']     = 'Are you sure you want to remove this user?';
+    $lang['addeduser']    = 'has been added with password ';
+    $lang['deladmin']     = 'You cannot remove an administrator.';
+    $lang['removeduser']  = 'User has been removed. (webdav + panel access)';
 
     $lang['readmore']     = 'Read more';
     $lang['synology-info']= '...offers proven NAS devices for home and enterprise users. An easy web interface smoothens the experience, while the community packages give you loads of functionality.';

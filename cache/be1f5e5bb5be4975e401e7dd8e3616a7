@@ -1,0 +1,28 @@
+1424802828
+{
+    "data": {
+        "247897": {
+            "air_by_date": 0, 
+            "anime": 0, 
+            "cache": {
+                "banner": 1, 
+                "poster": 1
+            }, 
+            "indexerid": 247897, 
+            "language": "en", 
+            "network": "Showtime", 
+            "next_ep_airdate": "", 
+            "paused": 0, 
+            "quality": "Any", 
+            "show_name": "Homeland", 
+            "sports": 0, 
+            "status": "Continuing", 
+            "subtitles": 1, 
+            "tvdbid": 247897, 
+            "tvrage_id": 27811, 
+            "tvrage_name": "Homeland"
+        }
+    }, 
+    "message": "", 
+    "result": "success"
+}

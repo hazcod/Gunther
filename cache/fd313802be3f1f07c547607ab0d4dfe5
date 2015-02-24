@@ -1,0 +1,71 @@
+1424781968
+
+<!doctype html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+<link rel="stylesheet" href="/minified/front.css?1424778275" type="text/css">
+
+<script type="text/javascript" src="/minified/front.js?1424778278"></script>
+
+<script type="text/javascript" src="/minified/head.js?1424778278"></script>
+
+<link rel="stylesheet" href="/minified/head.css?1424778275" type="text/css">
+<link href="/static/images/favicon.ico" rel="icon" type="image/x-icon" />
+<link rel="apple-touch-icon" href="/static/images/homescreen.png" />
+<script type="text/javascript" src="https://www.youtube.com/player_api" defer="defer"></script>
+<script type="text/javascript">
+window.addEvent('load', function(){
+if(window.getSize().x <= 480)
+setTimeout(function(){
+window.scrollTo(0, 1);
+window.scrollTo(0, 0);
+}, 100);
+});
+window.addEvent('domready', function() {
+new Uniform();
+Api.setup({
+'url': "/api/40389981c6a54cb4a3b813a4961e249d/",
+'path_sep': "/",
+'is_remote': false
+});
+$(document.body).set('data-api', window.location.protocol + '//' + window.location.host + Api.createUrl().replace('/default/', '/'));
+// Catch errors
+window.onerror = function(message, file, line){
+p(message, file, line);
+Api.request('logging.log', {
+'data': {
+'type': 'error',
+'message': Browser.name + ' ' + Browser.version + ': \n' + message,
+'page': window.location.href.replace(window.location.host, 'HOST'),
+'file': file.replace(window.location.host, 'HOST'),
+'line': line
+}
+});
+return true;
+}
+Quality.setup({
+'profiles': [{"core": false, "_rev": "0004ef63", "finish": [true, true, true], "qualities": ["1080p", "720p", "brrip"], "_id": "833f956863ca403c91c1cb4374d280d7", "_t": "profile", "label": "Best", "minimum_score": 1, "stop_after": [0, 0, 0], "wait_for": [0, 0, 0], "order": 0, "3d": [0, 0, 0]}, {"_rev": "00017c84", "finish": [true, true, true, true], "qualities": ["1080p", "720p", "720p", "1080p"], "_id": "b58b97936c564fe883ecd971da7fdbe8", "_t": "profile", "label": "Prefer 3D HD", "minimum_score": 1, "stop_after": [0, 0, 0, 0], "wait_for": [0, 0, 0, 0], "order": 3, "3d": [true, true, false, false]}, {"core": true, "_rev": "00011c35", "finish": [true], "_id": "7b735c7f02de46268e228268b6edf0a4", "_t": "profile", "label": "BR-Disk", "qualities": ["bd50"], "wait_for": [0], "order": 20}, {"core": true, "_rev": "000184b2", "finish": [true], "_id": "7685c0075af648139a44abff272b7d07", "_t": "profile", "label": "1080p", "qualities": ["1080p"], "wait_for": [0], "order": 21}, {"core": true, "_rev": "0001218f", "finish": [true], "_id": "5098d04e38544f369a2a866dc7596db5", "_t": "profile", "label": "720p", "qualities": ["720p"], "wait_for": [0], "order": 22}, {"core": true, "_rev": "00011bf4", "finish": [true], "_id": "adf17da3b89b449db74717552197724c", "_t": "profile", "label": "BR-Rip", "qualities": ["brrip"], "wait_for": [0], "order": 23}, {"core": true, "_rev": "00017d91", "finish": [true], "_id": "1422acf1b2a742e6b98083b51673a07c", "_t": "profile", "label": "DVD-R", "qualities": ["dvdr"], "wait_for": [0], "order": 24}, {"core": true, "_rev": "0001f2b3", "finish": [true], "_id": "684bff102bfa49eca8db0fb435ea3dbf", "_t": "profile", "label": "DVD-Rip", "qualities": ["dvdrip"], "wait_for": [0], "order": 25}, {"core": true, "_rev": "00019d9a", "finish": [true], "_id": "1bc492f456864ceda1e017861c334f25", "_t": "profile", "label": "Screener", "qualities": ["scr"], "wait_for": [0], "order": 26}, {"core": true, "_rev": "0001997a", "finish": [true], "_id": "3839071b969844fbb2e7ea48d1690cd9", "_t": "profile", "label": "R5", "qualities": ["r5"], "wait_for": [0], "order": 27}, {"core": true, "_rev": "0001cbbf", "finish": [true], "_id": "d9ef8edac8244978a5d83ad1930add12", "_t": "profile", "label": "TeleCine", "qualities": ["tc"], "wait_for": [0], "order": 28}, {"core": true, "_rev": "000116c6", "finish": [true], "_id": "2a53c2ba498341949aa961580f634ada", "_t": "profile", "label": "TeleSync", "qualities": ["ts"], "wait_for": [0], "order": 29}, {"core": true, "_rev": "00015374", "finish": [true], "_id": "23cf1810f7af44028615804bae832c29", "_t": "profile", "label": "Cam", "qualities": ["cam"], "wait_for": [0], "order": 30}],
+'qualities': [{"_id": "82a212e52fa142bb9ab23add4231ce68", "tags": ["bdmv", "certificate", ["complete", "bluray"], "avc", "mvc"], "_rev": "00015023", "_t": "quality", "size_max": 60000, "size_min": 20000, "label": "BR-Disk", "order": 0, "ext": ["iso", "img"], "allow_3d": true, "allow": ["1080p"], "alternative": ["bd25", ["br", "disk"]], "identifier": "bd50", "median_size": 40000, "hd": true, "size": [20000, 60000]}, {"_rev": "0001ec8f", "identifier": "1080p", "size_min": 4000, "tags": ["m2ts", "x264", "h264"], "_id": "a4b0fb7d06c34571815939488f69d709", "_t": "quality", "size_max": 20000, "label": "1080p", "height": 1080, "order": 1, "width": 1920, "ext": ["mkv", "m2ts", "ts"], "allow": [], "alternative": [], "allow_3d": true, "median_size": 10000, "hd": true, "size": [4000, 20000]}, {"_rev": "0001365f", "identifier": "720p", "size_min": 3000, "tags": ["x264", "h264"], "_id": "661749836b6844e68d1550d5ddb5653e", "_t": "quality", "size_max": 10000, "label": "720p", "height": 720, "order": 2, "width": 1280, "ext": ["mkv", "ts"], "allow": [], "alternative": [], "allow_3d": true, "median_size": 5500, "hd": true, "size": [3000, 10000]}, {"_id": "785efe281f1e454eb04fac0d95002226", "tags": ["webdl", ["web", "dl"]], "_rev": "0001677c", "_t": "quality", "size_max": 7000, "size_min": 700, "label": "BR-Rip", "order": 3, "ext": ["mp4", "avi"], "allow_3d": true, "allow": ["720p", "1080p"], "alternative": ["bdrip", ["br", "rip"], "hdtv", "hdrip"], "identifier": "brrip", "median_size": 2000, "hd": true, "size": [700, 7000]}, {"_id": "bf26f4373e6740eea9c0b394cba94897", "tags": ["pal", "ntsc", "video_ts", "audio_ts", ["dvd", "r"], "dvd9"], "_rev": "0001f105", "_t": "quality", "size_max": 10000, "size_min": 3000, "label": "DVD-R", "order": 4, "ext": ["iso", "img", "vob"], "allow": [], "alternative": ["br2dvd", ["dvd", "r"]], "identifier": "dvdr", "median_size": 4500, "size": [3000, 10000]}, {"_id": "b4b3b452e8664109b7707dd3802cdeed", "tags": [["dvd", "rip"], ["dvd", "xvid"], ["dvd", "divx"]], "_rev": "0001e610", "_t": "quality", "size_max": 2400, "size_min": 600, "label": "DVD-Rip", "order": 5, "width": 720, "ext": ["avi"], "allow": [], "alternative": [["dvd", "rip"]], "identifier": "dvdrip", "median_size": 1500, "size": [600, 2400]}, {"_id": "9912a62a423e4e43903bb66dafa3699f", "tags": [], "_rev": "00019a63", "_t": "quality", "size_max": 1600, "size_min": 600, "label": "Screener", "order": 6, "ext": [], "allow": ["dvdr", "dvdrip", "720p", "1080p"], "alternative": ["screener", "dvdscr", "ppvrip", "dvdscreener", "hdscr", "webrip", ["web", "rip"]], "identifier": "scr", "median_size": 700, "size": [600, 1600]}, {"_rev": "00012b9e", "order": 7, "size_min": 600, "alternative": ["r6"], "size": [600, 1000], "identifier": "r5", "_t": "quality", "size_max": 1000, "label": "R5", "ext": [], "allow": ["dvdr", "720p", "1080p"], "_id": "4c18f7603c134591a3dada72d08a504d", "median_size": 700}, {"_rev": "0001213c", "order": 8, "size_min": 600, "alternative": ["telecine"], "size": [600, 1000], "identifier": "tc", "_t": "quality", "size_max": 1000, "label": "TeleCine", "ext": [], "allow": ["720p", "1080p"], "_id": "8b46bf5e28c1493ebf1da868b2ccdc7d", "median_size": 700}, {"_rev": "0001920e", "order": 9, "size_min": 600, "alternative": ["telesync", "hdts"], "size": [600, 1000], "identifier": "ts", "_t": "quality", "size_max": 1000, "label": "TeleSync", "ext": [], "allow": ["720p", "1080p"], "_id": "07a66efcb7d1487aa25b200f013156e4", "median_size": 700}, {"_rev": "0001a97c", "order": 10, "size_min": 600, "alternative": ["camrip", "hdcam"], "size": [600, 1000], "identifier": "cam", "_t": "quality", "size_max": 1000, "label": "Cam", "ext": [], "allow": ["720p", "1080p"], "_id": "7154d7c5e0c747e986a0360a25e6a71f", "median_size": 700}]
+});
+CategoryList.setup([]);
+App.setup({
+'base_url': "/",
+'args': "['--quiet', '--daemon', '--pid_file=/var/run/couchpotato/couchpotato.pid', '--data_dir=/var/opt/couchpotato']",
+'options': "Namespace(config_file='/var/opt/couchpotato/settings.conf', console_log=False, daemon=True, data_dir='/var/opt/couchpotato', debug=False, pid_file='/var/run/couchpotato/couchpotato.pid', quiet=True)",
+'app_dir': "/home/nindustries/couchpotato",
+'data_dir': "/var/opt/couchpotato",
+'pid': "1669 ",
+'userscript_version': 25
+});
+})
+
+</script>
+<title>CouchPotato</title>
+</head>
+<body></body>
+</html>

@@ -14,12 +14,14 @@ if [ "$#" -eq 2 ]; then
 	# hash the username, realm, and password
 	htdigest_hash=`printf $username:$AUTH_REALM:$rand_pw | md5sum -`
 
-	# remove previous username lines
-	sed -i "/$username:$AUTH_REALM/d" ./"$HTDIGEST_FILE"
+	if [ -f "$HTDIGEST_FILE" ]; then
+		# remove previous username lines (if file exists)
+		sed -i "/$username:$AUTH_REALM/d" "$HTDIGEST_FILE"
+	fi
 
 	# build an htdigest appropriate line, and tack it onto the file
 	echo "$username:$AUTH_REALM:${htdigest_hash:0:32}" >> "$HTDIGEST_FILE"
-	echo "User $username has password $rand_pw"
+	echo "$rand_pw"
 else
 	echo "ERROR: Expects two arguments. (digest_file and username)"
 fi

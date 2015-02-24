@@ -34,6 +34,7 @@ CREATE TABLE roles (
 ALTER TABLE users ADD CONSTRAINT users_fk1 FOREIGN KEY (role) REFERENCES roles(id);
 
 INSERT INTO roles (name) VALUES ('admin');
+INSERT INTO roles (name) VALUES ('regular');
 INSERT INTO users (login, password, role) VALUES ('admin', '$2y$10$yG.0inUhckrKM1kGXcjUEe4U60iEcdpfn3bVyW.1EPEd2DaLKGauq', 1);
 INSERT INTO langs (name, flag) VALUES ('English', 'en');
 
@@ -78,6 +79,7 @@ CREATE TABLE roles (
 ALTER TABLE users ADD CONSTRAINT users_fk1 FOREIGN KEY (role) REFERENCES roles(id);
 
 INSERT INTO roles (name) VALUES ('admin');
+INSERT INTO roles (name) VALUES ('regular');
 INSERT INTO users (login, password, role) VALUES ('admin', '$2y$10$yG.0inUhckrKM1kGXcjUEe4U60iEcdpfn3bVyW.1EPEd2DaLKGauq', 1);
 INSERT INTO langs (name, flag) VALUES ('English', 'en');
 
