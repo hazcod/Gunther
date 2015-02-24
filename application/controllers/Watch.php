@@ -14,6 +14,8 @@ class Watch extends Core_controller
 
         //set page title
         $this->template->setPagetitle($this->lang['title']);	
+
+        include(APPLICATION_PATH . 'includes/VideoStream.php');
     }
 
     private function streamMovie($id){
@@ -27,13 +29,12 @@ class Watch extends Core_controller
         $serie_id = $parts[0];
         $season_id = $parts[1];
         $episode_id = $parts[2];
-        $serie = $this->mediamodel->getShow($serie_id, $season_id, $episode_id);
+        $serie = $this->mediamodel->getEpisode($serie_id, $season_id, $episode_id);
         $stream = new VideoStream($serie->location);
         return $stream->start();
     }
 
    public function stream($id=false){
-        include __DIR__ . '/../includes/VideoStream.php';
 
         $prefix = substr($id, 0, 2);
         if (strcmp($prefix, 'ss') == 0){

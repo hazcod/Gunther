@@ -1,4 +1,4 @@
-
+<?php
 /**
  * Description of VideoStream
  *
@@ -124,3 +124,4 @@ class VideoStream
         $this->end();
     }
 }
+?>
