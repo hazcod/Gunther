@@ -27,7 +27,7 @@
     <br>
 
 	<? foreach ($this->seasons as $nr_s => $season): ?>
-	<h3 id="#s<?= ($nr_s+1); ?>"><i class="fa fa-book"></i> Season <?= ($nr_s+1); ?></h3>
+	<h3 id="s<?= ($nr_s+1); ?>"><i class="fa fa-book"></i> Season <?= ($nr_s+1); ?></h3>
 	<hr>
 	<? foreach ($season as $nr_e => $episode): ?>
 	<div class="col-sm-2" style="margin-top:10px;">
