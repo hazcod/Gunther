@@ -66,7 +66,7 @@ class Menu_m extends Core_db
         if ($admin == true){
             array_push($menuitems, array(
                                 'link' => 'admin/index',
-                                'description' => $lang['admin'],
+                                'description' => '<strong>' . $lang['admin'] . '</strong>',
                         ));
         }
         return $menuitems;
