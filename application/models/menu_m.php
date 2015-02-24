@@ -4,7 +4,7 @@ class Menu_m extends Core_db
 {
 
     public function getMenu($user, $lang){
-        if (isset($user) and $user != false and isset($user->role)){
+        if ($user and isset($user->role)){
             return $this->getUsermenu($lang, (strcmp('admin', $user->role) == 0));
         } else {
             return $this->getStartmenu($lang);
