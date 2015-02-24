@@ -58,5 +58,8 @@ function getLang(){
 
     $lang['admin']        = 'Administrator';
 
+    $lang['readmore']     = 'Read more';
+    $lang['synology-info']= '...offers proven NAS devices for home and enterprise users. An easy web interface smoothens the experience, while the community packages give you loads of functionality.';
+
     return $lang;
 }
