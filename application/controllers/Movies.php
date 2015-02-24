@@ -37,17 +37,20 @@ class Movies extends Core_controller
      public function search(){
         $formdata = $this->form->getPost();
         $this->template->searchterm = $formdata->title;
-        $existing = $this->mediamodel->getAllMovies();
-        $arr=array();
-        foreach ($this->mediamodel->getMediaInfo('movie', $formdata->title) as $result){
-            $id = $result->imdbID;
-            if ($this->isMovieInList($existing, $id) == false){
-                array_push($arr, $result);
-            } else {
-                $this->setCurrentflashmessage($this->lang['hiddenmov'], 'info');
+        $existing = $this->mediamodel->getAllMovies();        
+        $searchresults = $this->mediamodel->getMediaInfo('movie', $formdata->title);
+        if ($searchresults){
+            $arr=array();
+            foreach ($this->mediamodel->getMediaInfo('movie', $formdata->title) as $result){
+                $id = $result->imdbID;
+                if ($this->isMovieInList($existing, $id) == false){
+                    array_push($arr, $result);
+                } else {
+                    $this->setCurrentflashmessage($this->lang['hiddenmov'], 'info');
+                }
             }
+            $this->template->results = $arr;
         }
-        $this->template->results = $arr;
         $this->template->setPagetitle($this->lang['search'] . ': ' . $formdata->title . ' - Gunther');
         $this->template->render('media/movies.add');
     }
