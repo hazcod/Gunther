@@ -39,6 +39,7 @@ function getLang(){
     $lang['nojs']         = 'To view this video, enable JavaScript in your browser or upgrade to one that supports HTML5.';
 
     $lang['series']       = 'Series';
+    $lang['season']       = 'Season';
     $lang['searchshow']   = 'Search for a TV Show';
     $lang['noshows']      = 'No TV Shows found.';
     $lang['addshow']      = 'Add a new TV Show';

@@ -15,11 +15,10 @@
     <br>
 
 <? if ($this->seasons): ?>
-    <strong><?= $this->lang['seasons']; ?>:
     <ul class="list-inline">
     <? foreach ($this->seasons as $nr_s => $season): ?>
     	<li>
-    		<a href="#s<?= ($nr_s+1); ?>">  #<?= ($nr_s+1); ?></a>
+    		<a href="#s<?= ($nr_s+1); ?>">   <?= $this->lang['season'] . ' ' . ($nr_s+1); ?></a>
     	</li>
 	<? endforeach; ?>
 	</ul>
