@@ -1,11 +1,13 @@
-<div class="col-md-6 col-md-offset-3">
+<div class="col-md-8 col-md-offset-2">
 	<div class="jumbotron">
         <h1>Synology...</h1>
         <p><?= $this->lang['synology-info']; ?></p>
         <p><a class="btn btn-primary btn-lg" href="https://www.synology.com/en-global/"><?= $this->lang['readmore']; ?></a></p>
+    </div>
 
-        <br>
+    <br>
 
+    <div class="">
         <h3><?= $this->lang['synology-howto']; ?></h3>
         <ol>
 	        <li>
@@ -18,7 +20,7 @@
 	        </li>
 	        <li>
 	        	Add our webdav share as seen on the picture.
-	        	<img src="<?= URL::base_uri(); ?>/img/help/synology_webdav.png" class="scale-img" alt="Synology webdav details" />
+	        	<img src="<?= URL::base_uri(); ?>img/help/synology_webdav.png" class="scale-img" alt="Synology webdav details" />
 	        </li>
         </ol>
     </div>

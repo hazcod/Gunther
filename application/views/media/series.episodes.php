@@ -14,6 +14,7 @@
 
     <br>
 
+<? if ($this->seasons): ?>
 	<? foreach ($this->seasons as $nr_s => $season): ?>
 	<h3>Season <?= ($nr_s+1); ?></h3>
 	<hr>
@@ -32,5 +33,6 @@
 	<div style="clear:both;"></div>
 	<br>
 	<? endforeach; ?>
+<? endif; ?>
 
 </div>

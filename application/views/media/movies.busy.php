@@ -13,9 +13,11 @@
         </div>
 	</ul>
 	
+	<? if ($this->movies): ?>
 	<? foreach ($this->movies as $movie): ?>
 	<div class="col-sm-2" style="margin-top:10px;">
 		<img class="grey-inactive imgscale" alt="<?= $movie->info->original_title ?>" src="<?= $movie->info->images->poster[0]; ?>" />
 	</div>
 	<? endforeach; ?>
+	<? endif; ?>
 </div>

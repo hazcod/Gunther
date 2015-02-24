@@ -27,7 +27,7 @@
 
     <br>
 	
-	<? if (sizeof($this->movies) > 0): ?>
+	<? if ($this->movies): ?>
 	<? foreach ($this->movies as $movie): ?>
 	<div class="col-sm-2" style="margin-top:10px;">
 		<a href="/watch/index/<?= $movie->_id; ?>">

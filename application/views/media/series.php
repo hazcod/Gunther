@@ -24,7 +24,7 @@
 
     <br>
 	
-	<? if (sizeof($this->shows) > 0): ?>
+	<? if ($this->shows): ?>
 	<? foreach ($this->shows as $show): ?>
 	<div class="col-sm-2" style="margin-top:10px;">
 		<a href="/series/episodes/<?= $show->id; ?>">
