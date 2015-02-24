@@ -52,40 +52,73 @@
 		    }
 
 		    $json = json_decode(file_get_contents($url));
-
-		    $fh = fopen($cacheFile, 'w');
-		    fwrite($fh, time() . "\n");
-		    fwrite($fh, $json);
-		    fclose($fh);
-
-		    return $json;
+		    if ($json){
+			    $fh = fopen($cacheFile, 'w');
+			    fwrite($fh, time() . "\n");
+			    fwrite($fh, $json);
+			    fclose($fh);
+			    return $json;
+			} else {
+				return false;
+			}
+		    
 		}
 
 
 		##- DASHBOARD
 		public function getLastMovies($limit=10){
-        	return json_decode(file_get_contents($this->settings['CP_API'] . 'media.list?status=done&offset=' . urlencode($limit)))->movies;
+        	$json = json_decode(file_get_contents($this->settings['CP_API'] . 'media.list?status=done&offset=' . urlencode($limit)));
+        	if ($json){
+        		return $json->movies;
+        	} else {
+        		return false;
+        	}
     	}
 
     	##- MOVIES
 	 	public function getAllMovies(){
-	        return $this->getJson($this->settings['CP_API'] . 'media.list')->movies;
+	        $json = $this->getJson($this->settings['CP_API'] . 'media.list');
+	        if ($json){
+	        	return $json->movies;
+	        } else {
+	        	return false;
+	        }
 	    }
 
 	    public function getDoneMovies(){
-	        return $this->getJson($this->settings['CP_API'] . 'media.list?status=done')->movies;
+	        $json = $this->getJson($this->settings['CP_API'] . 'media.list?status=done');
+	        if ($json){
+	        	return $json->movies;
+	        } else {
+	        	return false;
+	        }
 	    }
 
 	    public function getBusyMovies(){
-	        return $this->getJson($this->settings['CP_API'] . 'media.list?status=active')->movies;
+	        $json = $this->getJson($this->settings['CP_API'] . 'media.list?status=active');
+	        if ($json){
+	        	return $json->movies;
+	        } else {
+	        	return false;
+	        }
 	    }
 
 		public function getMovie($id=false){
-		 return $this->getJson($this->settings['CP_API'] . 'media.get?id=' . $id)->media;
+			$json = $this->getJson($this->settings['CP_API'] . 'media.get?id=' . $id);
+			if ($json){
+				return $json->media;
+			} else {
+				return false;
+			}
 		}
 
 	    public function findExistingMovie($title){
-	        return $this->getJson($this->settings['CP_API'] . 'media.list?search=' . urlencode($title))->movies;
+	    	$json = $this->getJson($this->settings['CP_API'] . 'media.list?search=' . urlencode($title));
+	    	if ($json){
+	    		return $json->movies;
+	    	} else {
+	    		return false;
+	    	}
 	    }
 
 	    public function findMovies($title){
@@ -94,30 +127,44 @@
 
 	    public function getMediaInfo($type, $title){
 	        $url = "http://www.omdbapi.com/?type=" . urlencode($type) . "&s=" . urlencode($title);
-	        return $this->getJson($url)->Search;
+	        $json = $this->getJson($url);
+	        if ($json){
+	        	return $json->Search;
+	        } else {
+	        	return false;
+	        }
 	    }
 
 	    public function addMovie($id){
-	        return json_decode(file_get_contents($this->settings['CP_API'] . 'movie.add?identifier=' . urlencode($id)))->success;
+	        $json = json_decode(file_get_contents($this->settings['CP_API'] . 'movie.add?identifier=' . urlencode($id)));
+	        if ($json){
+	        	return $json->success;
+	        } else {
+	        	return false;
+	        }
 	    }
 
 
     	##- SHOWS
 	    public function getAllShows(){
 	        $result = array();
-	        $data = $this->getJson($this->settings['SB_API'] . 'shows')->data;
-	        foreach ($data as $id_=>$id) {
-	            array_push($result, $this->tvdb->getSerie($id_));
-	        }
+	        $data = $this->getJson($this->settings['SB_API'] . 'shows');
+	        if ($data){
+		        foreach ($data->data as $id_=>$id) {
+		            array_push($result, $this->tvdb->getSerie($id_));
+		        }
+		    }
 	        return $result;
 	    }
 
 	    public function getLatestEpisodes($limit=10){
 	    	$result = array();
-	    	$data = json_decode(file_get_contents($this->settings['SB_API'] . 'history&limit=' . urlencode($limit)))->data;
-	    	foreach ($data as $log){
-	    		array_push($result, $this->tvdb->getEpisode($log->tvdbid, $log->season, $log->episode));
-	    	}
+	    	$data = json_decode(file_get_contents($this->settings['SB_API'] . 'history&limit=' . urlencode($limit)));
+	    	if ($data){
+		    	foreach ($data->data as $log){
+		    		array_push($result, $this->tvdb->getEpisode($log->tvdbid, $log->season, $log->episode));
+		    	}
+		    }
 	    	return $result;
 	    }
 
@@ -143,7 +190,12 @@
 
 
 	    public function getEpisode($serie_id, $season_id, $episode_id){
-	        return $this->getJson($this->settings['SB_API'] . 'episode&tvdbid=' . urlencode($serie_id) . '&season=' . $season_id . '&episode=' . $episode_id . '&full_path=1')->data;
+	        $json = $this->getJson($this->settings['SB_API'] . 'episode&tvdbid=' . urlencode($serie_id) . '&season=' . $season_id . '&episode=' . $episode_id . '&full_path=1');
+	        if ($json){
+	        	return $json->data;
+	        } else {
+	        	return false;
+	        }
 	    }
 
 
