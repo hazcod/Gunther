@@ -15,8 +15,20 @@
     <br>
 
 <? if ($this->seasons): ?>
+    <strong><?= $this->lang['seasons']; ?>:
+    <ul class="list-inline">
+    <? foreach ($this->seasons as $nr_s => $season): ?>
+    	<li>
+    		<a href="#s<?= ($nr_s+1); ?>">  #<?= ($nr_s+1); ?></a>
+    	</li>
+	<? endforeach; ?>
+	</ul>
+
+    <br>
+
+
 	<? foreach ($this->seasons as $nr_s => $season): ?>
-	<h3>Season <?= ($nr_s+1); ?></h3>
+	<h3><a href="#s<?= ($nr_s+1); ?>"><i class="fa fa-book"></i></a> Season <?= ($nr_s+1); ?></h3>
 	<hr>
 	<? foreach ($season as $nr_e => $episode): ?>
 	<div class="col-sm-2" style="margin-top:10px;">
