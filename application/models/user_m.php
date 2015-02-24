@@ -58,7 +58,7 @@ class User_m extends Core_db
         $query = "
             INSERT INTO users (login, password, role)
             VALUES (?, ?, 2);";
-        $r = $this->db->query($query, array($user, $pass))->getResult();
+        $r = $this->db->query($query, array($user, password_hash($pass,PASSWORD_DEFAULT)))->getResult();
         if ($r){
             $result = $r;
         }
