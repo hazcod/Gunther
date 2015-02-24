@@ -60,6 +60,8 @@ function getLang(){
 
     $lang['readmore']     = 'Read more';
     $lang['synology-info']= '...offers proven NAS devices for home and enterprise users. An easy web interface smoothens the experience, while the community packages give you loads of functionality.';
+    $lang['synology-howto']= 'How to connect your Synology device to the Media collection';
+    
 
     return $lang;
 }
