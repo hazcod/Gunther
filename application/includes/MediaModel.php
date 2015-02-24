@@ -141,7 +141,7 @@
 	        if ($json){
 	        	return $json->success;
 	        } else {
-	        	error_log('could not add movie ' . $id . ', reason: ' . var_dump($json))
+	        	error_log('could not add movie ' . $id . ', reason: ' . var_dump($json));
 	        	return false;
 	        }
 	    }
