@@ -33,7 +33,7 @@ class Watch extends Core_controller
     }
 
    public function stream($id=false){
-        include __DIR__ . '/VideoStream.php';
+        include __DIR__ . '/../includes/VideoStream.php';
 
         $prefix = substr($id, 0, 2);
         if (strcmp($prefix, 'ss') == 0){
