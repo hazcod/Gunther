@@ -24,9 +24,11 @@ class Movies extends Core_controller
 
     private function isMovieInList($list, $id){
         $result = false;
-        foreach ($list as $movie){
-            if (strcmp($movie->info->imdb,$id) == 0){
-                $result = true;
+        if ($list){
+            foreach ($list as $movie){
+                if (strcmp($movie->info->imdb,$id) == 0){
+                    $result = true;
+                }
             }
         }
         return $result;
