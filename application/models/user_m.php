@@ -16,7 +16,10 @@ class User_m extends Core_db
 		    WHERE login = ?;
         ";
         $hash = $this->db->query($query, $login)->getRow();
-        if ($hash != false && password_verify($password, $hash->password) == true) {
+	//var_dump(password_hash($password, PASSWORD_DEFAULT));        
+	//var_dump($hash->password);	
+	//var_dump(password_verify($password, $hash->password));
+	if ($hash && password_verify($password, $hash->password) == true) {
             $result = true;
         }
         return $result;
@@ -30,7 +33,11 @@ class User_m extends Core_db
             FROM users u, roles r
             WHERE (u.role = r.id) AND (login = ?);
         ";
-        $hash = $this->db->query($query, $login)->getRow();
-        return $result;
+        $user = $this->db->query($query, $login)->getResult();
+        if ($user){
+		$result = $user[0];
+	}
+	//var_dump($user);
+	return $result;
     }
 }

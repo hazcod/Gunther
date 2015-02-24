@@ -34,7 +34,7 @@ CREATE TABLE roles (
 ALTER TABLE users ADD CONSTRAINT users_fk1 FOREIGN KEY (role) REFERENCES roles(id);
 
 INSERT INTO roles (name) VALUES ('admin');
-INSERT INTO users (login, password, role) VALUES ('admin', '52f504477e36154a49464ed65a50dd3b97c99327', 1);
+INSERT INTO users (login, password, role) VALUES ('admin', '$2y$10$yG.0inUhckrKM1kGXcjUEe4U60iEcdpfn3bVyW.1EPEd2DaLKGauq', 1);
 INSERT INTO langs (name, flag) VALUES ('English', 'en');
 
 CREATE USER gunther WITH PASSWORD '<PASSWORD>';
@@ -78,7 +78,7 @@ CREATE TABLE roles (
 ALTER TABLE users ADD CONSTRAINT users_fk1 FOREIGN KEY (role) REFERENCES roles(id);
 
 INSERT INTO roles (name) VALUES ('admin');
-INSERT INTO users (login, password, role) VALUES ('admin', '52f504477e36154a49464ed65a50dd3b97c99327', 1);
+INSERT INTO users (login, password, role) VALUES ('admin', '$2y$10$yG.0inUhckrKM1kGXcjUEe4U60iEcdpfn3bVyW.1EPEd2DaLKGauq', 1);
 INSERT INTO langs (name, flag) VALUES ('English', 'en');
 
 CREATE USER gunther WITH PASSWORD '<PASSWORD>';

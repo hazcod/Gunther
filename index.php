@@ -14,8 +14,8 @@ require_once(FRAMEWORK_PATH . 'Template.php');
 require_once(FRAMEWORK_PATH . 'Form.php');
 
 // abstract classes
-require_once(FRAMEWORK_PATH . 'Core_controller.php');
 require_once(FRAMEWORK_PATH . 'Core_db.php');
+require_once(FRAMEWORK_PATH . 'Core_controller.php');
 
 // application config and abstract classes
 require_once(APPLICATION_PATH . 'config.php');
