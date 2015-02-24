@@ -33,5 +33,19 @@
 				<? endforeach; ?>
 			</ul>
 		</div>
+
+		<div class="col-sm-4">
+			<h3>CouchPotato (<?= $this->lang['movies']; ?>)</h3>
+			<hr>
+			<a class="btn btn-primary" href="/admin/scanmovies"><i class="fa fa-refresh"></i> <?= $this->lang['refreshlib']; ?></a>
+			<a class="btn btn-danger" href="/admin/restartcp"><i class="fa fa-power-off"></i> <?= $this->lang['restart']; ?></a>
+		</div>
+
+		<div class="col-sm-4">
+			<h3>Sick{Beard|Rage} (<?= $this->lang['series']; ?>)</h3>
+			<hr>
+			<a class="btn btn-primary" href="/admin/scanshows"><i class="fa fa-refresh"></i> <?= $this->lang['refreshlib']; ?></a>
+			<a class="btn btn-danger" href="/admin/restartsick"><i class="fa fa-power-off"></i> <?= $this->lang['restart']; ?></a>
+		</div>
 	</div>
 </div>

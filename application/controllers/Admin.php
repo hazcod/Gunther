@@ -40,6 +40,50 @@ class Admin extends Core_controller
         return $result;
     }*/
 
+    public function scanmovies(){
+        if ($this->checkAdminAccess()){
+            $this->mediamodel->scanmovies();
+            $this->setFlashmessage($this->lang['scanstarted']);
+            $this->redirect('admin/index');
+        } else {
+            $this->setFlashmessage($this->lang['accessdenied'], 'danger');
+            $this->redirect('admin/index');
+        }
+    }
+
+    public function scanshows(){
+        if ($this->checkAdminAccess()){
+            $this->mediamodel->scanshows();
+            $this->setFlashmessage($this->lang['scanstarted']);
+            $this->redirect('admin/index');
+        } else {
+            $this->setFlashmessage($this->lang['accessdenied'], 'danger');
+            $this->redirect('admin/index');
+        }
+    }
+
+    public function restartcp(){
+        if ($this->checkAdminAccess()){
+            $this->mediamodel->restartCouch();
+            $this->setFlashmessage($this->lang['restarted']);
+            $this->redirect('admin/index');
+        } else {
+            $this->setFlashmessage($this->lang['accessdenied'], 'danger');
+            $this->redirect('admin/index');
+        }
+    }
+
+    public function restartsick(){
+        if ($this->checkAdminAccess()){
+            $this->mediamodel->restartSick();
+            $this->setFlashmessage($this->lang['restarted']);
+            $this->redirect('admin/index');
+        } else {
+            $this->setFlashmessage($this->lang['accessdenied'], 'danger');
+            $this->redirect('admin/index');
+        }
+    }
+
     public function removeuser($user=false){
         if ($this->checkAdminAccess()){
             $userFull = $this->user_m->getUserById($user);
