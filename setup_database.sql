@@ -1,5 +1,8 @@
 #MySQL
-CREATE SCHEMA gunther;
+
+set search_path to public;
+
+CREATE DATABASE gunther;
 
 USE gunther;
 
@@ -34,9 +37,18 @@ INSERT INTO roles (name) VALUES ('admin');
 INSERT INTO users (login, password, role) VALUES ('admin', '52f504477e36154a49464ed65a50dd3b97c99327', 1);
 INSERT INTO langs (name, flag) VALUES ('English', 'en');
 
+CREATE USER gunther WITH PASSWORD '<PASSWORD>';
+GRANT ALL PRIVILEGES ON DATABASE gunther to gunther;
 
-#PosgreSQL
-CREATE SCHEMA gunther;
+
+#===== PosgreSQL
+
+SET search_path to public;
+
+CREATE DATABASE gunther;
+
+
+# NOW CONNECT TO THE DATABASE
 
 CREATE TABLE users (
   id SERIAL NOT NULL,
@@ -68,3 +80,6 @@ ALTER TABLE users ADD CONSTRAINT users_fk1 FOREIGN KEY (role) REFERENCES roles(i
 INSERT INTO roles (name) VALUES ('admin');
 INSERT INTO users (login, password, role) VALUES ('admin', '52f504477e36154a49464ed65a50dd3b97c99327', 1);
 INSERT INTO langs (name, flag) VALUES ('English', 'en');
+
+CREATE USER gunther WITH PASSWORD '<PASSWORD>';
+grant all privileges on all tables in schema public to gunther;

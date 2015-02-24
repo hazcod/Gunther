@@ -3,9 +3,9 @@
 date_default_timezone_set('Europe/Brussels');
 
 $db_config = array(
-    'driver' => 'mysql',
-    'username' => '<USER>',
-    'password' => '<PASS>',
+    'driver' => 'mysql',    #or pgsql
+    'username' => 'gunther',
+    'password' => '<PASS>', #The value you modified in the SQL script
     'schema' => 'gunther',
     'dsn' => array(
         'host' => 'localhost',

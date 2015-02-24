@@ -9,8 +9,8 @@ If you want to contribute, application/ is the folder you need.
 
 # Installation
 1. Setup a database and web server. I supplied a sample apache2 site config in [apache2-site](/apache2-site-example)
-2. Import the [database setup file](/setup_database.sql).
-4. Change your API key in [config.php](/application/config.php).
+2. Change `<password>` and import the [database setup file](/setup_database.sql) in your database.
+4. Change your database settings and API keys in [config.php](/application/config.php).
 5. Setup a daily cron job to keep the site snappy. (not mandatory)
    `01 0 * * * www-data wget --no-check-certificate -q http://localhost/cache &>/dev/null`
 6. Login with admin - admin
