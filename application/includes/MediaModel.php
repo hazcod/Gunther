@@ -44,18 +44,19 @@
 		        $cacheTime = trim(fgets($fh));
 
 		        if ($cacheTime > strtotime('-60 minutes')) {
-		            return fread($fh, filesize($cacheFile));
+		            return json_decode(fread($fh, filesize($cacheFile)));
 		        } else {
 			        fclose($fh);
 			        unlink($cacheFile);
 			    }
 		    }
 
-		    $json = json_decode(file_get_contents($url));
-		    if ($json){
+		    $data = file_get_contents($url);
+		    if ($data){
+		    	$json = json_decode($data);
 			    $fh = fopen($cacheFile, 'w');
 			    fwrite($fh, time() . "\n");
-			    fwrite($fh, $json);
+			    fwrite($fh, $data);
 			    fclose($fh);
 			    return $json;
 			} else {
