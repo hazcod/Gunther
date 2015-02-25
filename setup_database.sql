@@ -5,7 +5,7 @@ CREATE DATABASE gunther;
 USE gunther;
 
 CREATE TABLE users (
-  id SERIAL NOT NULL,
+  id int unsigned auto_increment NOT NULL,
   login VARCHAR(10) NOT NULL,
   password VARCHAR(255) NOT NULL,
   created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
