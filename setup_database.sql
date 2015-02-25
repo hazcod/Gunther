@@ -1,7 +1,5 @@
 #MySQL
 
-set search_path to public;
-
 CREATE DATABASE gunther;
 
 USE gunther;
