@@ -1,4 +1,6 @@
-#MySQL
+#===== MySQL
+
+SET AUTOCOMMIT=0; SET FOREIGN_KEY_CHECKS=0;
 
 CREATE DATABASE gunther;
 
@@ -11,8 +13,10 @@ CREATE TABLE users (
   created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   email TEXT,
   lastseen TIMESTAMP,
-  role INT NOT NULL,
-  PRIMARY KEY  (id)
+  role int unsigned NOT NULL,
+  PRIMARY KEY  (id),
+  INDEX (role),
+  FOREIGN KEY (role) REFERENCES roles(id)
 );
 
 CREATE TABLE langs (
@@ -28,16 +32,18 @@ CREATE TABLE roles (
   PRIMARY KEY  (id)
 );
 
-
-ALTER TABLE users ADD CONSTRAINT users_fk1 FOREIGN KEY (role) REFERENCES roles(id);
-
 INSERT INTO roles (name) VALUES ('admin');
 INSERT INTO roles (name) VALUES ('regular');
 INSERT INTO users (login, password, role) VALUES ('admin', '$2y$10$yG.0inUhckrKM1kGXcjUEe4U60iEcdpfn3bVyW.1EPEd2DaLKGauq', 1);
 INSERT INTO langs (name, flag) VALUES ('English', 'en');
 
-CREATE USER gunther WITH PASSWORD '<PASSWORD>';
-GRANT ALL PRIVILEGES ON DATABASE gunther to gunther;
+CREATE USER gunther IDENTIFIED BY '<PASSWORD>';
+GRANT ALL PRIVILEGES ON gunther to gunther;
+SET FOREIGN_KEY_CHECKS=1; COMMIT; SET AUTOCOMMIT=1;
+FLUSH PRIVILEGES;
+
+
+
 
 
 #===== PosgreSQL
