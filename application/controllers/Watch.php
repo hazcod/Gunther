@@ -34,6 +34,10 @@ class Watch extends Core_controller
         return $stream->start();
     }
 
+    public function getmovie($id){
+        return $this->offerFile($this->mediamodel->getMovie($id)->releases[0]->files->movie[0]);
+    }
+
    public function stream($id=false){
 
         $prefix = substr($id, 0, 2);
