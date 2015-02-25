@@ -42,7 +42,7 @@ class Movies extends Core_controller
             $searchresults = $this->mediamodel->getMediaInfo('movie', $formdata->title);
             if ($searchresults){
                 $arr=array();
-                foreach ($this->mediamodel->getMediaInfo('movie', $formdata->title) as $result){
+                foreach ($searchresults as $result){
                     $id = $result->imdbID;
                     if ($this->isMovieInList($existing, $id) == false){
                         array_push($arr, $result);
