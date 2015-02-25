@@ -18,13 +18,14 @@
 	# where the website is located
 	DocumentRoot /var/www/
 	
-	# OPTIONAL: offer a webdav over HTTPS share with this;
+	# OPTIONAL: offer a webdav over HTTPS share with this; (reires: a2enmod auth_digest)
 	#Alias /webdav /media/storage
 	#<Location /webdav>
 	#	Options Indexes
 	#	DAV On
-	#	AuthType Basic
-	#	AuthName "Gunther webdav"
+	#	AuthType Digest
+	#	AuthName "Media"
+	#	AuthDigestProvider file
 	#	AuthUserFile /home/www-data/passwd.dav
 	#	Require valid-user
 	#</Location>
