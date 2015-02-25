@@ -16,14 +16,14 @@ CREATE TABLE users (
 );
 
 CREATE TABLE langs (
-  id SERIAL NOT NULL,
+  id int unsigned auto_increment NOT NULL,
   name VARCHAR(15) NOT NULL,
   flag VARCHAR(2) NOT NULL,
   PRIMARY KEY  (id)
 );
 
 CREATE TABLE roles (
-  id SERIAL NOT NULL,
+  id int unsigned auto_increment NOT NULL,
   name VARCHAR(20) NOT NULL,
   PRIMARY KEY  (id)
 );
