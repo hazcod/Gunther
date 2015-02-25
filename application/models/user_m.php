@@ -16,28 +16,71 @@ class User_m extends Core_db
 		    WHERE login = ?;
         ";
         $hash = $this->db->query($query, $login)->getRow();
-	//var_dump(password_hash($password, PASSWORD_DEFAULT));        
-	//var_dump($hash->password);	
-	//var_dump(password_verify($password, $hash->password));
-	if ($hash && password_verify($password, $hash->password) == true) {
+	    if ($hash && password_verify($password, $hash->password) == true) {
             $result = true;
         }
         return $result;
     }
-    	
-       public function getUserByLogin($login)
+
+    public function getUserById($id)
     {
         $result = false;
         $query = "
-            SELECT *
+            SELECT login, password, u.id, r.name as role, email, created, lastseen
+            FROM users u, roles r
+            WHERE (u.role = r.id) AND (u.id = ?);
+        ";
+        $user = $this->db->query($query, $id)->getRow();
+        if ($user){
+          $result = $user;
+        }
+        return $result;
+    }
+    	
+    public function getUserByLogin($login)
+    {
+        $result = false;
+        $query = "
+            SELECT login, password, u.id, r.name as role, email, created, lastseen
             FROM users u, roles r
             WHERE (u.role = r.id) AND (login = ?);
         ";
-        $user = $this->db->query($query, $login)->getResult();
+        $user = $this->db->query($query, $login)->getRow();
         if ($user){
-		$result = $user[0];
-	}
-	//var_dump($user);
-	return $result;
+		  $result = $user;
+	    }
+	    return $result;
+    }
+
+    public function addUser($user, $pass)
+    {
+        $result = false;
+        $query = "
+            INSERT INTO users (login, password, role)
+            VALUES (?, ?, 2);";
+        $r = $this->db->query($query, array($user, password_hash($pass,PASSWORD_DEFAULT)))->getResult();
+        if ($r){
+            $result = $r;
+        }
+        return $result;
+    }
+
+    public function delUser($id)
+    {
+        $query = "DELETE FROM users WHERE (id = ?);";
+        $this->db->query($query, $id);
+        return true;
+    }
+
+    public function getUsers(){
+        $result = false;
+        $query = "SELECT login, password, u.id, r.name as role, email, created, lastseen
+                  FROM users u, roles r
+                  WHERE (u.role = r.id)";
+        $users = $this->db->query($query)->getResult();
+        if ($users){
+            $result = $users;
+        }
+        return $result;
     }
 }

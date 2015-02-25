@@ -76,6 +76,34 @@
         	}
     	}
 
+    	public function scanmovies(){
+    		$r = json_decode(file_get_contents($this->settings['CP_API'] . 'manage.update?full=true'));
+    		return true;
+    	}
+
+    	public function scanshows(){
+    		$shows = $this->getAllShows();
+    		foreach ($shows as $show){
+    			var_dump($show);
+    			$r = json_decode(file_get_contents($this->settings['SB_API'] . 'show.refresh&tvdbid=' . $show->id));
+    		}
+    		return true;
+    	}
+
+    	public function restartCouch(){
+    		$r = json_decode(file_get_contents($this->settings['CP_API'] . 'app.restart'));
+    		return true;
+    	}
+
+    	public function restartSick(){
+    		$result = false;
+    		$r = json_decode(file_get_contents($this->settings['SB_API'] .'sb.restart'));
+    		if ($r){
+    			$result = (strcmp($r->result, 'success') == 0);
+    		}
+    		return $result;
+    	}
+
     	##- MOVIES
 	 	public function getAllMovies(){
 	        $json = $this->getJson($this->settings['CP_API'] . 'media.list');

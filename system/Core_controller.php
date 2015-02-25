@@ -56,7 +56,7 @@ abstract class Core_controller
     }
 
     public function isAdminUser(){
-        if (strcmp($this->user->role, '1') == 0){
+        if (strcmp($this->user->role, 'admin') == 0){
             return true;
         } else {
             return false;

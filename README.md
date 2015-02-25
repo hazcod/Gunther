@@ -16,8 +16,9 @@ If you want to contribute, application/ is the folder you need.
 6. Login with admin - admin
 
 # TODO
-- Fix subtitles for TV Shows in Watch.php
-- Add administrator panel (user management, statistics, ...)
+- Fix Watch.php (or not)
+- Add detailed media information page
+- Expand administrator interface
 
 # Screenshots
 ![Gunther login screenshot](https://i.imgur.com/RWgQcBR.png "Login screen")
@@ -26,6 +27,7 @@ If you want to contribute, application/ is the folder you need.
 
 ![Gunther stream screenshot](https://i.imgur.com/ddidCuk.jpg "Streaming screen")
 
+![Gunther admin screenshot](https://i.imgur.com/87bhWjv.jpg "Admin interface")
 
 
 # Project dependencies
