@@ -13,7 +13,7 @@ class Info extends Core_controller
             ->setPartial('flashmessage');
             
         //set page title
-        $this->template->setPagetitle($this->lang['series'] . ' - ' . $this->lang['title']);  
+        
     }
 
 
@@ -21,6 +21,7 @@ class Info extends Core_controller
         $this->template->info = $this->mediamodel->getMovie($id);
         if ($this->template->info){
             $this->template->id = $id;
+            $this->template->setPagetitle($this->template->info->info->original_title . ' - ' . $this->lang['title']);  
             $this->template->render('info/movie');
         } else {
             $this->setFlashmessage($this->lang['movienotfound'], 'danger');

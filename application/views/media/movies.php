@@ -30,7 +30,7 @@
 	<? if ($this->movies): ?>
 	<? foreach ($this->movies as $movie): ?>
 	<div class="col-sm-2" style="margin-top:10px;">
-		<a href="/watch/index/<?= $movie->_id; ?>">
+		<a href="/info/movie/<?= $movie->info->imdb; ?>">
 		<? if ($movie->status == 'done'): ?>
 		<img class="imgscale" alt="<?= $movie->info->original_title ?>" src="<?= $movie->info->images->poster[0]; ?>" />
 		<? else: ?>
