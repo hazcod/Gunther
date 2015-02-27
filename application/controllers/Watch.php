@@ -98,7 +98,7 @@ class Watch extends Core_controller
             return file_get_contents($file);
         } else {
             header("HTTP/1.0 404 Not Found");
-            return;
+            return '404 - File Not Found';
         }
    }
 
