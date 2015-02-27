@@ -25,6 +25,8 @@ If you want to contribute, application/ is the folder you need.
 
 ![Gunther dashboard](https://i.imgur.com/UcSAg08.png "Dashboard")
 
+![Movie info](https://i.imgur.com/0QovMZD.png "Movie info page")
+
 ![Gunther stream screenshot](https://i.imgur.com/ddidCuk.jpg "Streaming screen")
 
 ![Gunther admin screenshot](https://i.imgur.com/87bhWjv.jpg "Admin interface")
