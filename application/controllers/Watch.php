@@ -90,11 +90,16 @@ class Watch extends Core_controller
    }
 
    private function offerFile($file){
-        header('Content-Disposition: attachment; filename="' . basename($file) . '"');
-        header('Content-Type: text/plain'); # Don't use application/force-download - it's not a real MIME type, and the Content-Disposition header is sufficient
-        header('Content-Length: ' . strlen($file));
-        header('Connection: close');
-        return file_get_contents($file);
+        if (file_exists($file)){
+            header('Content-Disposition: attachment; filename="' . basename($file) . '"');
+            header('Content-Type: text/plain'); # Don't use application/force-download - it's not a real MIME type, and the Content-Disposition header is sufficient
+            header('Content-Length: ' . strlen($file));
+            header('Connection: close');
+            return file_get_contents($file);
+        } else {
+            header("HTTP/1.0 404 Not Found");
+            return;
+        }
    }
 
 
