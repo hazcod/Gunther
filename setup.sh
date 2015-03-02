@@ -105,6 +105,8 @@ http {
 
         ssl_certificate /etc/nginx/ssl-certs/gunther.crt;
         ssl_certificate_key /etc/nginx/ssl-certs/gunther.key;
+
+	include /etc/nginx/conf/mime.types;
         
         server {
                 # REDIRECT HTTP TO HTTPS
