@@ -1,5 +1,5 @@
 # Gunther
-~ Easy responsive web frontend for Couch, Sick & media streaming.
+~ Easy web frontend for your media on a debian VPS.
 
 Gunther can be used as a web frontend for your personal media. You can stream your media, aswell as automatically send new movies to program controlled by API. (think CouchPotato, Sickbeard, ...)
 
@@ -8,14 +8,13 @@ If you want to contribute, application/ is the folder you need.
 
 
 # Installation
-1. Replace `<YOURPASS>` with your admin password and run the [setup script](setup.sh) to setup everything.
+1. Replace `<YOURPASS>` with your admin password and run the [setup script](setup.sh) to setup everything on your Debian host.
 4. Change your API keys in [config.php](/application/config.php).
 5. Setup a daily cron job to keep the site snappy. (not mandatory)
    `01 0 * * * www-data wget --no-check-certificate -q http://localhost/cache &>/dev/null`
 6. Login with admin and `<YOURPASS>`
 
 # TODO
-- Write setup script
 - Broaden Series information page
 - Fix Watch.php (or not)
 - Expand administrator interface
@@ -33,4 +32,4 @@ If you want to contribute, application/ is the folder you need.
 
 
 # Project dependencies
-(HTML/PHP/CSS/SQL), VideoJS, Bootswatch Flatly
+(HTML/PHP/CSS/SHELL), VideoJS, Bootswatch Flatly, Bootstrap, IMDB, TheTVDB
