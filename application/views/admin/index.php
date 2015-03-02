@@ -24,7 +24,7 @@
 				<? foreach ($this->users as $user): ?>
 				<li class="list-group-item">
 					<?= $user->login; ?>
-					<? if (strcmp('admin', $user->role) != 0): ?>
+					<? if (strcmp('admin', $user->login) != 0): ?>
 					<div class="pull-right">
 						<a href="/admin/removeuser/<?= $user->id; ?>" onclick="return confirm('<?= $this->lang['deluserc']; ?>');"><i class="fa fa-times"></i></a>
 					</div>

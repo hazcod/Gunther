@@ -72,7 +72,7 @@ class Admin extends Core_controller
     public function removeuser($user=false){
         if ($this->checkAdminAccess()){
             $userFull = $this->user_m->getUserById($user);
-            if ($userFull and strcmp($userFull->role, 'admin') != 0){
+            if ($userFull and strcmp($userFull->login, 'admin') != 0){
                 $this->user_m->delUser($user);
                 $this->setFlashmessage($this->lang['removeduser']);
                 $this->redirect('admin/index');
