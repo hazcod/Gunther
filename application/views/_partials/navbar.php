@@ -1,9 +1,10 @@
 <?php
     function getLangName($arr, $code){
         $result = '';
-        for ($i=0; $i < $arr and $result == ''; $i++){
+        for ($i=0; $arr != false and $result == '' and $i < sizeof($arr); $i++){
             if ($arr[$i]->flag == $code){
                 $result = $arr[$i]->name;
+		break;
             }
         }
         return $result;
