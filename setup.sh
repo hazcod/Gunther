@@ -182,37 +182,37 @@ fi
  
 set -e
  
-case "$1" in
+case '$1' in
   start)
-        echo -n "Starting $DESC: "
+        echo -n 'Starting $DESC: '
         start-stop-daemon --start --quiet --pidfile /var/run/nginx.pid \
                 --exec $DAEMON -- $DAEMON_OPTS
-        echo "$NAME."
+        echo '$NAME.'
         ;;
   stop)
-        echo -n "Stopping $DESC: "
+        echo -n 'Stopping $DESC: '
         start-stop-daemon --stop --quiet --pidfile /var/run/nginx.pid \
                 --exec $DAEMON
-        echo "$NAME."
+        echo '$NAME.'
         ;;
   restart|force-reload)
-        echo -n "Restarting $DESC: "
+        echo -n 'Restarting $DESC: '
         start-stop-daemon --stop --quiet --pidfile \
                 /var/run/nginx.pid --exec $DAEMON
         sleep 1
         start-stop-daemon --start --quiet --pidfile \
                 /var/run/nginx.pid --exec $DAEMON -- $DAEMON_OPTS
-        echo "$NAME."
+        echo '$NAME.'
         ;;
   reload)
-      echo -n "Reloading $DESC configuration: "
+      echo -n 'Reloading $DESC configuration: '
       start-stop-daemon --stop --signal HUP --quiet --pidfile /var/run/nginx.pid \
           --exec $DAEMON
-      echo "$NAME."
+      echo '$NAME.'
       ;;
   *)
         N=/etc/init.d/$NAME
-        echo "Usage: $N {start|stop|restart|force-reload}" >&2
+        echo 'Usage: $N {start|stop|restart|force-reload}' >&2
         exit 1
         ;;
 esac
