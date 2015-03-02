@@ -28,7 +28,7 @@
 	<? foreach ($this->shows as $show): ?>
 	<div class="col-sm-2" style="margin-top:10px;">
 		<a href="/series/episodes/<?= $show->id; ?>">
-			<img class="imgscale" alt="<?= $show->name; ?>" src="http://thetvdb.com/banners/<?= $show->poster; ?>" />
+			<img class="imgscale" alt="<?= $show->name; ?>" data-src="http://thetvdb.com/banners/<?= $show->poster; ?>" />
 		</a>
 	</div>
 	<? endforeach; ?>

@@ -52,6 +52,12 @@
         <script type="text/javascript">
 		_V_.options.flash.swf = "<?= URL::base_uri(); ?>js/video-js.swf";
         </script>
+        <script type="text/javascript" src="<?= URL::base_uri(); ?>js/unveil.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+              $("img").unveil(150);
+            });
+        </script>
     </body>
 </html>
 

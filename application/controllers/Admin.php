@@ -25,21 +25,6 @@ class Admin extends Core_controller
         }
     }
 
-/*    private function getUsers(){
-        $result = array();
-
-        $handle = fopen($this->settings['AUTH_DIGEST_FILE'], "r");
-        if ($handle) {
-            while (($line = fgets($handle)) !== false) {
-                $result[] = explode(':', $line)[0];                
-            }
-            fclose($handle);
-        } else {
-            error_log('Could not open digest file at ' . $this->settings['AUTH_DIGEST_FILE']);
-        }
-        return $result;
-    }*/
-
     public function scanmovies(){
         if ($this->checkAdminAccess()){
             $this->mediamodel->scanmovies();
@@ -89,7 +74,6 @@ class Admin extends Core_controller
             $userFull = $this->user_m->getUserById($user);
             if ($userFull and strcmp($userFull->role, 'admin') != 0){
                 $this->user_m->delUser($user);
-                shell_exec('scripts/delUser.sh ' . $this->settings['AUTH_DIGEST_FILE'] . ' ' . $userFull->login);
                 $this->setFlashmessage($this->lang['removeduser']);
                 $this->redirect('admin/index');
             } else {
@@ -107,9 +91,7 @@ class Admin extends Core_controller
             $formdata = $this->form->getPost();
             if ($formdata and $formdata->username){
                 $user = $formdata->username;
-                $output = shell_exec('scripts/addUser.sh ' . $this->settings['AUTH_DIGEST_FILE'] . ' ' . $user);
-                $output = str_replace("\n", "", $output);
-                $this->user_m->addUser($user, $output);
+                $output = $this->user_m->addUser($user);
                 $this->setFlashmessage($user . ' ' . $this->lang['addeduser'] .' <strong>' . $output .'</strong>');
                 $this->redirect('admin/index');
             } else {

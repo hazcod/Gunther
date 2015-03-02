@@ -31,11 +31,7 @@
 	<? foreach ($this->movies as $movie): ?>
 	<div class="col-sm-2" style="margin-top:10px;">
 		<a href="/info/movie/<?= $movie->info->imdb; ?>">
-		<? if ($movie->status == 'done'): ?>
-		<img class="imgscale" alt="<?= $movie->info->original_title ?>" src="<?= $movie->info->images->poster[0]; ?>" />
-		<? else: ?>
-		<img class="imgscale grey-inactive" alt="<?= $movie->info->original_title ?>" src="<?= $movie->info->images->poster[0]; ?>" />
-		<? endif; ?>
+			<img class="imgscale<?php if ($movie->status == 'done'){ echo ' grey-inactive';} ?>" alt="<?= $movie->info->original_title ?>" data-src="<?= $movie->info->images->poster[0]; ?>" />
 		</a>
 	</div>
 	<? endforeach; ?>

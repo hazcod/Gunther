@@ -1,0 +1,3 @@
+#!/bin/sh
+
+pass=(echo -n "user:realm:" && echo -n "user:realm:testing" | md5) > outfile

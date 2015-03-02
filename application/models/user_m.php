@@ -1,22 +1,11 @@
 <?php
-class User_m extends Core_db
+class User_m
 {
-    public function __construct()
-    {
-        parent::__construct();
-        $this->table = 'users';
-    }
-    
     public function isValid($login, $password)
     {
         $result = false;
-        $query = "
-            SELECT password
-            FROM users
-		    WHERE login = ?;
-        ";
-        $hash = $this->db->query($query, $login)->getRow();
-	    if ($hash && password_verify($password, $hash->password) == true) {
+        $user = $this->getUserByLogin($login);
+	    if ($user && password_verify($password, $user->password) == true) {
             $result = true;
         }
         return $result;
@@ -25,61 +14,64 @@ class User_m extends Core_db
     public function getUserById($id)
     {
         $result = false;
-        $query = "
-            SELECT login, password, u.id, r.name as role, email, created, lastseen
-            FROM users u, roles r
-            WHERE (u.role = r.id) AND (u.id = ?);
-        ";
-        $user = $this->db->query($query, $id)->getRow();
-        if ($user){
-          $result = $user;
+        $users = $this->getUsers();
+
+        foreach ($users as $user){
+            if (strcmp($user->id, $id) == 0){
+                $result = $user;
+                break;
+            }
         }
+
         return $result;
     }
     	
     public function getUserByLogin($login)
     {
         $result = false;
-        $query = "
-            SELECT login, password, u.id, r.name as role, email, created, lastseen
-            FROM users u, roles r
-            WHERE (u.role = r.id) AND (login = ?);
-        ";
-        $user = $this->db->query($query, $login)->getRow();
-        if ($user){
-		  $result = $user;
-	    }
+        $users = $this->getUsers();
+
+        foreach ($users as $user){
+            if (strcmp($user->login, $login) == 0){
+                $result = $user;
+                break;
+            }
+        }
+
 	    return $result;
     }
 
     public function addUser($user, $pass)
     {
-        $result = false;
-        $query = "
-            INSERT INTO users (login, password, role)
-            VALUES (?, ?, 2);";
-        $r = $this->db->query($query, array($user, password_hash($pass,PASSWORD_DEFAULT)))->getResult();
-        if ($r){
-            $result = $r;
-        }
-        return $result;
+        $output = shell_exec('scripts/addUser.sh ' . $this->settings['AUTH_DIGEST_FILE'] . ' ' . $user);
+        $output = str_replace("\n", "", $output);
+        return $output;
     }
 
     public function delUser($id)
     {
-        $query = "DELETE FROM users WHERE (id = ?);";
-        $this->db->query($query, $id);
+        shell_exec('scripts/delUser.sh ' . $this->settings['AUTH_DIGEST_FILE'] . ' ' . $id);
         return true;
     }
 
-    public function getUsers(){
-        $result = false;
-        $query = "SELECT login, password, u.id, r.name as role, email, created, lastseen
-                  FROM users u, roles r
-                  WHERE (u.role = r.id)";
-        $users = $this->db->query($query)->getResult();
-        if ($users){
-            $result = $users;
+    private function getUsers(){
+        $result = array();
+
+        $handle = fopen($this->settings['AUTH_DIGEST_FILE'], "r");
+        if ($handle) {
+            $i=0;
+            while (($line = fgets($handle)) !== false) {
+                $parts = explode(':', $line)[0];
+                $result[] = array(
+                    'login' => $parts[0],
+                    'password' => $parts[2],
+                    'id' => $i,
+                );  
+                $i++;            
+            }
+            fclose($handle);
+        } else {
+            error_log('Could not open digest file at ' . $this->settings['AUTH_DIGEST_FILE']);
         }
         return $result;
     }

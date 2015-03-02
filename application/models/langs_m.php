@@ -1,31 +1,35 @@
 <?php
-class Langs_m extends Core_db
+class Langs_m
 {
-    public function __construct()
-    {
-        parent::__construct();
-        $this->table = 'langs';
+    var LANG_PATH = APPLICATION_PATH . 'languages/';
+
+    private function getLanguageName( $code ){
+        $result = 'English (?)';
+
+        switch ($code){
+            case 'nl':
+                $result = 'Nederlands';
+                break;
+
+            default:
+                $result = 'English';
+        }
+
+        return htmlentities($result);
     }
-    
-    public function addLang($name, $flag) {
-        $query = "INSERT INTO langs (id, name, flag) VALUES ('', ?, ?);";  
-        $this->db->query($query, array($name, $flag));
-    }
-    
-    public function deleteLang($id) {
-        $query = "DELETE FROM langs WHERE (id = ?);";
-        $this->db->query($query, $id);
-    } 
     
     public function getLangs()
     {
-        $result = false;
-        $query =   "SELECT * FROM langs";  
-        
-        $langs = $this->db->query($query)->getResult();
+        $result = array();
 
-        if ($langs){
-            $result = $langs;
+        $all = glob("*.[a-z][a-z].php");
+        foreach ($all as $i => $langf){
+            $parts = explode('.', $langf, 2);
+            $result[] = array(
+                'id'   => $i,
+                'name' => $this->getLanguageName($parts[1]),
+                'flag' => $parts[1],
+            );
         }
 
         return $result;

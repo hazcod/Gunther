@@ -33,8 +33,6 @@ abstract class Core_controller
         }
 
         $this->user_m = Load::model('user_m');
-        $this->user_m->settings = $this->settings;
-        
         if (isset($_SESSION['user'])){
         	$this->user = $this->user_m->getUserByLogin($_SESSION['user']);      
         }
@@ -58,7 +56,7 @@ abstract class Core_controller
     }
 
     public function isAdminUser(){
-        if (strcmp($this->user->name, 'admin') == 0){
+        if (strcmp($this->user->role, 'admin') == 0){
             return true;
         } else {
             return false;
