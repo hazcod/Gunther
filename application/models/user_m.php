@@ -5,10 +5,12 @@ class User_m
     {
         $result = false;
         $user = $this->getUserByLogin($login);
-	    if ($user && password_verify($password, $user->password) == true) {
+	$password = hash('md5', $login . ':Media:' . $password);
+
+	if ($user && strcmp($password, $user->password) == 0) {
             $result = true;
         }
-        return $result;
+	return $result;
     }
 
     public function getUserById($id)
@@ -64,7 +66,7 @@ class User_m
                 $parts = explode(':', $line);
                 $result[] = (object) array(
                     'login' => $parts[0],
-                    'password' => $parts[2],
+                    'password' => str_replace(array("\r", "\n"), '', $parts[2]),
                     'id' => $i,
                 );  
                 $i++;            
