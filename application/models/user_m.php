@@ -56,7 +56,7 @@ class User_m
         return true;
     }
 
-    private function getUsers(){
+    public function getUsers(){
         $result = array();
 
         $handle = fopen($this->settings['AUTH_DIGEST_FILE'], "r");
