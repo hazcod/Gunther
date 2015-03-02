@@ -61,7 +61,7 @@ class User_m
         if ($handle) {
             $i=0;
             while (($line = fgets($handle)) !== false) {
-                $parts = explode(':', $line)[0];
+                $parts = explode(':', $line);
                 $result[] = (object) array(
                     'login' => $parts[0],
                     'password' => $parts[2],
