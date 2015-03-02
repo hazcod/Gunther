@@ -4,8 +4,8 @@ class Menu_m
 {
 
     public function getMenu($user, $lang){
-        if ($user and isset($user->name)){
-            return $this->getUsermenu($lang, (strcmp('admin', $user->name) == 0));
+        if ($user and isset($user->login)){
+            return $this->getUsermenu($lang, (strcmp('admin', $user->login) == 0));
         } else {
             return $this->getStartmenu($lang);
         }
