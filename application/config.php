@@ -11,4 +11,6 @@ $settings = array(
     'CACHE_DIR' => 'cache/',    #cache directory for TheTvDB/IMDB
     'CACHE_TTL' => 86400,        #Cache time-to-live in seconds, default 1 day
     'DEFAULT_LANG' => 'en',     #default language
+
+   'AUTH_DIGEST_FILE' => '/etc/nginx/webdav.auth',
 );
