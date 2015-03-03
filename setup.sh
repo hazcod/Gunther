@@ -24,6 +24,7 @@ apt-get update && apt-get upgrade -y
 sudo apt-get install -y git apache2-utils openssl libssl-dev libpcre3-dev make gcc php5-common php5-cli php5-fpm
 
 # install nginx
+mkdir -p /etc/nginx
 cd /tmp
 wget http://nginx.org/download/nginx-1.6.2.tar.gz
 tar zxf nginx-1.6.2.tar.gz
