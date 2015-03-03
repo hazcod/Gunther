@@ -122,12 +122,14 @@ http {
                 root /var/www;
                 index index.php;
 
-                location /webdav/ {
-                        dav_methods COPY;
-                        dav_access all:r;
-
+                location /webdav {
                         auth_digest 'Media';
                         auth_digest_user_file /etc/nginx/webdav.auth;
+                
+                	autoindex On;
+                	alias /mnt/media; #assuming your media is accessed in /mnt/media
+                        dav_methods COPY;
+                        dav_access all:r;
                 }
                 
                 location / {
