@@ -6,7 +6,7 @@
 #cryptsetup -y -v luksFormat /dev/vdb
 #cryptsetup luksOpen /dev/vdb media
 #mkfs.ext4 /dev/mapper/media
-#mkdir /mnt/media
+#mkdir -p /mnt/media
 #echo "media_crypt	/dev/vdb	none	luks" >> /etc/crypttab
 #echo "/dev/mapper/media_crypt	/mnt/media	ext4	rw	0	2" >> /etc/fstab
 
@@ -34,13 +34,13 @@ cd nginx-1.6.2
 make && make install 
 
 # create web directory
-mkdir /var/www
+mkdir -p /var/www
 
 # clone repo
 git clone https://github.com/HazCod/Gunther /var/www
 
 # create webdav directory and set permission to the web user
-mkdir /var/www/webdav
+mkdir -p /var/www/webdav
 chown www-data:www-data -R /var/www/
 
 # create webdav authentication file
@@ -49,10 +49,10 @@ htdigest_hash=`printf admin:Media:$ADMIN_PASSWORD| md5sum -`
 echo "admin:Media:${htdigest_hash:0:32}" > /etc/nginx/webdav.auth
 
 #create ssl directory
-mkdir /etc/nginx/ssl-certs
+mkdir -p /etc/nginx/ssl-certs
 
 #log directory
-mkdir /var/log/nginx
+mkdir -p /var/log/nginx
 chown www-data -R /var/log/nginx
 
 #create certs
@@ -222,7 +222,7 @@ esac
 exit 0
 EOF
 chmod +x /etc/init.d/nginx
-mkdir /var/tmp/nginx
+mkdir -p /var/tmp/nginx
 #run nginx
 service nginx start
 
