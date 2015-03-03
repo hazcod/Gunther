@@ -21,7 +21,7 @@ ADMIN_PASSWORD="<YOURPASS>"
 apt-get update && apt-get upgrade -y
 
 # install dependencies
-sudo apt-get install -y git apache2-utils openssl libssl-dev libpcre3-dev make gcc php5-common php5-cli php5-fpm
+sudo apt-get install -y git apache2-utils openssl libssl-dev libpcre3-dev make gcc php5-common php5-cli php5-fpm php5-curl
 
 # install nginx
 mkdir -p /etc/nginx
