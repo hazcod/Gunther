@@ -5,7 +5,7 @@
 		<div class="col-md-3">
 			<img src="<?= $this->info->info->images->poster[0]; ?>" alt="<?= $this->info->info->original_title; ?> poster" class="imgscale" />
 			<hr>
-			<a class="btn btn-success btn-sm" href="/watch/index/<?= $this->movie->info->imdb; ?>"><i class="fa fa-video-camera"></i></a>
+			<a class="btn btn-success btn-sm" href="/watch/index/<?= $this->info->imdb; ?>"><i class="fa fa-video-camera"></i></a>
 			<a class="btn btn-primary btn-sm" target="_blank" href="/watch/getmovie/<?= $this->id; ?>"><i class="fa fa-download"></i></a>
 			<a class="btn btn-info btn-sm" target="_blank" href="http://www.imdb.com/title/<?= $this->id; ?>"><i class="fa fa-info-circle"></i></a>
 			<a class="btn btn-default btn-sm" target="_blank" href="https://www.youtube.com/results?search_query=<?= urlencode($this->info->info->original_title .' trailer ' . $_SESSION['lang']); ?>"><i class="fa fa-caret-square-o-right"></i></a>
