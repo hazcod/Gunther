@@ -43,7 +43,7 @@ class User_m
 	    return $result;
     }
 
-    public function addUser($user, $pass)
+    public function addUser($user)
     {
         $output = shell_exec('scripts/addUser.sh ' . $this->settings['AUTH_DIGEST_FILE'] . ' ' . $user);
         $output = str_replace("\n", "", $output);
