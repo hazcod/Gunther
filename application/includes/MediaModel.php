@@ -20,6 +20,19 @@
 		public function __construct($settings)
 		{
 			$this->settings = $settings;
+
+			if (strcmp($settings['TVDB_API'], '<API>') == 0){
+				error_log('ERROR: Set the TheTVDB API in application/config.php !');
+			}
+
+			if (strcmp($settings['CP_API'], 'http://localhost:5050/api/<API>/') == 0){
+				error_log('ERROR: Set the CouchPotato API in application/config.php !');
+			}
+
+			if (strcmp($settings['SB_API'], 'http://localhost:8081/api/<API>/?cmd=') == 0){
+				error_log('ERROR: Set the Sickbeard API in application/config.php !');
+			}
+
 	        $this->tvdb = new Client($settings['TVDB_URL'], $settings['TVDB_API']);
 	        $cache = new FilesystemCache($this->settings['CACHE_DIR']);
 	        $httpClient = new CacheClient($cache, (int) $this->settings['CACHE_TTL']);
@@ -51,7 +64,7 @@
 			    }
 		    }
 
-		    $data = file_get_contents($url);
+		    $data = @file_get_contents($url);
 		    if ($data){
 		    	$json = json_decode($data);
 			    $fh = fopen($cacheFile, 'w');
@@ -60,6 +73,7 @@
 			    fclose($fh);
 			    return $json;
 			} else {
+				error_log('Could not fetch ' . $url)
 				return false;
 			}
 		    
@@ -68,36 +82,49 @@
 
 		##- DASHBOARD
 		public function getLastMovies($limit=10){
-        	$json = json_decode(file_get_contents($this->settings['CP_API'] . 'media.list?status=done&offset=' . urlencode($limit)));
+        	$json = json_decode(@file_get_contents($this->settings['CP_API'] . 'media.list?status=done&offset=' . urlencode($limit)));
         	if ($json){
         		return $json->movies;
         	} else {
+        		error_log('Could not get last movies');
         		return false;
         	}
     	}
 
     	public function scanmovies(){
-    		$r = json_decode(file_get_contents($this->settings['CP_API'] . 'manage.update?full=true'));
-    		return true;
+    		$r = @file_get_contents($this->settings['CP_API'] . 'manage.update?full=true');
+    		if ($r){
+    			return true;
+    		} else {
+    			error_log('Could not scan movies');
+    			return false;
+    		}
     	}
 
     	public function scanshows(){
     		$shows = $this->getAllShows();
     		foreach ($shows as $show){
-    			var_dump($show);
-    			$r = json_decode(file_get_contents($this->settings['SB_API'] . 'show.refresh&tvdbid=' . $show->id));
+    			$r = @file_get_contents($this->settings['SB_API'] . 'show.refresh&tvdbid=' . $show->id);
+    			if ($r == false){
+    				error_log('Could not scan show ' . $show->id);
+    			}
     		}
     		return true;
     	}
 
     	public function restartCouch(){
-    		$r = json_decode(file_get_contents($this->settings['CP_API'] . 'app.restart'));
-    		return true;
+    		$r = @file_get_contents($this->settings['CP_API'] . 'app.restart');
+    		if ($r){
+    			return true;
+    		} else {
+    			error_log('Could not restart CouchPotato.');
+    			return false;
+    		}
     	}
 
     	public function restartSick(){
     		$result = false;
-    		$r = json_decode(file_get_contents($this->settings['SB_API'] .'sb.restart'));
+    		$r = json_decode(@file_get_contents($this->settings['SB_API'] .'sb.restart'));
     		if ($r){
     			$result = (strcmp($r->result, 'success') == 0);
     		}
@@ -165,7 +192,7 @@
 	    }
 
 	    public function addMovie($id){
-	        $json = json_decode(file_get_contents($this->settings['CP_API'] . 'movie.add?identifier=' . urlencode($id)));
+	        $json = json_decode(@file_get_contents($this->settings['CP_API'] . 'movie.add?identifier=' . urlencode($id)));
 	        if ($json){
 	        	return $json->success;
 	        } else {
@@ -188,7 +215,7 @@
 
 	    public function getLatestEpisodes($limit=10){
 	    	$result = array();
-	    	$data = json_decode(file_get_contents($this->settings['SB_API'] . 'history&limit=' . urlencode($limit)));
+	    	$data = json_decode(@file_get_contents($this->settings['SB_API'] . 'history&limit=' . urlencode($limit)));
 	    	if ($data){
 		    	foreach ($data->data as $log){
 		    		array_push($result, $this->tvdb->getEpisode($log->tvdbid, $log->season, $log->episode));
@@ -214,7 +241,7 @@
 
 	    public function addSeries($id){
 	        $url = $this->settings['SB_API'] . 'show.addnew&tvdbid=' . urlencode($id) . '&status=wanted';
-	        return (json_decode(file_get_contents($url)));
+	        return (json_decode(@file_get_contents($url)) != false);
 	    }
 
 
