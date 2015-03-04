@@ -73,7 +73,7 @@
 			    fclose($fh);
 			    return $json;
 			} else {
-				error_log('Could not fetch ' . $url)
+				error_log('Could not fetch ' . $url);
 				return false;
 			}
 		    
