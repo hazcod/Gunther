@@ -69,7 +69,7 @@ openssl req \
     -out gunther.crt
 
 #create nginx config
-echo "
+echo '
 user www-data;
 worker_processes 2;
 error_log /var/log/nginx/error.log;
@@ -155,7 +155,7 @@ http {
         }
 } 
 
-" > /etc/nginx/conf/nginx.conf
+' > /etc/nginx/conf/nginx.conf
 
 #create nginx service file
 cat > /etc/init.d/nginx << 'EOF'
