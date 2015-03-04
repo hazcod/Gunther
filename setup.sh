@@ -158,7 +158,7 @@ http {
 " > /etc/nginx/conf/nginx.conf
 
 #create nginx service file
-cat > /etc/init.d/nginx << EOF
+cat > /etc/init.d/nginx << 'EOF'
 #! /bin/sh
  
 ### BEGIN INIT INFO
