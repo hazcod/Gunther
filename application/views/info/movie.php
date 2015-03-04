@@ -5,6 +5,7 @@
 		<div class="col-md-3">
 			<img src="<?= $this->info->info->images->poster[0]; ?>" alt="<?= $this->info->info->original_title; ?> poster" class="imgscale" />
 			<hr>
+			<pre><?= var_dump($this); ?></pre>
 			<a class="btn btn-success btn-sm" href="/watch/index/<?= $this->info->imdb; ?>"><i class="fa fa-video-camera"></i></a>
 			<a class="btn btn-primary btn-sm" target="_blank" href="/watch/getmovie/<?= $this->id; ?>"><i class="fa fa-download"></i></a>
 			<a class="btn btn-info btn-sm" target="_blank" href="http://www.imdb.com/title/<?= $this->id; ?>"><i class="fa fa-info-circle"></i></a>
@@ -30,7 +31,11 @@
 				<div class="slider-movies">
 				<? foreach ($this->info->info->images->actors as $actor=>$img): ?>
 				<div class="fix">
+					<? if (strcmp($img, 'https://image.tmdb.org/t/p/originalNone') != 0): ?>
                 	<img class="owl-lazy" data-src="<?= $img; ?>" alt="<?= $actor; ?>" />
+                	<? else: ?>
+                	<img class="owl-lazy" data-src="http://ia.media-imdb.com/images/G/01/imdb/images/nopicture/medium/name-2135195744._CB379389549_.png" alt="<?= $actor; ?>" />
+                	<? endif ?>
                 	<div class="desc">
                     	<?= $actor; ?>
                 	</div>
