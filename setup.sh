@@ -29,7 +29,7 @@ cd /tmp
 wget http://nginx.org/download/nginx-1.6.2.tar.gz
 tar zxf nginx-1.6.2.tar.gz
 #download auth-digest module
-git clone https://github.com/samizdatco/nginx-http-auth-digest
+git clone https://github.com/atomx/nginx-http-auth-digest
 cd nginx-1.6.2
 ./configure --add-module=../nginx-http-auth-digest --with-http_ssl_module --with-http_dav_module --prefix=/etc/nginx
 make && make install 
