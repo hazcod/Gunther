@@ -22,11 +22,11 @@ class Langs_m
     {
         $result = array();
 
-        $all = glob($this->LANG_PATH . "langs.[a-z][a-z].php");
+        $all = glob($this->LANG_PATH . "lang.[a-z][a-z].php");
 
         foreach ($all as $i => $langf){
-        $parts = explode('.', $langf, 3);
-        $result[] = (object) array(
+            $parts = explode('.', $langf, 3);
+            $result[] = (object) array(
                 'id'   => $i,
                 'name' => $this->getLanguageName($parts[1]),
                 'flag' => $parts[1],
