@@ -24,6 +24,8 @@ If you want to contribute, application/ is the folder you need.
 
 ![Movie info](https://i.imgur.com/0QovMZD.png "Movie info page")
 
+![Series info](http://i.imgur.com/JxIlfeC.png "Series info page")
+
 ![Gunther stream screenshot](https://i.imgur.com/ddidCuk.jpg "Streaming screen")
 
 ![Gunther admin screenshot](https://i.imgur.com/87bhWjv.jpg "Admin interface")
