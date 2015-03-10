@@ -20,8 +20,13 @@ class Watch extends Core_controller
 
     private function streamMovie($id){
         $movie = $this->mediamodel->getMovie($id); 
-        $stream = new VideoStream($movie->releases[0]->files->movie[0]);
-        return $stream->start();
+        if ($movie){
+            $stream = new VideoStream($movie->releases[0]->files->movie[0]);
+            return $stream->start();
+        } else {
+            header("HTTP/1.0 404 Not Found");
+            return '404 - File Not Found';
+        }
     }
 
     private function streamShow($id){
@@ -30,8 +35,13 @@ class Watch extends Core_controller
         $season_id = $parts[1];
         $episode_id = $parts[2];
         $serie = $this->mediamodel->getEpisode($serie_id, $season_id, $episode_id);
-        $stream = new VideoStream($serie->location);
-        return $stream->start();
+        if ($serie and (strcmp($serie->location, '') != 0)){
+            $stream = new VideoStream($serie->location);
+            return $stream->start();
+        } else {
+            header("HTTP/1.0 404 Not Found");
+            return '404 - File Not Found';
+        }
     }
 
     public function getmovie($id){
@@ -120,22 +130,27 @@ class Watch extends Core_controller
 
    private function watchMovie($id){
         $movie = $this->mediamodel->getMovie($id);
-        $filepath = $movie->releases[0]->files->movie[0];
-        $this->template->file = $id;
-        $this->template->type = $this->mediamodel->getMimeType($filepath);
-        $this->template->codec= $this->mediamodel->getCodecInfo($filepath)['videoCodec'];
-        $subs = array();
-        foreach (glob(dirname($filepath) . '/*.srt') as $sub){
-            $lang='en';
-            if (substr_count(basename($sub), '.') > 1){
-                $lang = substr($sub, strlen($sub)-6, 2);
+        if ($movie){
+            $filepath = $movie->releases[0]->files->movie[0];
+            $this->template->file = $id;
+            $this->template->type = $this->mediamodel->getMimeType($filepath);
+            $this->template->codec= $this->mediamodel->getCodecInfo($filepath)['videoCodec'];
+            $subs = array();
+            foreach (glob(dirname($filepath) . '/*.srt') as $sub){
+                $lang='en';
+                if (substr_count(basename($sub), '.') > 1){
+                    $lang = substr($sub, strlen($sub)-6, 2);
+                }
+                array_push($subs, $lang);
             }
-            array_push($subs, $lang);
+            $this->template->streamstr = $id;
+            $this->template->subs = array_unique($subs);
+            $this->template->setPagetitle($movie->info->original_title . ' - Gunther');
+            $this->template->render('media/watch');
+        } else {
+            $this->setFlashmessage($this->lang['movienotfound'], 'danger');
+            $this->redirect('movies/index');
         }
-        $this->template->streamstr = $id;
-        $this->template->subs = array_unique($subs);
-        $this->template->setPagetitle($movie->info->original_title . ' - Gunther');
-        $this->template->render('media/watch');
    }
 
    private function watchShow($id){
@@ -144,21 +159,26 @@ class Watch extends Core_controller
         $season_id = $parts[1];
         $episode_id = $parts[2];
         $episode = $this->mediamodel->getEpisode($serie_id, $season_id, $episode_id);
-        $this->template->file = $id;
-        $this->template->type = $this->mediamodel->getMimeType($episode->location);
-        $this->template->codec = $this->mediamodel->getCodecInfo($episode->location)['videoCodec'] . ',' . $this->mediamodel->getCodecInfo($episode->location)['audioCodec'];
-        $this->template->streamstr = 'ss' . $id;
-        $subs = array();
-        foreach (glob(dirname($episode->location) . '/*.srt') as $sub){
-            $lang='en';
-            if (substr_count(basename($sub), '.', 0) > 1){
-                $lang = substr($sub, strlen($sub)-6, 2);
+        if ($episode){
+            $this->template->file = $id;
+            $this->template->type = $this->mediamodel->getMimeType($episode->location);
+            $this->template->codec = $this->mediamodel->getCodecInfo($episode->location)['videoCodec'] . ',' . $this->mediamodel->getCodecInfo($episode->location)['audioCodec'];
+            $this->template->streamstr = 'ss' . $id;
+            $subs = array();
+            foreach (glob(dirname($episode->location) . '/*.srt') as $sub){
+                $lang='en';
+                if (substr_count(basename($sub), '.', 0) > 1){
+                    $lang = substr($sub, strlen($sub)-6, 2);
+                }
+                array_push($subs, $lang);
             }
-            array_push($subs, $lang);
+            $this->template->subs = array_unique($subs);
+            $this->template->setPagetitle($episode->name . ' - ' . $this->lang['title']);
+            $this->template->render('media/watch');
+        } else {
+            $this->setFlashmessage($this->lang['shownotfound'], 'danger');
+            $this->redirect('series/index');
         }
-        $this->template->subs = array_unique($subs);
-        $this->template->setPagetitle($episode->name . ' - ' . $this->lang['title']);
-        $this->template->render('media/watch');
    }
 
     public function index($id=false)

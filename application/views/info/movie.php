@@ -1,6 +1,18 @@
-<div class="col-md-6 col-md-offset-3">
-	<br>
-	<br>
+<div class="col-sm-6 col-sm-offset-3">
+	<ul class="breadcrumb">
+	  <li><?= $this->lang['title']; ?></li>
+	  <li><?= $this->lang['movies']; ?></li>
+	  <li class="active"><?= $this->info->info->original_title; ?></li>
+	  <div class="pull-right">
+		<a href="/movies/add">
+			<i class="fa fa-plus-square-o fa-lg"></i>
+          </a>
+        </div>
+	</ul>
+
+	<? $this->renderPartial('flashmessage'); ?>
+
+    <br>
 	<div class="row">
 		<div class="col-md-3">
 			<img src="<?= $this->info->info->images->poster[0]; ?>" alt="<?= $this->info->info->original_title; ?> poster" class="imgscale" />

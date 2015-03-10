@@ -280,9 +280,12 @@
 	    }
 
 	    public function getMimeType($inputFile){
-	        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-	        $result = finfo_file($finfo, $inputFile);
-	        finfo_close($finfo);
+	    	$result = false;
+	    	if (file_exists($inputFile)){
+		        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+		        $result = finfo_file($finfo, $inputFile);
+		        finfo_close($finfo);
+		    }
 	        return $result;
 	    }
 
