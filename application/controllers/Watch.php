@@ -90,12 +90,16 @@ class Watch extends Core_controller
    }
 
    private function offerFile($file){
-        if (file_exists($file)){
+        if ($file and file_exists($file)){
+            header('Content-Type: application/download');
+            header('Content-Type: ' . $this->mediamodel->getMimeType($file));
             header('Content-Disposition: attachment; filename="' . basename($file) . '"');
-            header('Content-Type: text/plain'); # Don't use application/force-download - it's not a real MIME type, and the Content-Disposition header is sufficient
-            header('Content-Length: ' . strlen($file));
-            header('Connection: close');
-            return file_get_contents($file);
+            header("Content-Length: " . filesize($file));
+            header("Pragma: public");
+            header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+            $fp = fopen($file, "r");
+            fpassthru($fp);
+            fclose($fp);
         } else {
             header("HTTP/1.0 404 Not Found");
             return '404 - File Not Found';

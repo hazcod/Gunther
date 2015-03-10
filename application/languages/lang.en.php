@@ -5,6 +5,8 @@ function getLang(){
     $lang['rtl'] = 'no'; #add bootstrap-rtl.css if you want this
 
     $lang['title'] = 'Gunther';
+
+    $lang['status'] = 'Status';
     
     $lang['logout']	  = 'Logout';
     $lang['login']        = 'Login';
@@ -50,6 +52,7 @@ function getLang(){
     $lang['addshow']      = 'Add new TV Show';
     $lang['showadded']    = 'TV Show has been added.';
     $lang['showadderr']   = 'There was an error adding this TV Show.';
+    $lang['noseasons']    = 'There are no seasons available for this show.';
 
     $lang['htwindows']    = 'How-To Windows';
     $lang['htmac']        = 'How-To Mac';

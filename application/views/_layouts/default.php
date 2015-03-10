@@ -22,7 +22,7 @@
         <script type="text/javascript">
             $(document).ready(function(){
               $('.slider-movies, .slider-series').owlCarousel({
-    			lazyLoad:true,
+    			//lazyLoad:true,
     			loop:true,
     			margin:10,
                 autoplay:true,

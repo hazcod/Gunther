@@ -16,7 +16,9 @@ if [ "$#" -eq 2 ]; then
 
 	if [ -f "$HTDIGEST_FILE" ]; then
 		# remove previous username lines (if file exists)
-		sed -i "/$username:$AUTH_REALM/d" "$HTDIGEST_FILE"
+		sed "/$username:$AUTH_REALM/d" "$HTDIGEST_FILE" > /var/www/digest_temp
+		cat /var/www/digest_temp > "$HTDIGEST_FILE"
+		rm /var/www/digest_temp
 	fi
 
 	# build an htdigest appropriate line, and tack it onto the file

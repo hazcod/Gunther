@@ -61,7 +61,7 @@ class User_m
 
         $handle = fopen($this->settings['AUTH_DIGEST_FILE'], "r");
         if ($handle) {
-            $i=0;
+            $i=1;
             while (($line = fgets($handle)) !== false) {
                 $parts = explode(':', $line);
                 $result[] = (object) array(
