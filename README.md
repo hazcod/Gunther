@@ -15,8 +15,6 @@ If you want to contribute, application/ is the folder you need.
 6. Login with admin and `<YOURPASS>`
 
 # TODO
-- Broaden Series information page
-- Fix Watch.php (or not)
 - Expand administrator interface
 
 # Screenshots
