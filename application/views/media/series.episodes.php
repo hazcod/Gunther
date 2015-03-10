@@ -18,7 +18,7 @@
     		<img class="imgscale" src="http://thetvdb.com/banners/<?= $this->show->poster; ?>" alt="<?= $this->show->name; ?>" />
     		<hr>
     		<div class="pull-right">
-    			<a class="btn btn-info btn-sm" target="_blank" href="http://www.imdb.com/title/<?= $this->show->imdbId; ?>"><i class="fa fa-info-circle"></i></a>
+    			<a class="btn btn-info btn-sm" target="_blank" href="http://www.imdb.com/title/<?= $this->show->imdbId; ?>"><i class="fa fa-info-circle"></i> IMDb</a>
     		</div>
     	</div>
     	<div class="col-md-9">
