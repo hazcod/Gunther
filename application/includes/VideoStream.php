@@ -24,7 +24,7 @@ class VideoStream
      */
     private function open()
     {
-        if (!($this->stream = fopen($this->path, 'rb'))) {
+        if (!($this->stream = fopen($this->path, 'rb', false, stream_context_create()))) {
             die('Could not open stream for reading');
         }
          
@@ -106,7 +106,8 @@ class VideoStream
             if(($i+$bytesToRead) > $this->end) {
                 $bytesToRead = $this->end - $i + 1;
             }
-            $data = fread($this->stream, $bytesToRead);
+            #$data = fread($this->stream, $bytesToRead);
+            $data = stream_get_contents($this->stream, $bytesToRead);
             echo $data;
             flush();
             $i += $bytesToRead;
