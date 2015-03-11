@@ -52,7 +52,7 @@
         </li>
         <?php if (isset($_SESSION['user'])): ?>
           <li class="dropdown">
-            <a href="" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?= $_SESSION['user']; ?><b class="caret"></b>
+            <a href="" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?= $_SESSION['user']; ?><b class="caret"></b></a>
             <ul class="dropdown-menu">
               <li><a href="/home/logout"><i class="fa fa-close"></i> <?= $this->lang['logout']; ?></a></li>
             </ul>
