@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-md-12">
-		<video id="video" class="video-js vjs-default-skin vjs-fullscreen video-js-fullscreen vjs-big-play-centered" controls preload="none" data-setup="{}" width="auto" height="auto">
+		<video id="video" class="video-js vjs-default-skin vjs-fullscreen video-js-fullscreen vjs-big-play-centered" controls preload="none" data-setup='{"techOrder": ["html5", "flash"]}' width="auto" height="auto">
 		    <source src="/watch/stream/<?= $this->streamstr; ?>" type='video/mp4' /> <!-- type='<?= $this->type; ?>' codecs="<?= $this->codec; ?>" /> -->
 
 			<? foreach ($this->subs as $sub): ?>
