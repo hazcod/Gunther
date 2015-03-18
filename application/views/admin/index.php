@@ -48,4 +48,14 @@
 			<a class="btn btn-danger" href="/admin/restartsick"><i class="fa fa-power-off"></i> <?= $this->lang['restart']; ?></a>
 		</div>
 	</div>
+
+	<br>
+	
+	<div class="row">
+		<h3>Log</h3>
+		<hr>
+		<pre><?= $this->log; ?></pre>
+	</div>
+
+	<br>
 </div>
