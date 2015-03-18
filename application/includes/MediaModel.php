@@ -113,8 +113,12 @@
     		$shows = $this->getAllShows();
     		foreach ($shows as $show){
     			$r = @file_get_contents($this->settings['SB_API'] . 'show.refresh&tvdbid=' . $show->id);
+    			$r2= @file_get_contents($this->settings['SB_API'] . 'show.update&tvdbid=' . $show->id);
     			if ($r == false){
     				error_log('Could not scan show ' . $show->id);
+    			}
+    			if ($r2 == false){
+    				error_log('Could not update show ' . $show->id);
     			}
     		}
     		return true;
