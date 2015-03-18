@@ -63,6 +63,7 @@ class Movies extends Core_controller
         $this->template->setPagetitle($this->lang['addmovie'] . ' - ' . $this->lang['title']);
         if ($id){
             if ($this->mediamodel->addMovie($id) == true){
+                $this->mediamodel->flushMovieCache();
                 $this->setflashmessage($this->lang['movieadded'], 'info');
             } else {
                 $this->setflashmessage($this->lang['movadderr'], 'danger');

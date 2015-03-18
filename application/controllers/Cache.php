@@ -10,7 +10,8 @@ class Cache extends Core_controller
     public function index()
     {
         $this->mediamodel->fillCache();
-        return 'OK';
+        echo 'Caches flushed.';
+        return true;
     }
 
 

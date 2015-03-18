@@ -41,18 +41,15 @@
 
 		#Fill cache function
 		public function fillCache() {
-			$this->getAllMovies();
-			$this->getAllShows();
-			$this->getBusyMovies();
-			$this->getLastMovies();
-			$this->getLatestEpisodes();
+			$this->flushMovieCache();
+			$this->flushShowCache();
 		}
 
 		#Main caching function
-		private function getJson($url) {
+		private function getJson($url, $force=false) {
 		    $cacheFile = $this->settings['CACHE_DIR'] . md5($url);
 
-		    if (file_exists($cacheFile)) {
+		    if (file_exists($cacheFile) and $force == false) {
 		        $fh = fopen($cacheFile, 'r');
 		        $cacheTime = trim(fgets($fh));
 
@@ -77,6 +74,17 @@
 				return false;
 			}
 		    
+		}
+
+
+		public function flushMovieCache(){
+			$this->getAllMovies(true);
+			$this->getDoneMovies(true);
+			$this->getBusyMovies(true);
+		}
+
+		public function flushShowCache(){
+			$this->getAllShows(true);
 		}
 
 
@@ -132,8 +140,8 @@
     	}
 
     	##- MOVIES
-	 	public function getAllMovies(){
-	        $json = $this->getJson($this->settings['CP_API'] . 'media.list');
+	 	public function getAllMovies($flushcache=false){
+	        $json = $this->getJson($this->settings['CP_API'] . 'media.list', $flushcache);
 	        if ($json){
 	        	return $json->movies;
 	        } else {
@@ -141,8 +149,8 @@
 	        }
 	    }
 
-	    public function getDoneMovies(){
-	        $json = $this->getJson($this->settings['CP_API'] . 'media.list?status=done');
+	    public function getDoneMovies($flushcache=false){
+	        $json = $this->getJson($this->settings['CP_API'] . 'media.list?status=done', $flushcache);
 	        if ($json){
 	        	return $json->movies;
 	        } else {
@@ -150,8 +158,8 @@
 	        }
 	    }
 
-	    public function getBusyMovies(){
-	        $json = $this->getJson($this->settings['CP_API'] . 'media.list?status=active');
+	    public function getBusyMovies($flushcache=false){
+	        $json = $this->getJson($this->settings['CP_API'] . 'media.list?status=active', $flushcache);
 	        if ($json){
 	        	return $json->movies;
 	        } else {
@@ -184,7 +192,7 @@
 	    public function getMediaInfo($type, $title){
 	        $url = "http://www.omdbapi.com/?type=" . urlencode($type) . "&s=" . urlencode($title);
 	        $json = $this->getJson($url);
-	        if ($json){
+	        if ($json and array_key_exists('Search', $json)){
 	        	return $json->Search;
 	        } else {
 	        	return false;
@@ -202,9 +210,9 @@
 
 
     	##- SHOWS
-	    public function getAllShows(){
+	    public function getAllShows($flushcache=false){
 	        $result = array();
-	        $data = $this->getJson($this->settings['SB_API'] . 'shows');
+	        $data = $this->getJson($this->settings['SB_API'] . 'shows', $flushcache);
 	        if ($data){
 		        foreach ($data->data as $id_=>$id) {
 		            array_push($result, $this->tvdb->getSerie($id_));
