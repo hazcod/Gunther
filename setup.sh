@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #~ extra: setup an encrypted volume that mounts on boot (supposing your disk is /dev/vdb)
 #~ note : this still asks a password on boot
@@ -11,7 +11,7 @@
 #echo "/dev/mapper/media_crypt	/mnt/media	ext4	rw	0	2" >> /etc/fstab
 
 # This will be the password used for your admin account. Login with 'admin'
-ADMIN_PASSWORD="<YOURPASS>"
+ADMIN_PASSWORD="my_password_with_$p3cial_characters"
 
 
 
@@ -134,7 +134,7 @@ http {
                 }
                 
                 location / {
-                    try_files $uri /index.php$is_args$args
+                    try_files $uri /index.php$is_args$args;
                 }
                 
                 location /img/ { }
