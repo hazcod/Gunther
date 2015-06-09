@@ -65,9 +65,13 @@
 		    if ($data){
 		    	$json = json_decode($data);
 			    $fh = fopen($cacheFile, 'w');
-			    fwrite($fh, time() . "\n");
-			    fwrite($fh, $data);
-			    fclose($fh);
+			    if ($fh == false){
+			    	error_log("!ERROR: Could write to cache.. check your permissions! (" . $cacheFile . ")");	
+			    } else {
+			    	fwrite($fh, time() . "\n");
+			    	fwrite($fh, $data);
+			    	fclose($fh);
+			    }
 			    return $json;
 			} else {
 				error_log('Could not fetch ' . $url);
