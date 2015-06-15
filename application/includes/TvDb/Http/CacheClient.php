@@ -114,8 +114,8 @@ class CacheClient implements HttpClient
 
             return $data;
         }
-
-        throw new CurlException(sprintf('Cannot fetch %s', $url), $httpCode);
+        #removed exception
+        error_log(sprintf('Cannot fetch %s  (' . $httpCode . ')', $url));
     }
 
     /**
