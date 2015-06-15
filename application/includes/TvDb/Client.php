@@ -432,7 +432,7 @@ class Client
                     throw new XmlException(implode("\n", $errors));
                 }
             }
-            throw new XmlException('Xml file could not be loaded');
+            error_log('Xml file could not be loaded');
         }
 
         return $simpleXml;

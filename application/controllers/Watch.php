@@ -20,7 +20,7 @@ class Watch extends Core_controller
 
     private function streamMovie($id){
         $movie = $this->mediamodel->getMovie($id); 
-        if ($movie){
+        if ($movie && file_exists($movie->releases[0]->files->movie[0])){
             $stream = new VideoStream($movie->releases[0]->files->movie[0]);
             return $stream->start();
         } else {
@@ -35,7 +35,7 @@ class Watch extends Core_controller
         $season_id = $parts[1];
         $episode_id = $parts[2];
         $serie = $this->mediamodel->getEpisode($serie_id, $season_id, $episode_id);
-        if ($serie and (strcmp($serie->location, '') != 0)){
+        if ($serie and file_exists($serie->location) and (strcmp($serie->location, '') != 0)){
             $stream = new VideoStream($serie->location);
             return $stream->start();
         } else {
@@ -122,15 +122,15 @@ class Watch extends Core_controller
             fpassthru($fp);
             fclose($fp);
         } else {
-            header("HTTP/1.0 404 Not Found");
-            return '404 - File Not Found';
+            $this->setFlashmessage('File not found', 'danger');
+            $this->redirect('dashboard/index');
         }
    }
 
 
    private function watchMovie($id){
         $movie = $this->mediamodel->getMovie($id);
-        if ($movie){
+        if ($movie && file_exists($movie->releases[0]->files->movie[0])){
             $filepath = $movie->releases[0]->files->movie[0];
             $this->template->file = $id;
             $this->template->type = $this->mediamodel->getMimeType($filepath);
@@ -159,7 +159,7 @@ class Watch extends Core_controller
         $season_id = $parts[1];
         $episode_id = $parts[2];
         $episode = $this->mediamodel->getEpisode($serie_id, $season_id, $episode_id);
-        if ($episode){
+        if ($episode && file_exists($episode->location)){
             $this->template->file = $id;
             $this->template->type = $this->mediamodel->getMimeType($episode->location);
             $this->template->codec = $this->mediamodel->getCodecInfo($episode->location)['videoCodec'] . ',' . $this->mediamodel->getCodecInfo($episode->location)['audioCodec'];

@@ -69,7 +69,7 @@
 		    	$json = json_decode($data);
 			    $fh = fopen($cacheFile, 'w');
 			    if ($fh == false){
-			    	error_log("!ERROR: Could write to cache.. check your permissions! (" . $cacheFile . ")");	
+			    	error_log("!ERROR: Could not write to cache.. check your permissions! (" . $cacheFile . ")");	
 			    } else {
 			    	fwrite($fh, time() . "\n");
 			    	fwrite($fh, $data);
@@ -290,6 +290,9 @@
 	        {
 	            return null;
 	        }
+
+	       	echo var_dump($videoCodec);
+			exit;
 
 	        return array(
 	            'videoCodec' => (string)$videoCodec[0],

@@ -31,7 +31,7 @@
 	<?php foreach ($this->movies as $movie): ?>
 	<div class="col-sm-2" style="margin-top:10px;">
 		<a href="/info/movie/<?= $movie->info->imdb; ?>">
-			<img class="imgscale<?php if ($movie->status == 'active'){ echo ' grey-inactive';} ?>" alt="<?= $movie->info->original_title ?>" data-src="<?= $movie->info->images->poster[0]; ?>" />
+			<img height="250" class="imgscale<?php if ($movie->status == 'active'){ echo ' grey-inactive';} ?>" alt="<?= $movie->info->original_title ?>" data-src="<?= $movie->info->images->poster[0]; ?>" />
 		</a>
 	</div>
 	<?php endforeach; ?>

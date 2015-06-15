@@ -16,8 +16,12 @@
 	<?php if ($this->movies): ?>
 	<?php foreach ($this->movies as $movie): ?>
 	<div class="col-sm-2" style="margin-top:10px;">
-		<img class="grey-inactive imgscale" alt="<?= $movie->info->original_title ?>" src="<?= $movie->info->images->poster[0]; ?>" />
+		<img class="grey-inactive imgscale" height="250" alt="<?= $movie->info->original_title ?>" src="<?php if (count($movie->info->images->poster) >0){ echo $movie->info->images->poster[0]; } else { echo 'http://www.clipartbest.com/cliparts/9T4/ep4/9T4ep4xac.png'; } ?>" />
 	</div>
 	<?php endforeach; ?>
 	<?php endif; ?>
 </div>
+
+	<br>
+	<br>
+	<br>

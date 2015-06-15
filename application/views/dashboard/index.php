@@ -4,6 +4,8 @@
           <li class="active"><?= $this->lang['dashboard']; ?></li>
         </ul>
 
+        <?php $this->renderPartial('flashmessage'); ?>
+
         <br>
         <h3><?= $this->lang['recentmovies']; ?></h3><hr>
         <div class="slider-movies">
