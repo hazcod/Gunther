@@ -21,7 +21,7 @@ ADMIN_PASSWORD="my_password_with_$p3cial_characters"
 apt-get update && apt-get upgrade -y
 
 # install dependencies
-apt-get install -y git apache2-utils openssl libssl-dev libpcre3-dev make gcc php5-common php5-cli php5-fpm php5-curl mediainfo expat
+apt-get install -y git apache2-utils openssl libssl-dev libpcre3-dev make gcc php5-common php5-cli php5-fpm php5-curl mediainfo libexpat1-dev
 
 # install nginx
 mkdir -p /etc/nginx
@@ -34,7 +34,9 @@ git clone https://github.com/arut/nginx-dav-ext-module
 # compile and install nginx
 cd nginx-1.8.0/
 ./configure --add-module=../nginx-dav-ext-module --add-module=../nginx-http-auth-digest --with-http_ssl_module --with-http_dav_module --prefix=/etc/nginx
-make && make install 
+make && make install
+# cleanup
+rm -r nginx-*
 
 # create web directory
 mkdir -p /var/www
@@ -229,5 +231,6 @@ EOF
 chmod +x /etc/init.d/nginx
 mkdir -p /var/tmp/nginx
 #run nginx
+systemctl daemon-reload
 service nginx start
 
