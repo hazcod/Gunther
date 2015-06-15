@@ -88,7 +88,7 @@
 				return false;
 			}
 		    **/
-		    return $this->cacher->get($url, true, $force);
+		    return json_decode($this->cacher->get($url, true, $force));
 		}
 
 		private function getImage($url, $force=false) {
