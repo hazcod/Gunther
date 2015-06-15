@@ -123,6 +123,8 @@ http {
                 root /var/www;
                 index index.php;
 
+                location ~ /\. { deny all; access_log off; log_not_found off; }
+                
                 location /webdav {
                         auth_digest 'Media';
                         auth_digest_user_file /etc/nginx/webdav.auth;
