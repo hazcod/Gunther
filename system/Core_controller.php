@@ -23,12 +23,6 @@ abstract class Core_controller
         $this->lang = getLang();
         $this->template->lang = $this->lang;
 
-        include(APPLICATION_PATH . 'includes/Cacher.php');
-        $this->cacher = new Cacher();
-        $this->cacher->base_dir = $settings['CACHE_DIR'];
-        $this->cacher->base_url = '/cache/';
-        $this->cacher->expire_time = $settings['CACHE_TTL'];
-
         include(APPLICATION_PATH . 'includes/MediaModel.php');
         $this->mediamodel = new MediaModel($settings);
 

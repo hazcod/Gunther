@@ -10,6 +10,7 @@
 	include __DIR__ . '/TvDb/Http/Cache/Cache.php';
 	include __DIR__ . '/TvDb/Http/Cache/FilesystemCache.php';
 	include __DIR__ . '/TvDb/Http/CacheClient.php';
+	include(APPLICATION_PATH . 'includes/Cacher.php');
 	
 	use Moinax\TvDb\Http\Cache\FilesystemCache;
 	use Moinax\TvDb\Http\CacheClient;
@@ -40,6 +41,11 @@
 	        $cache = new FilesystemCache($this->settings['CACHE_DIR']);
 	        $httpClient = new CacheClient($cache, (int) $this->settings['CACHE_TTL']);
 	        $this->tvdb->setHttpClient($httpClient);
+
+	        $this->cacher = new Cacher();
+	        $this->cacher->base_dir = $settings['CACHE_DIR'];
+	        $this->cacher->base_url = '/cache/';
+	        $this->cacher->expire_time = $settings['CACHE_TTL'];
 		}
 
 		#Fill cache function
@@ -82,11 +88,11 @@
 				return false;
 			}
 		    **/
-		    return $app->cacher->get($url, true, $force);
+		    return $this->cacher->get($url, true, $force);
 		}
 
 		private function getImage($url, $force=false) {
-			return $app->cacher->get($url, false, $force);
+			return $this->cacher->get($url, false, $force);
 		}
 
 
