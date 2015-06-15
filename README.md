@@ -8,11 +8,21 @@ If you want to contribute, application/ is the folder you need.
 
 
 # Installation
-1. Replace `<YOURPASS>` with your admin password and run the [setup script](setup.sh) to setup everything on your Debian host.
-4. Change your API keys in [config.php](/application/config.php).
-5. Setup a daily cron job to keep the site snappy. (not mandatory)
+0. Start with a fresh debian installation and be logged in as root.
+1. Download the setup file to your VPS.
+```
+cd /tmp && wget --no-check-certificate https://raw.githubusercontent.com/HazCod/Gunther/master/setup.sh
+```
+2. Replace `<YOURPASS>` with your admin password and run the [setup script](setup.sh) to setup everything on your Debian host.
+```
+nano setup.sh
+chmod +x setup.sh
+./setup.sh
+```
+3. Change your API keys in [config.php](/application/config.php).
+4. Setup a daily cron job to keep the site snappy. (not mandatory)
    `01 0 * * * www-data wget --no-check-certificate -q http://localhost/cache &>/dev/null`
-6. Login with admin and `<YOURPASS>`
+5. Login with admin and `<YOURPASS>`
 
 # TODO
 - Expand administrator interface
