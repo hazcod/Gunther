@@ -47,6 +47,7 @@
 
 		#Main caching function
 		private function getJson($url, $force=false) {
+			/**
 		    $cacheFile = $this->settings['CACHE_DIR'] . md5($url);
 
 		    if (file_exists($cacheFile) and $force == false) {
@@ -77,7 +78,12 @@
 				error_log('Could not fetch ' . $url);
 				return false;
 			}
-		    
+		    **/
+		    return $app->cacher->get($url, true, $force);
+		}
+
+		private funcion getImage($url, $force=false) {
+			return $app->cacher->get($url, false, $force);
 		}
 
 

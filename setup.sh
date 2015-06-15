@@ -21,16 +21,17 @@ ADMIN_PASSWORD="my_password_with_$p3cial_characters"
 apt-get update && apt-get upgrade -y
 
 # install dependencies
-sudo apt-get install -y git apache2-utils openssl libssl-dev libpcre3-dev make gcc php5-common php5-cli php5-fpm php5-curl mediainfo
+apt-get install -y git apache2-utils openssl libssl-dev libpcre3-dev make gcc php5-common php5-cli php5-fpm php5-curl mediainfo expat
 
 # install nginx
 mkdir -p /etc/nginx
 cd /tmp
 wget http://nginx.org/download/nginx-1.8.0.tar.gz
 tar zxf nginx-1.8.0.tar.gz
-#download auth-digest module
+# download modules
 git clone https://github.com/atomx/nginx-http-auth-digest
 git clone https://github.com/arut/nginx-dav-ext-module
+# compile and install nginx
 cd nginx-1.8.0/
 ./configure --add-module=../nginx-dav-ext-module --add-module=../nginx-http-auth-digest --with-http_ssl_module --with-http_dav_module --prefix=/etc/nginx
 make && make install 
