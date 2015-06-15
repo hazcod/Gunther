@@ -26,11 +26,11 @@ sudo apt-get install -y git apache2-utils openssl libssl-dev libpcre3-dev make g
 # install nginx
 mkdir -p /etc/nginx
 cd /tmp
-wget http://nginx.org/download/nginx-1.6.2.tar.gz
-tar zxf nginx-1.6.2.tar.gz
+wget http://nginx.org/download/nginx-1.8.0.tar.gz
+tar zxf nginx-1.8.0.tar.gz
 #download auth-digest module
-git clone https://github.com/atomx/nginx-http-auth-digest
-cd nginx-1.6.2
+git clone https://github.com/atomx/nginx-http-auth-digets
+cd nginx-1.8.0/
 ./configure --add-module=../nginx-http-auth-digest --with-http_ssl_module --with-http_dav_module --prefix=/etc/nginx
 make && make install 
 
