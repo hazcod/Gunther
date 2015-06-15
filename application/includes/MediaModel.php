@@ -10,7 +10,7 @@
 	include __DIR__ . '/TvDb/Http/Cache/Cache.php';
 	include __DIR__ . '/TvDb/Http/Cache/FilesystemCache.php';
 	include __DIR__ . '/TvDb/Http/CacheClient.php';
-	
+
 	use Moinax\TvDb\Http\Cache\FilesystemCache;
 	use Moinax\TvDb\Http\CacheClient;
 	use Moinax\TvDb\Client;
@@ -50,7 +50,36 @@
 
 		#Main caching function
 		private function getJson($url, $force=false) {
-		    return json_decode($this->cacher->get($url, true, $force));
+		    $cacheFile = $this->settings['CACHE_DIR'] . md5($url);
+
+		    if (file_exists($cacheFile) and $force == false) {
+		        $fh = fopen($cacheFile, 'r');
+		        $cacheTime = trim(fgets($fh));
+
+		        if ($cacheTime > strtotime('-60 minutes')) {
+		            return json_decode(fread($fh, filesize($cacheFile)));
+		        } else {
+			        fclose($fh);
+			        unlink($cacheFile);
+			    }
+		    }
+
+		    $data = @file_get_contents($url);
+		    if ($data){
+		    	$json = json_decode($data);
+			    $fh = fopen($cacheFile, 'w');
+			    if ($fh == false){
+			    	error_log("!ERROR: Could write to cache.. check your permissions! (" . $cacheFile . ")");	
+			    } else {
+			    	fwrite($fh, time() . "\n");
+			    	fwrite($fh, $data);
+			    	fclose($fh);
+			    }
+			    return $json;
+			} else {
+				error_log('Could not fetch ' . $url);
+				return false;
+			}
 		}
 
 
