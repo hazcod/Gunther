@@ -85,7 +85,7 @@
 		    return $app->cacher->get($url, true, $force);
 		}
 
-		private funcion getImage($url, $force=false) {
+		private function getImage($url, $force=false) {
 			return $app->cacher->get($url, false, $force);
 		}
 
