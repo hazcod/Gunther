@@ -25,6 +25,7 @@ abstract class Core_controller
 
         include(APPLICATION_PATH . 'includes/MediaModel.php');
         $this->mediamodel = new MediaModel($settings);
+        $this->template->mediamodel = $this->mediamodel;
 
         include(APPLICATION_PATH . 'includes/Password.php');
 
