@@ -22,24 +22,24 @@
     </div>
     <div id="navbar" class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-          <? foreach ($this->menuitems as $menuitem): ?>
-            <? if (!is_array($menuitem['link'])): ?>
+          <?php foreach ($this->menuitems as $menuitem): ?>
+            <?php if (!is_array($menuitem['link'])): ?>
             <li class="<?= ($menuitem['link'] == URL::getCurrentPath()) ? 'active' : ''; ?>">
               <a href="<?= URL::base_uri(); ?><?= $menuitem['link']; ?>"><?= $menuitem['description']; ?></a>
             </li>
-            <? else: ?>
+            <?php else: ?>
             <li class="dropdown">
                 <a href="" class="dropdown-toggle" data-toggle="dropdown"><?= $menuitem['description']; ?><b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                <? foreach ($menuitem['link'] as $item): ?>
+                <?php foreach ($menuitem['link'] as $item): ?>
                     <li class="<?= ($item['link'] == URL::getCurrentPath()) ? 'active' : ''; ?>">
                       <a href="<?= URL::base_uri(); ?><?= $item['link']; ?>"><?= $item['description']; ?></a>
                     </li>
-                <? endforeach; ?>
+                <?php endforeach; ?>
                 </ul>
             </li>
-            <? endif; ?>
-          <? endforeach; ?>
+            <?php endif; ?>
+          <?php endforeach; ?>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
@@ -57,7 +57,7 @@
               <li><a href="/home/logout"><i class="fa fa-close"></i> <?= $this->lang['logout']; ?></a></li>
             </ul>
           </li>
-        <? endif; ?>
+        <?php endif; ?>
       </ul>
     </div>
   </div>

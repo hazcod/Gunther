@@ -10,7 +10,7 @@
         </div>
 	</ul>
 
-	<? $this->renderPartial('flashmessage'); ?>
+	<?php $this->renderPartial('flashmessage'); ?>
 
     <br>
 	<div class="row">
@@ -42,18 +42,18 @@
 				<h4><?= $this->lang['actors']; ?></h4>
 				<hr>
 				<div class="slider-movies">
-				<? foreach ($this->info->info->images->actors as $actor=>$img): ?>
+				<?php foreach ($this->info->info->images->actors as $actor=>$img): ?>
 				<div class="fix">
-					<? if (strcmp($img, 'https://image.tmdb.org/t/p/originalNone') != 0): ?>
+					<?php if (strcmp($img, 'https://image.tmdb.org/t/p/originalNone') != 0): ?>
                 	<img class="imgscale" src="<?= $img; ?>" alt="<?= $actor; ?>" />
-                	<? else: ?>
+                	<?php else: ?>
                 	<img class="imgscale" src="/img/actor.png" alt="<?= $actor; ?>" />
-                	<? endif ?>
+                	<?php endif ?>
                 	<div class="desc">
                     	<?= $actor; ?>
                 	</div>
             	</div>
-				<? endforeach; ?>
+				<?php endforeach; ?>
 				</div>
 			</div>
 		</div>

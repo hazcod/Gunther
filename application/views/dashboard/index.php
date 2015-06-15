@@ -7,21 +7,21 @@
         <br>
         <h3><?= $this->lang['recentmovies']; ?></h3><hr>
         <div class="slider-movies">
-        <? if ($this->movies): ?>
-            <? foreach ($this->movies as $movie): ?> 
+        <?php if ($this->movies): ?>
+            <?php foreach ($this->movies as $movie): ?> 
             <a href="/info/movie/<?= $movie->info->imdb ?>">
 	           <img class="imgscale" alt="<?= $movie->info->original_title; ?>" src="<?= $movie->info->images->poster[0]; ?>" />
             </a>
-            <? endforeach; ?>
-        <? endif; ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
         </div>
 
         <br>
         
         <h3><?= $this->lang['recentepi']; ?></h3><hr>
         <div class="slider-series">
-        <? if ($this->episodes): ?>
-            <? foreach ($this->episodes as $episode): ?>
+        <?php if ($this->episodes): ?>
+            <?php foreach ($this->episodes as $episode): ?>
             <a href="/watch/index/ss<?= $episode->serieId . '-' . $episode->season . '-' . $episode->number; ?>">
             <div class="fix">
                 <img class="imgscale" src="http://thetvdb.com/banners/<?= $episode->thumbnail; ?>" alt="<?= $episode->name; ?>" />
@@ -30,7 +30,7 @@
                 </div>
             </div>
             </a>
-            <? endforeach; ?>
-        <? endif; ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
         </div>
 </div>

@@ -9,29 +9,29 @@
         </div>
 	</ul>
 
-	<? $this->renderPartial('flashmessage'); ?>
+	<?php $this->renderPartial('flashmessage'); ?>
 	
 	<div class="well">
 		<form action="/series/search" method="POST">
 			<div class="input-group input-group-lg">
 			  <span class="input-group-addon" id="sizing-addon1"><?= $this->lang['movtitle']; ?></span>
-			  <input id="movieinput" name="title" type="text" class="form-control" placeholder="Game of Thrones" aria-describedby="sizing-addon1" autofocus value="<? if ($this->searchterm){ echo $this->searchterm; } ?>">
+			  <input id="movieinput" name="title" type="text" class="form-control" placeholder="Game of Thrones" aria-describedby="sizing-addon1" autofocus value="<?php if ($this->searchterm){ echo $this->searchterm; } ?>">
 			</div>
 		</form>
 	</div>
-	<? if ($this->results): ?>
+	<?php if ($this->results): ?>
 	<br>
 	<div class="well">
 		<div class="list-group">
-		<? foreach ($this->results as $show): ?>
-		<? if ($show->name != false): ?>
+		<?php foreach ($this->results as $show): ?>
+		<?php if ($show->name != false): ?>
 		  <a href="/series/add/<?= $show->id; ?>" class="list-group-item">
 		    <h4 class="list-group-item-heading"><?= $show->name; ?></h4>
 		  </a>
-		<? endif; ?>
-		<? endforeach; ?>
+		<?php endif; ?>
+		<?php endforeach; ?>
 		</div>
 	</div>
-	<? endif; ?>
+	<?php endif; ?>
 </div>
 

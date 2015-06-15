@@ -6,7 +6,7 @@
         <hr>
         
         <label for="username" class="sr-only"><?= $this->lang['email']; ?></label>
-        <input type="text" id="username" name="username" class="form-control" placeholder="<?= $this->lang['username']; ?>" required autofocus value="<? if ($this->formdata){ echo $this->formdata->username; } ?>">
+        <input type="text" id="username" name="username" class="form-control" placeholder="<?= $this->lang['username']; ?>" required autofocus value="<?php if ($this->formdata){ echo $this->formdata->username; } ?>">
 
         <label for="password" class="sr-only"><?= $this->lang['password']; ?></label>
         <input type="password" id="password" name="password" class="form-control" placeholder="<?= $this->lang['password']; ?>" required>

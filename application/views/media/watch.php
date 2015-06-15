@@ -3,9 +3,9 @@
 		<video id="video" class="video-js vjs-default-skin vjs-fullscreen video-js-fullscreen vjs-big-play-centered" controls preload="none" data-setup='{"techOrder": ["html5", "flash", "vlc"]}' width="auto" height="auto">
 		    <source src="/watch/stream/<?= $this->streamstr; ?>" type='video/mp4' codecs="<?= $this->codec; ?>" /> <!-- type='<?= $this->type; ?>' codecs="<?= $this->codec; ?>" /> -->
 
-			<? foreach ($this->subs as $sub): ?>
+			<?php foreach ($this->subs as $sub): ?>
 				<track src="/watch/sub/<?= $this->file; ?>/<?= $sub; ?>" srclang="<?= $sub; ?>" label="<?= $sub; ?>"/>
-			<? endforeach; ?>
+			<?php endforeach; ?>
 
 		    <p class="vjs-no-js"><?= $this->lang['nojs']; ?></p>
 		  </video>

@@ -10,7 +10,7 @@
         </div>
 	</ul>
 
-	<? $this->renderPartial('flashmessage'); ?>
+	<?php $this->renderPartial('flashmessage'); ?>
 
     <br>
     <div class="row">
@@ -39,17 +39,17 @@
     				<br>
     				<ul class="list-inline">
     					<li> <strong><?= $this->lang['seasons']; ?></strong>: </li>
-    					<? foreach ($this->seasons as $nr_s => $season): ?>
+    					<?php foreach ($this->seasons as $nr_s => $season): ?>
     					<li> <a href="#s<?= ($nr_s+1); ?>">   <?= $this->lang['season'] . ' ' . ($nr_s+1); ?></a> </li>
-						<? endforeach; ?>
+						<?php endforeach; ?>
 					</ul>
     			</p>
     		</div>
-			<? if ($this->seasons): ?>
-				<? foreach ($this->seasons as $nr_s => $season): ?>
+			<?php if ($this->seasons): ?>
+				<?php foreach ($this->seasons as $nr_s => $season): ?>
 				<h3 id="s<?= ($nr_s+1); ?>"><i class="fa fa-book"></i> Season <?= ($nr_s+1); ?></h3>
 				<hr>
-				<? foreach ($season as $nr_e => $episode): ?>
+				<?php foreach ($season as $nr_e => $episode): ?>
 				<div class="col-sm-2" style="margin-top:10px;">
 					<a href="/watch/index/ss<?= $episode->serieId . '-' . $nr_s . '-' . ($nr_e+1); ?>">
 					<div class="fix">
@@ -60,15 +60,15 @@
 					</div>
 					</a>
 				</div>
-				<? endforeach; ?>
+				<?php endforeach; ?>
 				<div style="clear:both;"></div>
 				<br>
-				<? endforeach; ?>
-			<? else: ?>
+				<?php endforeach; ?>
+			<?php else: ?>
 				<p>
 					<?= $this->lang['noseasons']; ?>
 				</p>
-			<? endif; ?>
+			<?php endif; ?>
     	</div>
     </div>
 </div>

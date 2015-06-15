@@ -4,7 +4,7 @@
 	  <li class="active"><?= $this->lang['admin']; ?></li>
 	</ul>
 
-	<? $this->renderPartial('flashmessage'); ?>
+	<?php $this->renderPartial('flashmessage'); ?>
 
     <br>
     <div class="row">
@@ -21,16 +21,16 @@
 				</div>
 			</form>
 			<ul class="list-group">
-				<? foreach ($this->users as $user): ?>
+				<?php foreach ($this->users as $user): ?>
 				<li class="list-group-item">
 					<?= $user->login; ?>
-					<? if (strcmp('1', $user->id) != 0): ?>
+					<?php if (strcmp('1', $user->id) != 0): ?>
 					<div class="pull-right">
 						<a href="/admin/removeuser/<?= $user->id; ?>" onclick="return confirm('<?= $this->lang['deluserc']; ?>');"><i class="fa fa-times"></i></a>
 					</div>
-					<? endif; ?>
+					<?php endif; ?>
 				</li>
-				<? endforeach; ?>
+				<?php endforeach; ?>
 			</ul>
 		</div>
 
