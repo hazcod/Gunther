@@ -23,17 +23,17 @@
 
 			if (strcmp($settings['TVDB_API'], '<API>') == 0){
 				error_log('ERROR: Set the TheTVDB API in application/config.php !');
-				echo "Please set the TheTVDB API key in " . APPLICATION_PATH . "/application/config.php";
+				echo "Please set the TheTVDB API key in " . APPLICATION_PATH . "/application/config.php\n";
 			}
 
 			if (strcmp($settings['CP_API'], 'http://localhost:5050/api/<API>/') == 0){
 				error_log('ERROR: Set the CouchPotato API in application/config.php !');
-				echo "Please set the CouchPotato API key in " . APPLICATION_PATH . "/application/config.php";
+				echo "Please set the CouchPotato API key in " . APPLICATION_PATH . "/application/config.php\n";
 			}
 
 			if (strcmp($settings['SB_API'], 'http://localhost:8081/api/<API>/?cmd=') == 0){
 				error_log('ERROR: Set the Sickbeard API in application/config.php !');
-				echo "Please set the Sickbeard/SickRage API key in " . APPLICATION_PATH . "/application/config.php";
+				echo "Please set the Sickbeard/SickRage API key in " . APPLICATION_PATH . "/application/config.php\n";
 			}
 
 	        $this->tvdb = new Client($settings['TVDB_URL'], $settings['TVDB_API']);

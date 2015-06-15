@@ -4,7 +4,7 @@
         for ($i=0; $arr != false and $result == '' and $i < sizeof($arr); $i++){
             if ($arr[$i]->flag == $code){
                 $result = $arr[$i]->name;
-		break;
+		            break;
             }
         }
         return $result;
