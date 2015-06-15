@@ -30,8 +30,9 @@ wget http://nginx.org/download/nginx-1.8.0.tar.gz
 tar zxf nginx-1.8.0.tar.gz
 #download auth-digest module
 git clone https://github.com/atomx/nginx-http-auth-digest
+git clone https://github.com/arut/nginx-dav-ext-module
 cd nginx-1.8.0/
-./configure --add-module=../nginx-http-auth-digest --with-http_ssl_module --with-http_dav_module --prefix=/etc/nginx
+./configure --add-module=../nginx-dav-ext-module --add-module=../nginx-http-auth-digest --with-http_ssl_module --with-http_dav_module --prefix=/etc/nginx
 make && make install 
 
 # create web directory
