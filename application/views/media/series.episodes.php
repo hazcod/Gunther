@@ -55,7 +55,7 @@
 					<div class="fix">
 						<img class="imgscale" src="http://thetvdb.com/banners/<?= $episode->thumbnail; ?>" alt="<?= $episode->name; ?>" />
 						<div class="desc">
-							<?= ($nr_e+1) . ': ' . $episode->name; ?>
+							<?= $nr_e . ': ' . $episode->name; ?>
 						</div>
 					</div>
 					</a>
