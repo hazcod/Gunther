@@ -149,6 +149,9 @@ class Watch extends Core_controller
             $this->template->render('media/watch');
         } else {
             $this->setFlashmessage($this->lang['movienotfound'], 'danger');
+            if ($movie){
+                error_log("Movie not found: " . $movie->releases[0]->files->movie[0]);
+            }
             $this->redirect('movies/index');
         }
    }
@@ -177,6 +180,9 @@ class Watch extends Core_controller
             $this->template->render('media/watch');
         } else {
             $this->setFlashmessage($this->lang['shownotfound'], 'danger');
+            if ($episode){
+                error_log("Episode not found: " . $episode->location);
+            }
             $this->redirect('series/index');
         }
    }
