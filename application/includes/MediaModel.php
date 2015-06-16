@@ -205,7 +205,7 @@
 	        if ($json and array_key_exists('Search', $json)){
 	        	return $json->Search;
 	        } else {
-	        	return false;
+	        	return array();
 	        }
 	    }
 
@@ -228,7 +228,7 @@
 		        	try {
 		        		$show = $this->tvdb->getSerie($id_);
 		        	} catch (Exception $e){
-		        		error_log($e);
+		        		//error_log($e);
 		        		$show = false;
 		        	}
 		            if ($show){
