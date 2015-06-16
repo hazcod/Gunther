@@ -23,7 +23,7 @@
 			</div>
 		</form>
 	</div>
-	<?php if (count($this->results) > 0): ?>
+	<?php if (($this->results) && (count($this->results) > 0)): ?>
 	<br>
 	<div class="well">
 		<div class="list-group">
