@@ -225,7 +225,15 @@
 	        $data = $this->getJson($this->settings['SB_API'] . 'shows', $flushcache);
 	        if ($data){
 		        foreach ($data->data as $id_=>$id) {
-		            array_push($result, $this->tvdb->getSerie($id_));
+		        	try {
+		        		$show = $this->tvdb->getSerie($id_);
+		        	} catch (Exception $e){
+		        		error_log($e);
+		        		$show = false;
+		        	}
+		            if ($show){
+		            	array_push($result, $show);
+		            }
 		        }
 		    }
 	        return $result;

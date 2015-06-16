@@ -166,13 +166,10 @@ class Client
      **/
     public function getSerie($serieId, $language = null)
     {
-        try {
         $language = $language ? : $this->defaultLanguage;
 
         $data = $this->fetchXml('series/' . $serieId . '/' . $language . '.xml');
-        } catch (Exception $e){
-            error_log($e);
-        }
+
         return new Serie($data->Series);
     }
 
@@ -432,7 +429,7 @@ class Client
                     throw new XmlException(implode("\n", $errors));
                 }
             }
-            error_log('Xml file could not be loaded');
+            throw new XmlException('Xml file could not be loaded');
         }
 
         return $simpleXml;
