@@ -40,14 +40,14 @@
     				<ul class="list-inline">
     					<li> <strong><?= $this->lang['seasons']; ?></strong>: </li>
     					<?php foreach ($this->seasons as $nr_s => $season): ?>
-    					<li> <a href="#s<?= ($nr_s+1); ?>">   <?= $this->lang['season'] . ' ' . ($nr_s+1); ?></a> </li>
+    					<li> <a href="#s<?= ($nr_s+1); ?>">   <?= $this->lang['season'] . ' ' . $nr_s; ?></a> </li>
 						<?php endforeach; ?>
 					</ul>
     			</p>
     		</div>
 			<?php if ($this->seasons): ?>
 				<?php foreach ($this->seasons as $nr_s => $season): ?>
-				<h3 id="s<?= ($nr_s+1); ?>"><i class="fa fa-book"></i> Season <?= ($nr_s+1); ?></h3>
+				<h3 id="s<?= ($nr_s+1); ?>"><i class="fa fa-book"></i> Season <?= $nr_s; ?></h3>
 				<hr>
 				<?php foreach ($season as $nr_e => $episode): ?>
 				<div class="col-sm-2" style="margin-top:10px;">
