@@ -19,7 +19,7 @@
 			</div>
 		</form>
 	</div>
-	<?php if ($this->results): ?>
+	<?php if (count($this->results) > 0): ?>
 	<br>
 	<div class="well">
 		<div class="list-group">
@@ -31,6 +31,12 @@
 		<?php endif; ?>
 		<?php endforeach; ?>
 		</div>
+	</div>
+	<?php else: ?>
+	<div class="well">
+		<p>
+		<strong><?= $this->lang['noshows']; ?></strong>
+		</p>
 	</div>
 	<?php endif; ?>
 </div>

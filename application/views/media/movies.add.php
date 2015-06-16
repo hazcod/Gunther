@@ -34,6 +34,12 @@
 		<?php endforeach; ?>
 		</div>
 	</div>
+	<?php else: ?>
+	<div class='well'>
+		<p>
+		<strong><?= $this->lang['nomovies']; ?></strong>
+		</p>
+	</div>
 	<?php endif; ?>
 </div>
 
