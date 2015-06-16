@@ -3,9 +3,9 @@
 date_default_timezone_set('Europe/Brussels');
 
 $settings = array(
-    'CP_API' => 'http://192.168.0.210:5053/api/72cb07d4472343448cd1477259b6664b/',
-    'SB_API' => 'http://192.168.0.210:8083/api/218a9ace35adac6caffb1c873d5929c2/?cmd=',
-    'TVDB_API' => '67B935BD93959F7A',      #Your TheTvDB API key
+    'CP_API' => 'http://localhost:5050/api/API-KEY-HERE/',
+    'SB_API' => 'http://localhost:8081/api/API-KEY-HERE/?cmd=',
+    'TVDB_API' => 'API-KEY-HERE',      #Your TheTvDB API key
 
     'TVDB_URL' => 'http://thetvdb.com',
     'CACHE_DIR' => 'cache/',    #cache directory for TheTvDB/IMDB
