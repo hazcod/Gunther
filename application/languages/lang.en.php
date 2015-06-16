@@ -53,6 +53,7 @@ function getLang(){
     $lang['showadded']    = 'TV Show has been added.';
     $lang['showadderr']   = 'There was an error adding this TV Show.';
     $lang['noseasons']    = 'There are no seasons available for this show.';
+    $lang['shownotfound'] = 'Episode could not be found.';
 
     $lang['htwindows']    = 'How-To Windows';
     $lang['htmac']        = 'How-To Mac';
