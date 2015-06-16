@@ -51,11 +51,11 @@
 				<hr>
 				<?php foreach ($season as $nr_e => $episode): ?>
 				<div class="col-sm-2" style="margin-top:10px;">
-					<a href="/watch/index/ss<?= $episode->serieId . '-' . $nr_s . '-' . $nr_e; ?>">
+					<a href="/watch/index/ss<?= $episode->serieId . '-' . $nr_s . '-' . ($nr_e+1); ?>">
 					<div class="fix">
 						<img class="imgscale" src="http://thetvdb.com/banners/<?= $episode->thumbnail; ?>" alt="<?= $episode->name; ?>" />
 						<div class="desc">
-							<?= $nr_e . ': ' . $episode->name; ?>
+							<?= ($nr_e+1) . ': ' . $episode->name; ?>
 						</div>
 					</div>
 					</a>
