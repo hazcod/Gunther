@@ -158,7 +158,7 @@ class Watch extends Core_controller
         $serie_id = $parts[0];
         $season_id = $parts[1];
         $episode_id = $parts[2];
-        $episode = $this->mediamodel->getEpisode($serie_id, $season_id, $episode_id);
+        $episode = $this->mediamodel->getEpisode($serie_id, $season_id +1, $episode_id +1); #no zero
         if ($episode && file_exists($episode->location)){
             $this->template->file = $id;
             $this->template->type = $this->mediamodel->getMimeType($episode->location);

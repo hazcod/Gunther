@@ -40,18 +40,18 @@
     				<ul class="list-inline">
     					<li> <strong><?= $this->lang['seasons']; ?></strong>: </li>
     					<?php foreach ($this->seasons as $nr_s => $season): ?>
-    					<li> <a href="#s<?= ($nr_s+1); ?>">   <?= $this->lang['season'] . ' ' . $nr_s; ?></a> </li>
+    					<li> <a href="#s<?= $nr_s; ?>">   <?= $this->lang['season'] . ' ' . $nr_s; ?></a> </li>
 						<?php endforeach; ?>
 					</ul>
     			</p>
     		</div>
 			<?php if ($this->seasons): ?>
 				<?php foreach ($this->seasons as $nr_s => $season): ?>
-				<h3 id="s<?= ($nr_s+1); ?>"><i class="fa fa-book"></i> Season <?= $nr_s; ?></h3>
+				<h3 id="s<?= $nr_s; ?>"><i class="fa fa-book"></i> Season <?= $nr_s; ?></h3>
 				<hr>
 				<?php foreach ($season as $nr_e => $episode): ?>
 				<div class="col-sm-2" style="margin-top:10px;">
-					<a href="/watch/index/ss<?= $episode->serieId . '-' . $nr_s . '-' . ($nr_e+1); ?>">
+					<a href="/watch/index/ss<?= $episode->serieId . '-' . $nr_s . '-' . $nr_e; ?>">
 					<div class="fix">
 						<img class="imgscale" src="http://thetvdb.com/banners/<?= $episode->thumbnail; ?>" alt="<?= $episode->name; ?>" />
 						<div class="desc">
