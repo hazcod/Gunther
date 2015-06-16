@@ -59,6 +59,8 @@ mkdir -p /etc/nginx/ssl-certs
 #log directory
 mkdir -p /var/log/nginx
 chown www-data -R /var/log/nginx
+touch /var/log/nginx/error.log
+chmod 777 /var/log/nginx.error.log
 
 #create certs
 cd /etc/nginx/ssl-certs

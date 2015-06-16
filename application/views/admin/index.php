@@ -58,6 +58,9 @@
 	
 	<div class="row">
 		<h3>Log</h3>
+		<div class='pull-right'>
+			<a href='/admin/clearlog'><i class='fa fa-trash'></i> <?= $this->lang['clearlog']; ?></a>
+		</div>
 		<hr>
 		<pre><?= $this->log; ?></pre>
 	</div>

@@ -187,8 +187,18 @@ class Admin extends Core_controller
         }
     }
 
-    public function clearmoviecache(){
-
+    public function clearlog(){
+        if ($this->checkAdminAccess()){
+            $myTextFileHandler = @fopen($this->settings['LOG'], "r+");
+            if ($myTextFileHandler){
+                ftruncate($myTextFileHandler, 0);
+                fclose($myTextFileHandler);
+                $this->setFlashmessage($this->lang['logcleared']);
+            } else {
+                $this->setFlashmessage($this->lang['lognotcleared'] . ' ' . $this->settings['LOG'], 'danger');
+            }
+            $this->redirect('admin/index');
+        }
     }
 
     public function index()
