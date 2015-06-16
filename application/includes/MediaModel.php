@@ -273,7 +273,7 @@
 
 	    public function getEpisode($serie_id, $season_id, $episode_id){
 	        $json = $this->getJson($this->settings['SB_API'] . 'episode&tvdbid=' . urlencode($serie_id) . '&season=' . $season_id . '&episode=' . $episode_id . '&full_path=1');
-	        if ($json){
+	        if ($json && count((array)$json->data)){
 	        	return $json->data;
 	        } else {
 	        	return false;
