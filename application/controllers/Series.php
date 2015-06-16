@@ -47,7 +47,7 @@ class Series extends Core_controller
     public function add($id=false){
         $this->template->setPagetitle($this->lang['addshow'] . ' - ' . $this->lang['title']);
         if ($id){
-            if (strcmp($this->mediamodel->addSeries($id)->result, "success") == 0){
+            if ($this->mediamodel->addSeries($id)){
                 $this->setflashmessage($this->lang['showadded'], 'info');
             } else {
                 $this->setflashmessage($this->lang['showadderr'], 'danger');
