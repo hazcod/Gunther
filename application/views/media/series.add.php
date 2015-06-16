@@ -32,7 +32,7 @@
 		<?php endforeach; ?>
 		</div>
 	</div>
-	<?php else: ?>
+	<?php elseif ($this->results): ?>
 	<div class="well">
 		<p>
 		<strong><?= $this->lang['noshows']; ?></strong>

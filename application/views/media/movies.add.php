@@ -23,7 +23,7 @@
 			</div>
 		</form>
 	</div>
-	<?php if ($this->results): ?>
+	<?php if (count($this->results) > 0): ?>
 	<br>
 	<div class="well">
 		<div class="list-group">
@@ -34,7 +34,7 @@
 		<?php endforeach; ?>
 		</div>
 	</div>
-	<?php else: ?>
+	<?php elseif ($this->results): ?>
 	<div class='well'>
 		<p>
 		<strong><?= $this->lang['nomovies']; ?></strong>
