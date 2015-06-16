@@ -232,5 +232,6 @@ chmod +x /etc/init.d/nginx
 mkdir -p /var/tmp/nginx
 #run nginx
 systemctl daemon-reload
+update-rc.d nginx defaults
 service nginx start
 
