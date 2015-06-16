@@ -52,6 +52,7 @@ class Series extends Core_controller
             } else {
                 $this->setflashmessage($this->lang['showadderr'], 'danger');
             }
+            $this->mediamodel->flushShowCache();
             $this->redirect('series/index');
          } else {
             $this->template->render('media/series.add');
