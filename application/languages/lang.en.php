@@ -75,6 +75,12 @@ function getLang(){
     $lang['restart']      = 'Restart';
     $lang['scanstarted']  = 'A scan of your library has been initiated. This can take a while..';
     $lang['restarted']    = 'A restart of the service has been initiated. Functionality may be unavailable for a short period..';
+    $lang['clearcaches']  = 'Clear all caches';
+    $lang['flushmovies']  = 'Flush movie cache';
+    $lang['flushshows']   = 'Flush TV Show cache';
+    $lang['flushed']      = 'All caches have been forcefully cleared.';
+    $lang['moviesflushed']= 'Movie information cache has been cleared.';
+    $lang['showsflushed'] = 'TV Show information cache has been cleared.';
 
     $lang['readmore']     = 'Read more';
     $lang['synology-info']= '...offers proven NAS devices for home and enterprise users. An easy web interface smoothens the experience, while the community packages give you loads of functionality.';

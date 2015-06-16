@@ -152,6 +152,45 @@ class Admin extends Core_controller
         }
     }
 
+    private function recursiveDelete($str) {
+        if (is_file($str)) {
+            return @unlink($str);
+        }
+        elseif (is_dir($str)) {
+            $scan = glob(rtrim($str,'/').'/*');
+            foreach($scan as $index=>$path) {
+                recursiveDelete($path);
+            }
+            return @rmdir($str);
+        }
+    }
+
+    public function clearcache($subj=false){
+        if ($this->checkAdminAccess()){
+            if (!$subj){
+                $this->recursiveDelete($this->settings['CACHE_DIR'] . '*');
+                $this->mediamodel->fillCache();
+                $this->setFlashmessage($this->lang['flushed']);
+                $this->redirect('admin/index');
+            } elseif ($subj == 'movies'){
+                $this->mediamodel->flushMovieCache();
+                $this->setFlashmessage($this->lang['moviesflushed']);
+                $this->redirect('admin/index');
+            } elseif ($subj == 'shows'){
+                $this->mediamodel->flushShowCache();
+                $this->setFlashmessage($this->lang['showsflushed']);
+                $this->redirect('admin/index');
+            } else {
+                $this->setFlashmessage('Invalid URL', 'danger');
+                $this->redirect('admin/index');
+            }
+        }
+    }
+
+    public function clearmoviecache(){
+
+    }
+
     public function index()
     {
         if ($this->checkAdminAccess()){
