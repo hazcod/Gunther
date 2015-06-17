@@ -324,9 +324,9 @@
 	    						&& array_key_exists('movie', $release->files) && (count($release->files->movie) > 0)
          						&& file_exists($release->files->movie[0])){
 						$result = $release->files->movie[0];
-						if (count($release->files->movie) > 0){
+						if (count($release->files->movie) > 1){
 							// how would we ever check the quality of multiple video files?
-							error_log("Notice: multiple video files were available, but we can only take the first. (" . $movie->info->original_title . ")");
+							error_log("Notice: multiple video files were available, but we can only take the first. (" . $movie->info->original_title . ") dump: " . var_dump($release->files->movie));
 						}
 	    			}
 	    		}
