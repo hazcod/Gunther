@@ -6,6 +6,8 @@ Gunther can be used as a web frontend for your personal media. You can stream yo
 The idea is to have a central place for the less tech-savvy user.
 If you want to contribute, application/ is the folder you need.
 
+Note: This does not install usenet, torrent or media applications for you. [Use something this installer for that](https://github.com/igorpecovnik/Debian-micro-home-server).
+
 
 # Installation
 0. Start with a fresh debian installation and be logged in as root.
