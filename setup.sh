@@ -34,7 +34,8 @@ git clone https://github.com/arut/nginx-dav-ext-module
 # compile and install nginx
 cd nginx-1.8.0/
 ./configure --add-module=../nginx-dav-ext-module --add-module=../nginx-http-auth-digest --with-http_ssl_module --with-http_dav_module --prefix=/etc/nginx
-make && make install
+cpunum=$(nproc)
+make -j$cpunum && make install
 # cleanup
 rm -r nginx-*
 
