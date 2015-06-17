@@ -315,6 +315,26 @@
 	        return $result;
 	    }
 
+	    public function getRelease($movie){
+	    	$result = false;
+
+	    	if ($movie && array_key_exists('releases', $movie)){
+	    		foreach ($movie->releases as $release){
+	    			if (($result == false) && array_key_exists('files', $release) && (count($release->files) >0)
+	    						&& array_key_exists('movie', $release->files) && (count($release->files->movie) > 0)
+         						&& file_exists($release->files->movie[0])){
+						$result = $release->files->movie[0];
+						if (count($release->files->movie) > 0){
+							// how would we ever check the quality of multiple video files?
+							error_log("Notice: multiple video files were available, but we can only take the first. (" . $movie->info->original_title . ")");
+						}
+	    			}
+	    		}
+	    	}
+
+	    	return $result;
+	    }
+
 
 	}
 

@@ -20,8 +20,11 @@ class Watch extends Core_controller
 
     private function streamMovie($id){
         $movie = $this->mediamodel->getMovie($id); 
-        if ($movie && file_exists($movie->releases[0]->files->movie[0])){
-            $stream = new VideoStream($movie->releases[0]->files->movie[0]);
+        if ($movie){
+            $release = $this->mediamodel->getRelease($movie);
+        }
+        if (($release != false) && file_exists($release)){
+            $stream = new VideoStream($release);
             return $stream->start();
         } else {
             header("HTTP/1.0 404 Not Found");
@@ -45,7 +48,7 @@ class Watch extends Core_controller
     }
 
     public function getmovie($id){
-        return $this->offerFile($this->mediamodel->getMovie($id)->releases[0]->files->movie[0]);
+        return $this->offerFile($this->mediamodel->getRelease($this->mediamodel->getMovie($id)));
     }
 
    public function stream($id=false){
@@ -62,14 +65,14 @@ class Watch extends Core_controller
    private function getMovieSub($id, $lang){
         $subfile = false;
         $movie = $this->mediamodel->getMovie($id);
-        $filepath = $movie->releases[0]->files->movie[0];
-        $moviename = substr(basename($filepath), 0, strlen(basename($filepath))-4);
-        $sub = dirname($filepath) . '/' . $moviename . '.' . $lang . '.srt';
+        $release = $this->mediamodel->getRelease($movie);
+        $moviename = substr(basename($release), 0, strlen(basename($release))-4);
+        $sub = dirname($release) . '/' . $moviename . '.' . $lang . '.srt';
         if (file_exists($sub)){
             $subfile = $sub;
         } else {
             # try without a lang, so movie.srt
-            $sub = dirname($filepath) . '/' . $moviename . '.srt';
+            $sub = dirname($release) . '/' . $moviename . '.srt';
             if (file_exists($sub)){
                 $subfile = $sub;
             }
@@ -130,17 +133,18 @@ class Watch extends Core_controller
 
    private function watchMovie($id){
         $movie = $this->mediamodel->getMovie($id);
-        if ($movie && array_key_exists('releases', $movie) && (count($movie->releases) >0) 
-         && array_key_exists('files', $movie->releases[0]) && (count($movie->releases[0]->files) >0)
-         && array_key_exists('movie', $movie->releases[0]->files) && (count($movie->releases[0]->files->movie) > 0)
-         && file_exists($movie->releases[0]->files->movie[0])){
-
-            $filepath = $movie->releases[0]->files->movie[0];
+        if ($movie){
+            $release = $this->mediamodel->getRelease($movie);
+            if ($release == false){
+                error_log('No valid release found for ' . $movie->info->original_title . ' : ' . var_dump($movie->releases));
+            }
+        }
+        if ($release){
             $this->template->file = $id;
-            $this->template->type = $this->mediamodel->getMimeType($filepath);
-            $this->template->codec= $this->mediamodel->getCodecInfo($filepath)['videoCodec'];
+            $this->template->type = $this->mediamodel->getMimeType($release);
+            $this->template->codec= $this->mediamodel->getCodecInfo($release)['videoCodec'];
             $subs = array();
-            foreach (glob(dirname($filepath) . '/*.srt') as $sub){
+            foreach (glob(dirname($release) . '/*.srt') as $sub){
                 $lang='en';
                 if (substr_count(basename($sub), '.') > 1){
                     $lang = substr($sub, strlen($sub)-6, 2);
@@ -154,7 +158,7 @@ class Watch extends Core_controller
         } else {
             $this->setFlashmessage($this->lang['movienotfound'], 'danger');
             if ($movie){
-                error_log("Movie not found: " . var_dump($movie->releases));
+                error_log("Movie not found: " . $movie->info->original_title);
             }
             $this->redirect('movies/index');
         }
