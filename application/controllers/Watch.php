@@ -130,7 +130,11 @@ class Watch extends Core_controller
 
    private function watchMovie($id){
         $movie = $this->mediamodel->getMovie($id);
-        if ($movie && $movie->releases && (count($movie->releases) >0) && $movie->releases[0]->files && file_exists($movie->releases[0]->files->movie[0])){
+        if ($movie && $movie->releases && (count($movie->releases) >0) 
+         && $movie->releases[0]->files && (count($movie->releases[0]->files) >0)
+         && $movie->releases[0]->files->movie && (count($movie->releases[0]->files->movie) > 0)
+         && file_exists($movie->releases[0]->files->movie[0])){
+            
             $filepath = $movie->releases[0]->files->movie[0];
             $this->template->file = $id;
             $this->template->type = $this->mediamodel->getMimeType($filepath);
@@ -150,7 +154,7 @@ class Watch extends Core_controller
         } else {
             $this->setFlashmessage($this->lang['movienotfound'], 'danger');
             if ($movie){
-                error_log("Movie not found: " . $movie->releases[0]->files->movie[0]);
+                error_log("Movie not found: " . var_dump($movie->releases));
             }
             $this->redirect('movies/index');
         }
