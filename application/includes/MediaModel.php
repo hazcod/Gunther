@@ -228,7 +228,7 @@
 		        	try {
 		        		$show = $this->tvdb->getSerie($id_);
 		        	} catch (Exception $e){
-		        		//error_log($e);
+		        		error_log("Coult not find show: " . $_id . " (" . $e .")");
 		        		$show = false;
 		        	}
 		            if ($show){
