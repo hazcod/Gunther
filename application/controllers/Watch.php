@@ -27,6 +27,7 @@ class Watch extends Core_controller
             $stream = new VideoStream($release);
             return $stream->start();
         } else {
+            error_log("Streamer could not find " . $release);
             header("HTTP/1.0 404 Not Found");
             return '404 - File Not Found';
         }
@@ -42,6 +43,7 @@ class Watch extends Core_controller
             $stream = new VideoStream($serie->location);
             return $stream->start();
         } else {
+            error_log("Streamer could not find " . $release);
             header("HTTP/1.0 404 Not Found");
             return '404 - File Not Found';
         }
