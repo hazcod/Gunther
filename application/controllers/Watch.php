@@ -130,7 +130,7 @@ class Watch extends Core_controller
 
    private function watchMovie($id){
         $movie = $this->mediamodel->getMovie($id);
-        if ($movie && file_exists($movie->releases[0]->files->movie[0])){
+        if ($movie && $movie->releases && (count($movie->releases) >0) && $movie->releases[0]->files && file_exists($movie->releases[0]->files->movie[0])){
             $filepath = $movie->releases[0]->files->movie[0];
             $this->template->file = $id;
             $this->template->type = $this->mediamodel->getMimeType($filepath);
