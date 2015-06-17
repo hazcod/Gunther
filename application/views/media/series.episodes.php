@@ -47,11 +47,11 @@
     		</div>
 			<?php if ($this->seasons): ?>
 				<?php foreach ($this->seasons as $nr_s => $season): ?>
-				<h3 id="s<?= $nr_s; ?>"><i class="fa fa-book"></i> Season <?= $nr_s; ?></h3>
+				<h3 id="s<?= $nr_s; ?>"><i class="fa fa-book"></i> Season <?= $nr_s+1; ?></h3>
 				<hr>
 				<?php foreach ($season as $nr_e => $episode): ?>
 				<div class="col-sm-2" style="margin-top:10px;">
-					<a href="/watch/index/ss<?= $episode->serieId . '-' . $nr_s . '-' . ($nr_e+1); ?>">
+					<a href="/watch/index/ss<?= $episode->serieId . '-' . $nr_s . '-' . ($nr_e); ?>">
 					<div class="fix">
 						<img class="imgscale" src="http://thetvdb.com/banners/<?= $episode->thumbnail; ?>" alt="<?= $episode->name; ?>" />
 						<div class="desc">
