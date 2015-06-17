@@ -299,9 +299,6 @@
 	            return null;
 	        }
 
-	       	echo var_dump($videoCodec);
-			exit;
-
 	        return array(
 	            'videoCodec' => (string)$videoCodec[0],
 	            'audioCodec' => (string)$audioCodec[0],
