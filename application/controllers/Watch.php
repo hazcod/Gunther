@@ -27,7 +27,7 @@ class Watch extends Core_controller
             $stream = new VideoStream($release);
             return $stream->start();
         } else {
-            error_log("Streamer could not find " . $release);
+            error_log("Streamer could not find " . $release . " (id $id)");
             header("HTTP/1.0 404 Not Found");
             return '404 - File Not Found';
         }
@@ -38,12 +38,12 @@ class Watch extends Core_controller
         $serie_id = $parts[0];
         $season_id = $parts[1];
         $episode_id = $parts[2];
-        $serie = $this->mediamodel->getEpisode($serie_id, $season_id, $episode_id);
+        $serie = $this->mediamodel->getEpisode($serie_id, $season_id +1, $episode_id +1);
         if ($serie and file_exists($serie->location) and (strcmp($serie->location, '') != 0)){
             $stream = new VideoStream($serie->location);
             return $stream->start();
         } else {
-            error_log("Streamer could not find " . $release);
+            error_log("Streamer could not find " . $serie . " (id $id)");
             header("HTTP/1.0 404 Not Found");
             return '404 - File Not Found';
         }
