@@ -105,8 +105,12 @@
         	}
     	}
 
-    	public function scanmovies(){
-    		$r = @file_get_contents($this->settings['CP_API'] . 'manage.update?full=true');
+    	public function scanmovies($fast=false){
+    		$full = 'true';
+    		if ($fast){
+    			$full = 'false';
+    		}
+    		$r = @file_get_contents($this->settings['CP_API'] . 'manage.update?full=' . $full);
     		if ($r){
     			return true;
     		} else {
