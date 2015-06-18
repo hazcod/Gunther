@@ -37,6 +37,7 @@
 		<div class="col-sm-4">
 			<h3>CouchPotato (<?= $this->lang['movies']; ?>)</h3>
 			<hr>
+			<a class="btn btn-primary" href="/admin/scanmovies/full"><i class="fa fa-refresh"></i> <?= $this->lang['refreshlibfull']; ?></a>
 			<a class="btn btn-primary" href="/admin/scanmovies"><i class="fa fa-refresh"></i> <?= $this->lang['refreshlib']; ?></a>
 			<a class="btn btn-danger" href="/admin/restartcp"><i class="fa fa-power-off"></i> <?= $this->lang['restart']; ?></a>
 		</div>

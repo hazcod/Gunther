@@ -71,7 +71,8 @@ function getLang(){
     $lang['addeduser']    = 'has been added with password ';
     $lang['deladmin']     = 'You cannot remove an administrator.';
     $lang['removeduser']  = 'User has been removed. (webdav + panel access)';
-    $lang['refreshlib']   = 'Refresh library';
+    $lang['refreshlib']   = 'Refresh library (fast)';
+    $lang['refreshlibfull']='Re-scan library (slow)' ;
     $lang['restart']      = 'Restart';
     $lang['scanstarted']  = 'A scan of your library has been initiated. This can take a while..';
     $lang['restarted']    = 'A restart of the service has been initiated. Functionality may be unavailable for a short period..';
