@@ -37,7 +37,7 @@ cd nginx-1.8.0/
 cpunum=$(nproc)
 make -j$cpunum && make install
 # cleanup
-rm -r nginx-*
+rm -r /tmp/nginx-*
 
 # create web directory
 mkdir -p /var/www
@@ -226,12 +226,14 @@ case "$1" in
         echo -n "Stopping $DESC: "
         start-stop-daemon --stop --quiet --pidfile /var/run/nginx.pid \
                 --exec $DAEMON
+        killall nginx
         echo "$NAME."
         ;;
   restart|force-reload)
         echo -n "Restarting $DESC: "
         start-stop-daemon --stop --quiet --pidfile \
                 /var/run/nginx.pid --exec $DAEMON
+        killall nginx
         sleep 1
         start-stop-daemon --start --quiet --pidfile \
                 /var/run/nginx.pid --exec $DAEMON -- $DAEMON_OPTS
@@ -255,7 +257,6 @@ EOF
 chmod +x /etc/init.d/nginx
 mkdir -p /var/tmp/nginx
 #run nginx
-systemctl daemon-reload
 update-rc.d nginx defaults
 service nginx start
 
