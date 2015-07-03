@@ -73,11 +73,12 @@ openssl req \
     -x509 \
     -subj "/C=BE/ST=Vlaams-Brabant/L=Brussels/O=Global IT/OU=IT/CN=gunther.com" \
     -keyout gunther.key \
-    -out gunther.crt
+    -out gunther.crt \
+    -sha256
     
 #create DHE parameters, instead of 1024 default ones
 cd /etc/ssl/certs
-openssl dhparam -out dhparam.pem 4096
+#openssl dhparam -out dhparam.pem 4096
 
 #create nginx config
 echo "
@@ -143,7 +144,7 @@ http {
                 # Only allow over HTTPS
                 add_header Strict-Transport-Security "max-age=63072000; includeSubdomains; preload";
 		# Use stronger DHE parameter
-		ssl_dhparam /etc/ssl/certs/dhparam.pem;
+		#ssl_dhparam /etc/ssl/certs/dhparam.pem;
 
                 ssl_certificate     /etc/nginx/ssl-certs/gunther.crt;
                 ssl_certificate_key /etc/nginx/ssl-certs/gunther.key;
