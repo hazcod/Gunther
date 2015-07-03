@@ -21,7 +21,7 @@ ADMIN_PASSWORD="my_password_with_$p3cial_characters"
 apt-get update && apt-get upgrade -y
 
 # install dependencies
-apt-get install -y git apache2-utils openssl libssl-dev libpcre3-dev make gcc php5-common php5-cli php5-fpm php5-curl mediainfo libexpat1-dev
+apt-get install -y git apache2-utils openssl libssl-dev libpcre3-dev make gcc php5-common php5-cli php5-fpm php5-curl mediainfo libexpat1-dev haveged
 
 # install nginx
 mkdir -p /etc/nginx
