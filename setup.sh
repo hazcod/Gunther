@@ -81,7 +81,7 @@ cd /etc/ssl/certs
 #openssl dhparam -out dhparam.pem 4096
 
 #create nginx config
-echo "
+cat > /etc/nginx/conf/nginx.conf << 'EOF'
 user www-data;
 worker_processes $(nproc);
 worker_connections $(ulimit -n);
@@ -185,8 +185,7 @@ http {
                 }
         }
 } 
-
-" > /etc/nginx/conf/nginx.conf
+EOF
 
 #create nginx service file
 cat > /etc/init.d/nginx << 'EOF'
