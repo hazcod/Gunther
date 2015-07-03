@@ -74,6 +74,10 @@ openssl req \
     -subj "/C=BE/ST=Vlaams-Brabant/L=Brussels/O=Global IT/OU=IT/CN=gunther.com" \
     -keyout gunther.key \
     -out gunther.crt
+    
+#create DHE parameters, instead of 1024 default ones
+cd /etc/ssl/certs
+openssl dhparam -out dhparam.pem 4096
 
 #create nginx config
 echo ""
@@ -92,11 +96,9 @@ client_header_timeout 12;
 keepalive_timeout 15;
 send_timeout 10;
 
-gzip             on;
-gzip_comp_level  2;
-gzip_min_length  1000;
-gzip_proxied     expired no-cache no-store private auth;
-gzip_types       text/plain application/x-javascript text/xml text/css application/xml;
+#Only use secure ciphers
+ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
+ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 
 http {
         upstream php {
@@ -137,6 +139,11 @@ http {
         }
         server {
                 listen 443 ssl;
+                
+                # Only allow over HTTPS
+                add_header Strict-Transport-Security "max-age=63072000; includeSubdomains; preload";
+		# Use stronger DHE parameter
+		ssl_dhparam /etc/ssl/certs/dhparam.pem;
 
                 ssl_certificate     /etc/nginx/ssl-certs/gunther.crt;
                 ssl_certificate_key /etc/nginx/ssl-certs/gunther.key;
