@@ -76,13 +76,11 @@ openssl req \
     -out gunther.crt
 
 #create nginx config
-echo '
+echo ""
 user www-data;
-worker_processes 2;
+worker_processes $(nproc);
+worker_connections $(ulimit -n);
 error_log /var/log/nginx/error.log;
-events {
-        worker_connections 1024;
-}
 
 http {
         upstream php {
