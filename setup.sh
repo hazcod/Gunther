@@ -82,6 +82,22 @@ worker_processes $(nproc);
 worker_connections $(ulimit -n);
 error_log /var/log/nginx/error.log;
 
+client_body_buffer_size 10K;
+client_header_buffer_size 1k;
+client_max_body_size 8m;
+large_client_header_buffers 2 1k;
+
+client_body_timeout 12;
+client_header_timeout 12;
+keepalive_timeout 15;
+send_timeout 10;
+
+gzip             on;
+gzip_comp_level  2;
+gzip_min_length  1000;
+gzip_proxied     expired no-cache no-store private auth;
+gzip_types       text/plain application/x-javascript text/xml text/css application/xml;
+
 http {
         upstream php {
                 server unix:/tmp/php5-fpm/sock;
