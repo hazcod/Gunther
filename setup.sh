@@ -61,7 +61,7 @@ mkdir -p /etc/nginx/ssl-certs
 mkdir -p /var/log/nginx
 chown www-data -R /var/log/nginx
 touch /var/log/nginx/error.log
-chmod 777 /var/log/nginx.error.log
+chmod 777 /var/log/nginx/error.log
 
 #create certs
 cd /etc/nginx/ssl-certs
@@ -185,7 +185,7 @@ http {
         }
 } 
 
-' > /etc/nginx/conf/nginx.conf
+" > /etc/nginx/conf/nginx.conf
 
 #create nginx service file
 cat > /etc/init.d/nginx << 'EOF'
