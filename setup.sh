@@ -86,16 +86,16 @@ user www-data;
 worker_processes $(nproc);
 error_log /var/log/nginx/error.log;
 
-#Only use secure ciphers
-ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
-ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-
 http {
 	worker_connections $(ulimit -n);
 	
         upstream php {
                 server unix:/tmp/php5-fpm/sock;
         }
+        
+	#Only use secure ciphers
+	ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
+	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
         
 	client_body_buffer_size 10K;
 	client_header_buffer_size 1k;
