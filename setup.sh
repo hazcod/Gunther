@@ -84,11 +84,12 @@ cd /etc/ssl/certs
 cat > /etc/nginx/conf/nginx.conf << EOF
 user www-data;
 worker_processes $(nproc);
-error_log /var/log/nginx/error.log;
 
-http {
+error_log /var/log/nginx/error.log;
+events {
 	worker_connections $(ulimit -n);
-	
+}
+http {
         upstream php {
                 server unix:/tmp/php5-fpm/sock;
         }
