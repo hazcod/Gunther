@@ -86,25 +86,27 @@ user www-data;
 worker_processes $(nproc);
 error_log /var/log/nginx/error.log;
 
-client_body_buffer_size 10K;
-client_header_buffer_size 1k;
-client_max_body_size 8m;
-large_client_header_buffers 2 1k;
-
-client_body_timeout 12;
-client_header_timeout 12;
-keepalive_timeout 15;
-send_timeout 10;
-
 #Only use secure ciphers
 ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
 ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 
 http {
 	worker_connections $(ulimit -n);
+	
         upstream php {
                 server unix:/tmp/php5-fpm/sock;
         }
+        
+	client_body_buffer_size 10K;
+	client_header_buffer_size 1k;
+	client_max_body_size 8m;
+	large_client_header_buffers 2 1k;
+	
+	client_body_timeout 12;
+	client_header_timeout 12;
+	keepalive_timeout 15;
+	send_timeout 10;
+        
         gzip on;
         gzip_http_version 1.0;
         gzip_comp_level 5;
