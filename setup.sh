@@ -84,7 +84,6 @@ cd /etc/ssl/certs
 cat > /etc/nginx/conf/nginx.conf << EOF
 user www-data;
 worker_processes $(nproc);
-worker_connections $(ulimit -n);
 error_log /var/log/nginx/error.log;
 
 client_body_buffer_size 10K;
@@ -102,6 +101,7 @@ ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
 ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 
 http {
+	worker_connections $(ulimit -n);
         upstream php {
                 server unix:/tmp/php5-fpm/sock;
         }
