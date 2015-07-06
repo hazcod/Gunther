@@ -8,6 +8,12 @@ If you want to contribute, application/ is the folder you need.
 
 Note: This does not install usenet, torrent or other media applications for you. [Use something like this installer for that](https://github.com/blindpet/MediaServerInstaller).
 
+# Features
+- Based on the high performance web server nginx
+- Uses the high performant Webdav protocol for sharing; almost every client supports this
+- No database required
+- Fetches all media directly from CouchPotato/Sickbeard.
+
 
 # Installation
 0. Start with a fresh debian installation and be logged in as root.
