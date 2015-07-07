@@ -41,17 +41,14 @@ rm -r /tmp/nginx-*
 
 # create web directory
 mkdir -p /var/www
+mkdir -p /var/www/webdav
 
 # clone repo
 git clone https://github.com/HazCod/Gunther /var/www
 
-# create webdav directory and set permission to the web user
-mkdir -p /var/www/webdav
-chown www-data:www-data -R /var/www/
-
 # create webdav authentication file
-# add admin user
 htdigest_hash=`printf admin:Media:$ADMIN_PASSWORD| md5sum -`
+# add admin user to webdav file
 echo "admin:Media:${htdigest_hash:0:32}" > /etc/nginx/webdav.auth
 
 #create ssl directory
@@ -59,9 +56,9 @@ mkdir -p /etc/nginx/ssl-certs
 
 #log directory
 mkdir -p /var/log/nginx
-chown www-data -R /var/log/nginx
 touch /var/log/nginx/error.log
-chmod 777 /var/log/nginx/error.log
+chmod 700 /var/log/nginx/error.log
+chown www-data -R /var/log/nginx
 
 #create certs
 cd /etc/nginx/ssl-certs
@@ -89,7 +86,7 @@ error_log /var/log/nginx/error.log;
 events {
 	worker_connections $(ulimit -n);
 }
-http {
+    http {
         upstream php {
                 server unix:/tmp/php5-fpm/sock;
         }
@@ -134,12 +131,12 @@ http {
         ssl_certificate /etc/nginx/ssl-certs/gunther.crt;
         ssl_certificate_key /etc/nginx/ssl-certs/gunther.key;
 
-	include /etc/nginx/conf/mime.types;
+	   include /etc/nginx/conf/mime.types;
         
         server {
                 # REDIRECT HTTP TO HTTPS
                 listen 80;
-                rewrite     ^   https://$server_name$request_uri? permanent;
+                rewrite     ^   https://\$server_name\$request_uri? permanent;
         }
         server {
                 listen 443 ssl;
@@ -168,7 +165,7 @@ http {
                 }
                 
                 location / {
-                    try_files $uri /index.php$is_args$args;
+                    try_files \$uri /index.php\$is_args\$args;
                 }
                 
                 location /img/ { }
@@ -179,7 +176,7 @@ http {
                 location /index.php {
                     fastcgi_split_path_info ^(.+\.php)(/.+)$;
                     include fastcgi_params;
-                    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                    fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
                     fastcgi_pass unix:/var/run/php5-fpm.sock;
                 }
 
@@ -259,6 +256,8 @@ exit 0
 EOF
 chmod +x /etc/init.d/nginx
 mkdir -p /var/tmp/nginx
+chown www-data:www-data -R /var/www/
+chown www-data:www-data -R /etc/nginx
 #run nginx
 update-rc.d nginx defaults
 service nginx start
