@@ -66,11 +66,15 @@ class User_m
             $i=1;
             while (($line = fgets($handle)) !== false) {
                 $parts = explode(':', $line);
-                $result[] = (object) array(
-                    'login' => $parts[0],
-                    'password' => str_replace(array("\r", "\n"), '', $parts[2]),
-                    'id' => $i,
-                );  
+                if (len($parts) == 3){
+	                $result[] = (object) array(
+	                    'login' => $parts[0],
+	                    'password' => str_replace(array("\r", "\n"), '', $parts[2]),
+	                    'id' => $i,
+	                );
+                } else {
+                	error_log("Malformed webdav auth entry at line $i : " . $line . "   in " . $this->settings['AUTH_DIGEST_FILE']);
+                }
                 $i++;            
             }
             fclose($handle);
