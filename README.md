@@ -6,7 +6,7 @@ Gunther can be used as a web frontend for your personal media. You can stream yo
 The idea is to have a central place for the less tech-savvy user.
 If you want to contribute, application/ is the folder you need.
 
-Note: This does not install usenet, torrent or other media applications for you. [Use something like this installer for that](https://github.com/blindpet/MediaServerInstaller).
+Note: This can install downloaders for you. [Use the setupDownloaders.sh script for that.](https://github.com/HazCod/Gunther/blob/master/setupDownloaders.sh).
 
 # Features
 - Based on the high performance web server nginx
