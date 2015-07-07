@@ -45,12 +45,11 @@ make -j$cpunum && make install
 # cleanup
 rm -r /tmp/nginx-*
 
-# create web directory
-mkdir -p /var/www
-mkdir -p /var/www/webdav
-
 # clone repo
 git clone https://github.com/HazCod/Gunther /var/www
+
+# create webdav directory
+mkdir -p /var/www/webdav
 
 # create webdav authentication file
 htdigest_hash=`printf admin:Media:$ADMIN_PASSWORD| md5sum -`
