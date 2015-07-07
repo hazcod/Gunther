@@ -45,14 +45,16 @@ class User_m
 
     public function addUser($user)
     {
-        $output = shell_exec('scripts/addUser.sh ' . $this->settings['AUTH_DIGEST_FILE'] . ' ' . $user);
+        $output = shell_exec('scripts/addUser.sh ' . $this->settings['AUTH_DIGEST_FILE'] . ' ' . $user . ' 2>&1');
         $output = str_replace("\n", "", $output);
         return $output;
     }
 
     public function delUser($id)
     {
-        shell_exec('scripts/delUser.sh ' . $this->settings['AUTH_DIGEST_FILE'] . ' ' . $id);
+        $output = shell_exec('scripts/delUser.sh ' . $this->settings['AUTH_DIGEST_FILE'] . ' ' . $id . ' 2>&1');
+        str_replace("\n", "", $output);
+        error_log($output);
         return true;
     }
 
