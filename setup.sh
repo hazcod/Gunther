@@ -31,6 +31,12 @@ tar zxf nginx-1.8.0.tar.gz
 # download modules
 git clone https://github.com/atomx/nginx-http-auth-digest
 git clone https://github.com/arut/nginx-dav-ext-module
+
+# shut down nginx if necessary
+if [ ! -z "$(pgrep nginx)" ]; then
+	killall nginx
+fi
+
 # compile and install nginx
 cd nginx-1.8.0/
 ./configure --add-module=../nginx-dav-ext-module --add-module=../nginx-http-auth-digest --with-http_ssl_module --with-http_dav_module --prefix=/etc/nginx
