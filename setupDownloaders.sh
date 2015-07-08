@@ -15,6 +15,7 @@ sed -i 's/CP_HOME=/CP_HOME=\/home\/media\/couchpotato\//g' /etc/default/couchpot
 sed -i 's/CP_USER=/CP_USER=media/g' /etc/default/couchpotato
 echo "HOST=127.0.0.1" >> /etc/default/couchpotato
 echo "PORT=5050" >> /etc/default/couchpotato
+echo "SSD_OPTS=--group=media"
 update-rc.d couchpotato defaults
 
 
@@ -26,6 +27,7 @@ chmod +x /etc/init.d/sickrage
 echo "SR_USER=media" > /etc/default/sickrage
 echo "SR_HOME=/home/media/sickrage" > /etc/default/sickrage
 echo "SR_OPTS=-p 8081" > /etc/default/sickrage
+echo "SR_GROUP=media" > /etc/default/sickrage
 #TODO: HOST
 update-rc.d sickrage defaults
 
@@ -40,6 +42,7 @@ sed -i 's/USER=/USER=media/g' /etc/default/sabnzbdplus
 sed -i 's/CONFIG=/CONFIG=\/home\/media\/sabnzbdplus\/settings/g' /etc/default/sabnzbdplus
 sed -i 's/HOST=/HOST=127.0.0.1/g' /etc/default/sabnzbdplus
 sed -i 's/PORT=/PORT=8080/g' /etc/default/sabnzbdplus
+sed -i 's/EXTRAOPTS=/EXTRAOPTS=--group=media/g' /etc/default/sabnzbdplus
 update-rc.d sabnzbdplus defaults
 
 # Headphones
@@ -49,6 +52,7 @@ chmod +x /etc/init.d/headphones
 echo "HP_USER=media" > /etc/default/headphones
 echo "HP_HOME=/home/media/headphones" > /etc/default/headphones
 echo "HP_PORT=/home/media/headphones" > /etc/default/headphones
+echo "SSD_OPTS=--group=media" > /etc/default/headphones
 #TODO : HOST
 update-rc.d headphones defaults
 
