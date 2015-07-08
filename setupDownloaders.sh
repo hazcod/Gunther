@@ -32,8 +32,11 @@ echo "SR_GROUP=media" > /etc/default/sickrage
 update-rc.d sickrage defaults
 
 # Sabnzbd
-echo "deb http://ppa.launchpad.net/jcfp/ppa/ubuntu precise main" | tee -a /etc/apt/sources.list
-apt-key adv --keyserver hkp://pool.sks-keyservers.net:11371 --recv-keys 0x98703123E0F52B2BE16D586EF13930B14BB9F05F
+r=$(grep "ppa.launchpad.net/jcfp/ppa/ubuntu precise main" /etc/apt/sources.list)
+if [ -z "$r" ]; then
+  echo "deb http://ppa.launchpad.net/jcfp/ppa/ubuntu precise main" | tee -a /etc/apt/sources.list
+  apt-key adv --keyserver hkp://pool.sks-keyservers.net:11371 --recv-keys 0x98703123E0F52B2BE16D586EF13930B14BB9F05F
+fi
 apt-get update
 apt-get upgrade -y
 apt-get install -y --force-yes sabnzbdplus
