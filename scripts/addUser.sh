@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "$#" -eq 2 ]; then
+if [ "$#" -eq 2 ] || [ "$#" -eq 3 ]; then
 	# auth realm for digest auth
 	AUTH_REALM=Media
 
@@ -9,7 +9,11 @@ if [ "$#" -eq 2 ]; then
 	HTDIGEST_FILE=$1
 
 	# generate a pseudo-random password
-	rand_pw=`< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c12`
+	if [ -z "$3" ]; then
+		rand_pw=`< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c12`
+	else
+		rand_pw="$3"
+	fi
 
 	# hash the username, realm, and password
 	htdigest_hash=`printf $username:$AUTH_REALM:$rand_pw | md5sum -`
