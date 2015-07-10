@@ -56,6 +56,8 @@ mkdir -p /var/www/webdav
 htdigest_hash=`printf admin:Media:$ADMIN_PASSWORD| md5sum -`
 # add admin user to webdav file
 echo "admin:Media:${htdigest_hash:0:32}" > /etc/nginx/webdav.auth
+chown www-data:www-data /etc/nginx/webdav.auth
+chmod 600 /etc/nginx/webdav.auth
 
 #create ssl directory
 mkdir -p /etc/nginx/ssl-certs
