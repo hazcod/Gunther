@@ -6,14 +6,13 @@
 #cryptsetup -y -v luksFormat /dev/vdb
 #cryptsetup luksOpen /dev/vdb media
 #mkfs.ext4 /dev/mapper/media
-#mkdir -p /mnt/media
+#mkdir -p /mnt/media  (assuming your media is stored in /mnt/media)
 #echo "media_crypt	/dev/vdb	none	luks" >> /etc/crypttab
 #echo "/dev/mapper/media_crypt	/mnt/media	ext4	rw	0	2" >> /etc/fstab
 
 # This will be the password used for your admin account. Login with 'admin'
 ADMIN_PASSWORD="my_password_with_$p3cial_characters"
-
-
+MEDIA_PATH="/mnt/media" #edit in application/config.php too
 
 ##===== DO NOT MODIFY BELOW THIS LINE ====================================
 
@@ -100,10 +99,7 @@ rtmp {
         listen 1935;
         chunk_size 2000;
         application stream {
-            live on;
-            # publish only from localhost
-            allow publish 127.0.0.1;
-            deny publish all;   
+            play $MEDIA_PATH;
         }
     }
 }
@@ -186,7 +182,7 @@ http {
                         auth_digest_user_file /etc/nginx/webdav.auth;
                 
                 	autoindex On;
-                	alias /mnt/media; #assuming your media is accessed in /mnt/media
+                	alias $MEDIA_PATH;
                         dav_methods COPY;
                         dav_access all:r;
                 }

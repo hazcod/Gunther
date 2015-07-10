@@ -7,6 +7,8 @@ $settings = array(
     'SB_API' => 'http://localhost:8083/api/API-KEY-HERE/?cmd=',
     'TVDB_API' => 'TVDB-API-KEY-HERE',      #Your TheTvDB API key
 
+    'MEDIA_LOC' => '/mnt/media/',
+
     'TVDB_URL' => 'http://thetvdb.com',
     'CACHE_DIR' => 'cache/',    #cache directory for TheTvDB/IMDB
     'CACHE_TTL' => 86400,        #Cache time-to-live in seconds, default 1 day
