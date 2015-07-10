@@ -169,11 +169,11 @@ http {
                 root /var/www;
                 index index.php;
                 
-                map $request $isdavreq {
+                map \$request \$isdavreq {
 			~^/webdav
 			default 0;
 		}
-                access_log /var/log/nginx/access.log combined if=$isdavreq;
+                access_log /var/log/nginx/access.log combined if=\$isdavreq;
 
                 location ~ /\. { deny all; access_log off; log_not_found off; }
                 
