@@ -31,6 +31,7 @@ tar zxf nginx-1.8.0.tar.gz
 # download modules
 git clone https://github.com/atomx/nginx-http-auth-digest
 git clone https://github.com/arut/nginx-dav-ext-module
+git clone https://github.com/arut/nginx-rtmp-module
 
 # shut down nginx if necessary
 if [ ! -z "$(pgrep nginx)" ]; then
@@ -39,7 +40,7 @@ fi
 
 # compile and install nginx
 cd nginx-1.8.0/
-./configure --add-module=../nginx-dav-ext-module --add-module=../nginx-http-auth-digest --with-http_ssl_module --with-http_dav_module --prefix=/etc/nginx
+./configure --add-module=../nginx-dav-ext-module --add-module=../nginx-http-auth-digest --add-module=../nginx-rtmp-module --with-http_ssl_module --with-http_dav_module --prefix=/etc/nginx
 cpunum=$(nproc)
 make -j$cpunum && make install
 # cleanup
@@ -88,13 +89,26 @@ user www-data;
 worker_processes $(nproc);
 
 error_log /var/log/nginx/error.log;
+rtmp_auto_push on;
 events {
 	worker_connections $(ulimit -n);
 }
-    http {
-        upstream php {
-                server unix:/tmp/php5-fpm/sock;
+rtmp {
+    server {
+        listen 1935;
+        chunk_size 2000;
+        application stream {
+            live on;
+            # publish only from localhost
+            allow publish 127.0.0.1;
+            deny publish all;   
         }
+    }
+}
+http {
+    upstream php {
+        server unix:/tmp/php5-fpm/sock;
+    }
         
 	#Only use secure ciphers
 	ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
