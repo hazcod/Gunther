@@ -66,7 +66,7 @@ class User_m
             $i=1;
             while (($line = fgets($handle)) !== false) {
                 $parts = explode(':', $line);
-                if (len($parts) == 3){
+                if (sizeof($parts) == 3){
 	                $result[] = (object) array(
 	                    'login' => $parts[0],
 	                    'password' => str_replace(array("\r", "\n"), '', $parts[2]),
