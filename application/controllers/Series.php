@@ -67,9 +67,9 @@ class Series extends Core_controller
             $seasons = array();
             $nr = 0;
             foreach ($info['episodes'] as $episode){
-                $epi = $this->mediamodel->getEpisode($id, $episode->season, $nr);
+                $epi = $this->mediamodel->getEpisode($id, $episode->season+1, $nr+1);
 
-                if (array_key_exists('status', $epi) and strcmp($epi->status, 'Downloaded') == 0){
+                if ($epi && array_key_exists('status', $epi) and strcmp($epi->status, 'Downloaded') == 0){
                     if (array_key_exists($episode->season, $seasons) == false){
                         $seasons[$episode->season] = array();
                         $nr=0;

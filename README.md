@@ -6,6 +6,14 @@ Gunther can be used as a web frontend for your personal media. You can stream yo
 The idea is to have a central place for the less tech-savvy user.
 If you want to contribute, application/ is the folder you need.
 
+Note: This can install downloaders for you. [Use the setupDownloaders.sh script for that.](https://github.com/HazCod/Gunther/blob/master/setupDownloaders.sh).
+
+# Features
+- Based on the high performance web server nginx
+- Uses the high performant Webdav protocol for sharing; almost every client supports this
+- No database required
+- Fetches all media directly from CouchPotato/Sickbeard.
+
 
 # Installation
 0. Start with a fresh debian installation and be logged in as root.

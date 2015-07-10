@@ -232,7 +232,7 @@
 		        	try {
 		        		$show = $this->tvdb->getSerie($id_);
 		        	} catch (Exception $e){
-		        		//error_log($e);
+		        		error_log("Coult not find show: " . $_id . " (" . $e .")");
 		        		$show = false;
 		        	}
 		            if ($show){
@@ -245,7 +245,7 @@
 
 	    public function getLatestEpisodes($limit=10){
 	    	$result = array();
-	    	$data = json_decode(@file_get_contents($this->settings['SB_API'] . 'history&limit=' . urlencode($limit)));
+	    	$data = json_decode(@file_get_contents($this->settings['SB_API'] . 'history&type=downloaded&limit=' . urlencode($limit)));
 	    	if ($data){
 		    	foreach ($data->data as $log){
 		    		array_push($result, $this->tvdb->getEpisode($log->tvdbid, $log->season, $log->episode));
@@ -277,7 +277,7 @@
 
 	    public function getEpisode($serie_id, $season_id, $episode_id){
 	        $json = $this->getJson($this->settings['SB_API'] . 'episode&tvdbid=' . urlencode($serie_id) . '&season=' . $season_id . '&episode=' . $episode_id . '&full_path=1');
-	        if ($json){
+	        if ($json && count((array)$json->data)){
 	        	return $json->data;
 	        } else {
 	        	return false;
@@ -303,9 +303,6 @@
 	            return null;
 	        }
 
-	       	echo var_dump($videoCodec);
-			exit;
-
 	        return array(
 	            'videoCodec' => (string)$videoCodec[0],
 	            'audioCodec' => (string)$audioCodec[0],
@@ -320,6 +317,26 @@
 		        finfo_close($finfo);
 		    }
 	        return $result;
+	    }
+
+	    public function getRelease($movie){
+	    	$result = false;
+
+	    	if ($movie && array_key_exists('releases', $movie)){
+	    		foreach ($movie->releases as $release){
+	    			if (($result == false) && array_key_exists('files', $release) && (count($release->files) >0)
+	    						&& array_key_exists('movie', $release->files) && (count($release->files->movie) > 0)
+         						&& file_exists($release->files->movie[0])){
+						$result = $release->files->movie[0];
+						if (count($release->files->movie) > 1){
+							// how would we ever check the quality of multiple video files?
+							error_log("Notice: multiple video files were available, but we can only take the first. (" . $movie->info->original_title . ") dump: " . var_dump($release->files->movie));
+						}
+	    			}
+	    		}
+	    	}
+
+	    	return $result;
 	    }
 
 

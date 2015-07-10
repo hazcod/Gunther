@@ -21,7 +21,7 @@ ADMIN_PASSWORD="my_password_with_$p3cial_characters"
 apt-get update && apt-get upgrade -y
 
 # install dependencies
-apt-get install -y git apache2-utils openssl libssl-dev libpcre3-dev make gcc php5-common php5-cli php5-fpm php5-curl mediainfo libexpat1-dev
+apt-get install -y git apache2-utils openssl libssl-dev libpcre3-dev make gcc php5-common php5-cli php5-fpm php5-curl mediainfo libexpat1-dev haveged
 
 # install nginx
 mkdir -p /etc/nginx
@@ -31,33 +31,41 @@ tar zxf nginx-1.8.0.tar.gz
 # download modules
 git clone https://github.com/atomx/nginx-http-auth-digest
 git clone https://github.com/arut/nginx-dav-ext-module
+git clone https://github.com/arut/nginx-rtmp-module
+
+# shut down nginx if necessary
+if [ ! -z "$(pgrep nginx)" ]; then
+	killall nginx
+fi
+
 # compile and install nginx
 cd nginx-1.8.0/
-./configure --add-module=../nginx-dav-ext-module --add-module=../nginx-http-auth-digest --with-http_ssl_module --with-http_dav_module --prefix=/etc/nginx
-make && make install
+./configure --add-module=../nginx-dav-ext-module --add-module=../nginx-http-auth-digest --add-module=../nginx-rtmp-module --with-http_ssl_module --with-http_dav_module --prefix=/etc/nginx
+cpunum=$(nproc)
+make -j$cpunum && make install
 # cleanup
-rm -r nginx-*
-
-# create web directory
-mkdir -p /var/www
+rm -r /tmp/nginx-*
 
 # clone repo
 git clone https://github.com/HazCod/Gunther /var/www
 
-# create webdav directory and set permission to the web user
+# create webdav directory
 mkdir -p /var/www/webdav
-chown www-data:www-data -R /var/www/
 
 # create webdav authentication file
-# add admin user
 htdigest_hash=`printf admin:Media:$ADMIN_PASSWORD| md5sum -`
+# add admin user to webdav file
 echo "admin:Media:${htdigest_hash:0:32}" > /etc/nginx/webdav.auth
+chown www-data:www-data /etc/nginx/webdav.auth
+chmod 600 /etc/nginx/webdav.auth
 
 #create ssl directory
 mkdir -p /etc/nginx/ssl-certs
 
 #log directory
 mkdir -p /var/log/nginx
+touch /var/log/nginx/error.log
+chmod 700 /var/log/nginx/error.log
 chown www-data -R /var/log/nginx
 
 #create certs
@@ -70,21 +78,54 @@ openssl req \
     -x509 \
     -subj "/C=BE/ST=Vlaams-Brabant/L=Brussels/O=Global IT/OU=IT/CN=gunther.com" \
     -keyout gunther.key \
-    -out gunther.crt
+    -out gunther.crt \
+    -sha256
+    
+#create DHE parameters, instead of 1024 default ones
+cd /etc/ssl/certs
+#openssl dhparam -out dhparam.pem 4096
 
 #create nginx config
-echo '
+cat > /etc/nginx/conf/nginx.conf << EOF
 user www-data;
-worker_processes 2;
-error_log /var/log/nginx/error.log;
-events {
-        worker_connections 1024;
-}
+worker_processes $(nproc);
 
-http {
-        upstream php {
-                server unix:/tmp/php5-fpm/sock;
+error_log /var/log/nginx/error.log;
+rtmp_auto_push on;
+events {
+	worker_connections $(ulimit -n);
+}
+rtmp {
+    server {
+        listen 1935;
+        chunk_size 2000;
+        application stream {
+            live on;
+            # publish only from localhost
+            allow publish 127.0.0.1;
+            deny publish all;   
         }
+    }
+}
+http {
+    upstream php {
+        server unix:/tmp/php5-fpm/sock;
+    }
+        
+	#Only use secure ciphers
+	ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
+	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        
+	client_body_buffer_size 10K;
+	client_header_buffer_size 1k;
+	client_max_body_size 8m;
+	large_client_header_buffers 2 1k;
+	
+	client_body_timeout 12;
+	client_header_timeout 12;
+	keepalive_timeout 15;
+	send_timeout 10;
+        
         gzip on;
         gzip_http_version 1.0;
         gzip_comp_level 5;
@@ -111,15 +152,20 @@ http {
         ssl_certificate /etc/nginx/ssl-certs/gunther.crt;
         ssl_certificate_key /etc/nginx/ssl-certs/gunther.key;
 
-	include /etc/nginx/conf/mime.types;
+	   include /etc/nginx/conf/mime.types;
         
         server {
                 # REDIRECT HTTP TO HTTPS
                 listen 80;
-                rewrite     ^   https://$server_name$request_uri? permanent;
+                rewrite     ^   https://\$server_name\$request_uri? permanent;
         }
         server {
                 listen 443 ssl;
+                
+                # Only allow over HTTPS
+                add_header Strict-Transport-Security "max-age=63072000; includeSubdomains; preload";
+		# Use stronger DHE parameter
+		#ssl_dhparam /etc/ssl/certs/dhparam.pem;
 
                 ssl_certificate     /etc/nginx/ssl-certs/gunther.crt;
                 ssl_certificate_key /etc/nginx/ssl-certs/gunther.key;
@@ -146,7 +192,7 @@ http {
                 }
                 
                 location / {
-                    try_files $uri /index.php$is_args$args;
+                    try_files \$uri /index.php\$is_args\$args;
                 }
                 
                 location /img/ { }
@@ -157,7 +203,7 @@ http {
                 location /index.php {
                     fastcgi_split_path_info ^(.+\.php)(/.+)$;
                     include fastcgi_params;
-                    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                    fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
                     fastcgi_pass unix:/var/run/php5-fpm.sock;
                 }
 
@@ -166,8 +212,7 @@ http {
                 }
         }
 } 
-
-' > /etc/nginx/conf/nginx.conf
+EOF
 
 #create nginx service file
 cat > /etc/init.d/nginx << 'EOF'
@@ -208,12 +253,14 @@ case "$1" in
         echo -n "Stopping $DESC: "
         start-stop-daemon --stop --quiet --pidfile /var/run/nginx.pid \
                 --exec $DAEMON
+        killall nginx
         echo "$NAME."
         ;;
   restart|force-reload)
         echo -n "Restarting $DESC: "
         start-stop-daemon --stop --quiet --pidfile \
                 /var/run/nginx.pid --exec $DAEMON
+        killall nginx
         sleep 1
         start-stop-daemon --start --quiet --pidfile \
                 /var/run/nginx.pid --exec $DAEMON -- $DAEMON_OPTS
@@ -236,8 +283,9 @@ exit 0
 EOF
 chmod +x /etc/init.d/nginx
 mkdir -p /var/tmp/nginx
+chown www-data:www-data -R /var/www/
+chown www-data:www-data -R /etc/nginx
 #run nginx
-systemctl daemon-reload
 update-rc.d nginx defaults
 service nginx start
 

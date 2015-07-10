@@ -45,14 +45,16 @@ class User_m
 
     public function addUser($user)
     {
-        $output = shell_exec('scripts/addUser.sh ' . $this->settings['AUTH_DIGEST_FILE'] . ' ' . $user);
+        $output = shell_exec('scripts/addUser.sh ' . $this->settings['AUTH_DIGEST_FILE'] . ' ' . $user . ' 2>&1');
         $output = str_replace("\n", "", $output);
         return $output;
     }
 
     public function delUser($id)
     {
-        shell_exec('scripts/delUser.sh ' . $this->settings['AUTH_DIGEST_FILE'] . ' ' . $id);
+        $output = shell_exec('scripts/delUser.sh ' . $this->settings['AUTH_DIGEST_FILE'] . ' ' . $id . ' 2>&1');
+        str_replace("\n", "", $output);
+        error_log($output);
         return true;
     }
 
@@ -64,11 +66,15 @@ class User_m
             $i=1;
             while (($line = fgets($handle)) !== false) {
                 $parts = explode(':', $line);
-                $result[] = (object) array(
-                    'login' => $parts[0],
-                    'password' => str_replace(array("\r", "\n"), '', $parts[2]),
-                    'id' => $i,
-                );  
+                if (sizeof($parts) == 3){
+	                $result[] = (object) array(
+	                    'login' => $parts[0],
+	                    'password' => str_replace(array("\r", "\n"), '', $parts[2]),
+	                    'id' => $i,
+	                );
+                } else {
+                	error_log("Malformed webdav auth entry at line $i : " . $line . "   in " . $this->settings['AUTH_DIGEST_FILE']);
+                }
                 $i++;            
             }
             fclose($handle);
