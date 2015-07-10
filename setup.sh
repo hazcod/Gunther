@@ -152,7 +152,7 @@ http {
    	include /etc/nginx/conf/mime.types;
    	
 	map \$request \$isdavreq {
-		~^/webdav
+		~^/webdav 1;
 		default 0;
 	}
         
