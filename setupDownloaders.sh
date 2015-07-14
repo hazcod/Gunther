@@ -11,11 +11,14 @@ git clone https://github.com/ruudburger/couchpotatoserver /home/media/couchpotat
 cp /home/media/couchpotato/init/ubuntu /etc/init.d/couchpotato
 chmod +x /etc/init.d/couchpotato
 cp /home/media/couchpotato/init/ubuntu.default /etc/default/couchpotato
+mkdir /home/media/.couchpotato
 sed -i 's/CP_HOME=/CP_HOME=\/home\/media\/couchpotato\//g' /etc/default/couchpotato
 sed -i 's/CP_USER=/CP_USER=media/g' /etc/default/couchpotato
-echo "HOST=127.0.0.1" >> /etc/default/couchpotato
+#echo "HOST=127.0.0.1" >> /etc/default/couchpotato DOES NOT WORK
 echo "PORT=5050" >> /etc/default/couchpotato
 echo "SSD_OPTS=--group=media"
+echo "CP_PIDFILE=/home/media/couchpotato/cp.pid"
+echo "CP_DATA=/home/media/.couchpotato/"
 update-rc.d couchpotato defaults
 
 
