@@ -56,7 +56,7 @@ echo "HP_USER=media" > /etc/default/headphones
 echo "HP_HOME=/home/media/headphones" > /etc/default/headphones
 echo "HP_PORT=/home/media/headphones" > /etc/default/headphones
 echo "SSD_OPTS=--group=media" > /etc/default/headphones
-#TODO : HOST
+#Host is localhost by default
 update-rc.d headphones defaults
 
 chown media:www-data -R /home/media
