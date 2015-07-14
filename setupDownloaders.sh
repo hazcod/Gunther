@@ -16,9 +16,9 @@ sed -i 's/CP_HOME=/CP_HOME=\/home\/media\/couchpotato\//g' /etc/default/couchpot
 sed -i 's/CP_USER=/CP_USER=media/g' /etc/default/couchpotato
 #echo "HOST=127.0.0.1" >> /etc/default/couchpotato DOES NOT WORK
 echo "PORT=5050" >> /etc/default/couchpotato
-echo "SSD_OPTS=--group=media"
-echo "CP_PIDFILE=/home/media/couchpotato/cp.pid"
-echo "CP_DATA=/home/media/.couchpotato/"
+echo "SSD_OPTS=--group=media" >> /etc/default/couchpotato
+echo "CP_PIDFILE=/home/media/couchpotato/cp.pid" >> /etc/default/couchpotato
+echo "CP_DATA=/home/media/.couchpotato/" >> /etc/default/couchpotato
 update-rc.d couchpotato defaults
 
 
@@ -27,10 +27,13 @@ apt-get install python-cheetah
 git clone https://github.com/SiCKRAGETV/SickRage /home/media/sickrage
 cp /home/media/sickrage/runscripts/init.debian /etc/init.d/sickrage
 chmod +x /etc/init.d/sickrage
+mkdir /home/media/.sickrage
 echo "SR_USER=media" > /etc/default/sickrage
-echo "SR_HOME=/home/media/sickrage" > /etc/default/sickrage
-echo "SR_OPTS=-p 8081" > /etc/default/sickrage
-echo "SR_GROUP=media" > /etc/default/sickrage
+echo "SR_HOME=/home/media/sickrage" >> /etc/default/sickrage
+echo "SR_OPTS=\"-p 8081\"" >> /etc/default/sickrage
+echo "SR_GROUP=media" >> /etc/default/sickrage
+echo "SR_DATA=/home/media/.sickrage" >> /etc/default/sickrage
+echo "SR_PIDFILE=/home/media/sickrage/sr.pid" >> /etc/default/sickrage
 #TODO: HOST
 update-rc.d sickrage defaults
 
@@ -48,10 +51,10 @@ sed -i 's/USER=/USER=media/g' /etc/default/sabnzbdplus
 sed -i 's/CONFIG=/CONFIG=\/home\/media\/sabnzbdplus\/settings/g' /etc/default/sabnzbdplus
 sed -i 's/HOST=/HOST=127.0.0.1/g' /etc/default/sabnzbdplus
 sed -i 's/PORT=/PORT=8080/g' /etc/default/sabnzbdplus
-sed -i 's/EXTRAOPTS=/EXTRAOPTS=--group=media/g' /etc/default/sabnzbdplus
+#sed -i 's/EXTRAOPTS=/EXTRAOPTS="--group=media"/g' /etc/default/sabnzbdplus
 update-rc.d sabnzbdplus defaults
 
-# Headphones
+# Headphones; TODO
 git clone https://github.com/rembo10/headphones /home/media/headphones
 cp /home/media/headphones/init-scripts/init.ubuntu /etc/init.d/headphones
 chmod +x /etc/init.d/headphones
