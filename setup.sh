@@ -152,7 +152,7 @@ http {
 
    	include /etc/nginx/conf/mime.types;
    	
-	log_format lf_webdav "[$time_local] $remote_user ($remote_addr:$remote_port) : $uri ($msec)";
+	log_format lf_webdav "[\$time_local] \$remote_user (\$remote_addr:\$remote_port) : \$uri (\$msec)";
         
         server {
                 # REDIRECT HTTP TO HTTPS
@@ -179,11 +179,11 @@ http {
                 
                 location /webdav {
                 	# Fix for missing $remote_user in digest module : https://github.com/atomx/nginx-http-auth-digest/issues/1
-                	if ($http_authorization ~ username="([^\"]+)") {
-				set $htdigest_user $1;
+                	if (\$http_authorization ~ username="([^\"]+)") {
+				set \$htdigest_user $1;
 			}
-			fastcgi_param  AUTH_USER          $htdigest_user;
-			fastcgi_param  REMOTE_USER        $htdigest_user;
+			fastcgi_param  AUTH_USER          \$htdigest_user;
+			fastcgi_param  REMOTE_USER        \$htdigest_user;
                 	
                 	access_log /var/log/nginx/webdav.log lf_webdav;
                 	
