@@ -180,7 +180,7 @@ http {
                 location /webdav {
                 	# Fix for missing $remote_user in digest module : https://github.com/atomx/nginx-http-auth-digest/issues/1
                 	if (\$http_authorization ~ username="([^\"]+)") {
-				set \$htdigest_user $1;
+				set \$htdigest_user \$1;
 			}
 			fastcgi_param  AUTH_USER          \$htdigest_user;
 			fastcgi_param  REMOTE_USER        \$htdigest_user;
