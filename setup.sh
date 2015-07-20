@@ -6,14 +6,13 @@
 #cryptsetup -y -v luksFormat /dev/vdb
 #cryptsetup luksOpen /dev/vdb media
 #mkfs.ext4 /dev/mapper/media
-#mkdir -p /mnt/media
+#mkdir -p /mnt/media  (assuming your media is stored in /mnt/media)
 #echo "media_crypt	/dev/vdb	none	luks" >> /etc/crypttab
 #echo "/dev/mapper/media_crypt	/mnt/media	ext4	rw	0	2" >> /etc/fstab
 
 # This will be the password used for your admin account. Login with 'admin'
-ADMIN_PASSWORD="my_password_with_$p3cial_characters"
-
-
+ADMIN_PASSWORD="Gunth3r!" #edit this
+MEDIA_PATH="/mnt/media"	  #edit in application/config.php too
 
 ##===== DO NOT MODIFY BELOW THIS LINE ====================================
 
@@ -31,7 +30,7 @@ tar zxf nginx-1.8.0.tar.gz
 # download modules
 git clone https://github.com/atomx/nginx-http-auth-digest
 git clone https://github.com/arut/nginx-dav-ext-module
-git clone https://github.com/arut/nginx-rtmp-module
+#git clone https://github.com/arut/nginx-rtmp-module
 
 # shut down nginx if necessary
 if [ ! -z "$(pgrep nginx)" ]; then
@@ -40,7 +39,12 @@ fi
 
 # compile and install nginx
 cd nginx-1.8.0/
-./configure --add-module=../nginx-dav-ext-module --add-module=../nginx-http-auth-digest --add-module=../nginx-rtmp-module --with-http_ssl_module --with-http_dav_module --prefix=/etc/nginx
+./configure --add-module=../nginx-dav-ext-module \
+            --add-module=../nginx-http-auth-digest \
+            --with-http_ssl_module \
+            --with-http_dav_module \
+            --prefix=/etc/nginx
+        #   --add-module=../nginx-rtmp-module \
 cpunum=$(nproc)
 make -j$cpunum && make install
 # cleanup
@@ -65,7 +69,9 @@ mkdir -p /etc/nginx/ssl-certs
 #log directory
 mkdir -p /var/log/nginx
 touch /var/log/nginx/error.log
-chmod 700 /var/log/nginx/error.log
+touch /var/log/nginx/access.log
+touch /var/log/nginx/webdav.log
+chmod 600 -R /var/log/nginx
 chown www-data -R /var/log/nginx
 
 #create certs
@@ -91,22 +97,19 @@ user www-data;
 worker_processes $(nproc);
 
 error_log /var/log/nginx/error.log;
-rtmp_auto_push on;
+#rtmp_auto_push on;
 events {
 	worker_connections $(ulimit -n);
 }
-rtmp {
-    server {
-        listen 1935;
-        chunk_size 2000;
-        application stream {
-            live on;
-            # publish only from localhost
-            allow publish 127.0.0.1;
-            deny publish all;   
-        }
-    }
-}
+#rtmp {
+#    server {
+#        listen 1935;
+#        chunk_size 2000;
+#        application stream {
+#            play $MEDIA_PATH;
+#        }
+#    }
+#}
 http {
     upstream php {
         server unix:/tmp/php5-fpm/sock;
@@ -152,7 +155,18 @@ http {
         ssl_certificate /etc/nginx/ssl-certs/gunther.crt;
         ssl_certificate_key /etc/nginx/ssl-certs/gunther.key;
 
-	   include /etc/nginx/conf/mime.types;
+   	include /etc/nginx/conf/mime.types;
+   	
+   	map \$uri \$isfilereq {
+		~/$ 0;
+		default 1;
+	}
+	map \$uri \$nodavreq {
+		~^/webdav 0;
+		default 1;
+	}
+   	
+	log_format lf_webdav "[\$time_local] \$remote_user (\$remote_addr:\$remote_port) : \$uri (\$msec)";
         
         server {
                 # REDIRECT HTTP TO HTTPS
@@ -164,23 +178,34 @@ http {
                 
                 # Only allow over HTTPS
                 add_header Strict-Transport-Security "max-age=63072000; includeSubdomains; preload";
-		# Use stronger DHE parameter
-		#ssl_dhparam /etc/ssl/certs/dhparam.pem;
+                # Use stronger DHE parameter
+                #ssl_dhparam /etc/ssl/certs/dhparam.pem;
 
                 ssl_certificate     /etc/nginx/ssl-certs/gunther.crt;
                 ssl_certificate_key /etc/nginx/ssl-certs/gunther.key;
 
                 root /var/www;
                 index index.php;
+                
+                access_log /var/log/nginx/access.log combined if=\$nodavreq;
 
                 location ~ /(\.|scripts|cache) { deny all; access_log off; log_not_found off; return 404; }
 
                 location /webdav {
+                	# Fix for missing $remote_user in digest module : https://github.com/atomx/nginx-http-auth-digest/issues/1
+                	if (\$http_authorization ~ username="([^\"]+)") {
+				set \$htdigest_user \$1;
+			}
+			fastcgi_param  AUTH_USER          \$htdigest_user;
+			fastcgi_param  REMOTE_USER        \$htdigest_user;
+                	
+                	access_log /var/log/nginx/webdav.log lf_webdav if=\$isfilereq;
+                	
                         auth_digest 'Media';
                         auth_digest_user_file /etc/nginx/webdav.auth;
                 
                 	autoindex On;
-                	alias /mnt/media; #assuming your media is accessed in /mnt/media
+                	alias $MEDIA_PATH;
                         dav_methods COPY;
                         dav_access all:r;
                 }

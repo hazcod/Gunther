@@ -62,6 +62,7 @@ class Controller
             $this->controller = $controller;
         } else {
             error_log("Controller '$controller' not found.");
+            header ("HTTP/1.1 404 Not Found");
             exit;
         }
 
@@ -92,6 +93,7 @@ class Controller
         // check if method exists
         if (!method_exists($this->controller, $action)) {
             error_log("Action '$action' does not exist in class '$this->controller'.");
+            header ("HTTP/1.1 404 Not Found");
             exit;
         } else {
             $this->action = $action;
@@ -120,6 +122,7 @@ class Controller
 
         if (($parameters) > count($this->params)) {
             error_log("Action '$this->action' in class '$this->controller' expects $parameters mandatory parameter(s), you only provided " . count($this->params) . ".");
+            header ("HTTP/1.1 404 Not Found");
             exit;
         }
 
