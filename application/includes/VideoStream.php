@@ -119,6 +119,7 @@ class VideoStream
      */
     function start()
     {
+        session_write_close(); //ensure our session is written away before streaming, else we cannot use it elsewhere
         $this->open();
         $this->setHeader();
         $this->stream();
