@@ -152,6 +152,11 @@ http {
 
    	include /etc/nginx/conf/mime.types;
    	
+   	map \$request \$isfilereq {
+		~/$ 0;
+		default 1;
+	}
+   	
 	log_format lf_webdav "[\$time_local] \$remote_user (\$remote_addr:\$remote_port) : \$uri (\$msec)";
         
         server {
@@ -185,7 +190,7 @@ http {
 			fastcgi_param  AUTH_USER          \$htdigest_user;
 			fastcgi_param  REMOTE_USER        \$htdigest_user;
                 	
-                	access_log /var/log/nginx/webdav.log lf_webdav;
+                	access_log /var/log/nginx/webdav.log lf_webdav if=\$isfilereq;
                 	
                         auth_digest 'Media';
                         auth_digest_user_file /etc/nginx/webdav.auth;
