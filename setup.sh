@@ -65,6 +65,7 @@ mkdir -p /etc/nginx/ssl-certs
 mkdir -p /var/log/nginx
 touch /var/log/nginx/error.log
 touch /var/log/nginx/access.log
+touch /var/log/nginx/webdav.log
 chmod 600 -R /var/log/nginx
 chown www-data -R /var/log/nginx
 
@@ -151,10 +152,7 @@ http {
 
    	include /etc/nginx/conf/mime.types;
    	
-	map \$request \$isdavreq {
-		~^/webdav 1;
-		default 0;
-	}
+	log_format lf_webdav "[$time_local] $remote_user ($remote_addr:$remote_port) : $uri ($msec)";
         
         server {
                 # REDIRECT HTTP TO HTTPS
@@ -175,11 +173,20 @@ http {
                 root /var/www;
                 index index.php;
                 
-                access_log /var/log/nginx/access.log combined if=\$isdavreq;
+                access_log /var/log/nginx/access.log combined;
 
                 location ~ /\. { deny all; access_log off; log_not_found off; }
                 
                 location /webdav {
+                	# Fix for missing $remote_user in digest module : https://github.com/atomx/nginx-http-auth-digest/issues/1
+                	if ($http_authorization ~ username="([^\"]+)") {
+				set $htdigest_user $1;
+			}
+			fastcgi_param  AUTH_USER          $htdigest_user;
+			fastcgi_param  REMOTE_USER        $htdigest_user;
+                	
+                	access_log /var/log/nginx/webdav.log lf_webdav;
+                	
                         auth_digest 'Media';
                         auth_digest_user_file /etc/nginx/webdav.auth;
                 
