@@ -156,6 +156,10 @@ http {
 		~/$ 0;
 		default 1;
 	}
+	map \$request \$nodavreq {
+		~^/webdav 0;
+		default 1;
+	}
    	
 	log_format lf_webdav "[\$time_local] \$remote_user (\$remote_addr:\$remote_port) : \$uri (\$msec)";
         
@@ -178,7 +182,7 @@ http {
                 root /var/www;
                 index index.php;
                 
-                access_log /var/log/nginx/access.log combined;
+                access_log /var/log/nginx/access.log combined if=\$nodavreq;
 
                 location ~ /\. { deny all; access_log off; log_not_found off; }
                 
