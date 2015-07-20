@@ -152,11 +152,11 @@ http {
 
    	include /etc/nginx/conf/mime.types;
    	
-   	map \$request \$isfilereq {
+   	map \$uri \$isfilereq {
 		~/$ 0;
 		default 1;
 	}
-	map \$request \$nodavreq {
+	map \$uri \$nodavreq {
 		~^/webdav 0;
 		default 1;
 	}
