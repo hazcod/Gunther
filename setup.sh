@@ -1,6 +1,7 @@
 #!/bin/bash
 
-#~ extra: setup an encrypted volume that mounts on boot (supposing your disk is /dev/vdb)
+#~ extra: setup an encrypted disk that mounts on boot (supposing your disk is /dev/vdb)
+#~        if you need storage over more than one disk; lvm volume group -> lvm logical volume -> luks -> ext4
 #~ note : this still asks a password on boot
 #apt-get install -y cryptsetup
 #cryptsetup -y -v luksFormat /dev/vdb
