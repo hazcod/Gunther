@@ -1,8 +1,10 @@
 <?php
 /**
- * Description of VideoStream
+ * VideoStream - PHP class that supports (adaptive) streaming of files
  *
  * @author Rana
+ * modified by HazCod to use stream_get_contents and correct session shutoff
+ * https://github.com/HazCod
  * @link http://codesamplez.com/programming/php-html5-video-streaming-tutorial
  */
 class VideoStream
@@ -106,7 +108,6 @@ class VideoStream
             if(($i+$bytesToRead) > $this->end) {
                 $bytesToRead = $this->end - $i + 1;
             }
-            #$data = fread($this->stream, $bytesToRead);
             $data = stream_get_contents($this->stream, $bytesToRead);
             echo $data;
             flush();
