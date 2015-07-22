@@ -61,7 +61,6 @@ mkdir -p /var/www/webdav
 htdigest_hash=`printf admin:Media:$ADMIN_PASSWORD| md5sum -`
 # add admin user to webdav file
 echo "admin:Media:${htdigest_hash:0:32}" > /etc/nginx/webdav.auth
-chown www-data:www-data /etc/nginx/webdav.auth
 chmod 600 /etc/nginx/webdav.auth
 
 #create ssl directory
@@ -72,8 +71,6 @@ mkdir -p /var/log/nginx
 touch /var/log/nginx/error.log
 touch /var/log/nginx/access.log
 touch /var/log/nginx/webdav.log
-chmod 600 -R /var/log/nginx
-chown www-data -R /var/log/nginx
 
 #create certs
 cd /etc/nginx/ssl-certs
@@ -301,10 +298,18 @@ esac
  
 exit 0
 EOF
+
 chmod +x /etc/init.d/nginx
+
 mkdir -p /var/tmp/nginx
-chown www-data:www-data -R /var/www/
-chown www-data:www-data -R /etc/nginx
+
+usermod -a -G media www-data
+chmod -R 660 "$MEDIA_PATH"
+chown -R media:media "$MEDIA_PATH"
+
+chown www-data:www-data -R /var/www/ /etc/nginx /var/tmp/nginx /var/log/nginx
+chmod 660 -R /var/www/ /etc/nginx /var/tmp/nginx /var/log/nginx
+
 #run nginx
 update-rc.d nginx defaults
 service nginx start
