@@ -14,17 +14,8 @@ $settings = array(
     'CACHE_TTL' => 86400,        #Cache time-to-live in seconds, default 1 day
     'DEFAULT_LANG' => 'en',     #default language
 
+   'DB_LOC' => '/etc/nginx/gunther.sql',
    'AUTH_DIGEST_FILE' => '/etc/nginx/webdav.auth',
    'LOG' => '/var/log/nginx/error.log',
    'LAST_LOG' => 10,  #get last 10 logs
-);
-
-$db_config = array(
-    'driver' => 'sqlite',
-    'username' => 'gunther',
-    'password' => 'amdew3rowl2!2',
-    'dsn' => array(
-        'host' => '/etc/nginx/db.sq3',
-        'dbname' => 'gunther',
-    )
 );
