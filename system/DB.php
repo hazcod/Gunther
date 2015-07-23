@@ -18,25 +18,12 @@ class DB
     // on instantination: build the connection
     private function __construct()
     {
-        global $db_config;
-
-        $dsn = $db_config['driver'] . ':';
-
-        foreach ($db_config['dsn'] as $key=>$value) {
-            $dsn .= $key . '=' . $value . ';';
-        }
-
+        global $settings;
         try {
             // $this refers to the current class
-            $this->db = new PDO($dsn, $db_config['username'], $db_config['password']);
-
+            $this->db = new PDO('sqlite:' . $settings['DB_LOC']);
             // set the error reporting attribute
             $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-            // setting the search_path
-            if (($db_config['driver'] == 'pgsql') && isset($db_config['schema'])) {
-                $this->db->query(sprintf("SET SEARCH_PATH TO %s", $db_config['schema']));
-            }
         } catch(PDOException $e) {
             error_log($e->getMessage());
         }
