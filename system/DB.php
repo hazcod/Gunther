@@ -24,8 +24,21 @@ class DB
             $this->db = new PDO('sqlite:' . $settings['DB_LOC']);
             // set the error reporting attribute
             $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            
+            $this->setup();
         } catch(PDOException $e) {
             error_log($e->getMessage());
+        }
+    }
+    
+    private function setup()
+    {
+        $queries = array(
+                'create table if not exists roles (id serial, name text)',
+                'create table if not exists users (id serial, login text, email text, name text, role int)',
+                );
+        for ($queries as $query){
+            $this->query($query);
         }
     }
 
