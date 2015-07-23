@@ -20,14 +20,11 @@ $settings = array(
 );
 
 $db_config = array(
-    'driver' => 'mysql',
-    'username' => '',
-    'password' => '',
-    'schema' => '',
-    
+    'driver' => 'sqlite',
+    'username' => 'gunther',
+    'password' => 'amdew3rowl2!2',
     'dsn' => array(
-        'host' => 'localhost',
-        'dbname' => '',
-        'port' => '3306',
+        'host' => '/etc/nginx/db.sq3',
+        'dbname' => 'gunther',
     )
 );
