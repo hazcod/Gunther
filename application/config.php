@@ -18,3 +18,16 @@ $settings = array(
    'LOG' => '/var/log/nginx/error.log',
    'LAST_LOG' => 10,  #get last 10 logs
 );
+
+$db_config = array(
+    'driver' => 'mysql',
+    'username' => '',
+    'password' => '',
+    'schema' => '',
+    
+    'dsn' => array(
+        'host' => 'localhost',
+        'dbname' => '',
+        'port' => '3306',
+    )
+);
