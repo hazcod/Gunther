@@ -329,8 +329,8 @@ EOF
 chmod +x /etc/init.d/nginx
 mkdir -p /var/tmp/nginx
 
-chown www-data:www-data -R /var/www/ /var/log/nginx /etc/nginx
-chmod 760 -R /var/www /var/log/nginx /etc/nginx
+chown www-data:www-data -R /var/www/ /var/log/nginx /etc/nginx /var/tmp/nginx
+chmod 770 -R /var/www /var/log/nginx /etc/nginx /var/tmp/nginx
 chmod 600 /etc/nginx/webdav.auth
 
 #run nginx
