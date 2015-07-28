@@ -30,7 +30,6 @@ tar zxf nginx-1.8.0.tar.gz
 # download modules
 git clone https://github.com/atomx/nginx-http-auth-digest
 git clone https://github.com/arut/nginx-dav-ext-module
-#git clone https://github.com/arut/nginx-rtmp-module
 
 # shut down nginx if necessary
 if [ ! -z "$(pgrep nginx)" ]; then
@@ -44,17 +43,22 @@ cd nginx-1.8.0/
             --with-http_ssl_module \
             --with-http_dav_module \
             --prefix=/etc/nginx
-        #   --add-module=../nginx-rtmp-module \
+
 cpunum=$(nproc)
 make -j$cpunum && make install
 # cleanup
 rm -r /tmp/nginx-*
 
 # clone repo
+if [ -d /var/www/ ]; then
+	cp /var/www/application/config.php /tmp/config.php
+	rm -r /var/www
+fi
 git clone https://github.com/HazCod/Gunther /var/www
-
-# create webdav directory
 mkdir -p /var/www/webdav
+if [ -f /tmp/config.php ]; then
+	mv /tmp/config.php /var/www/application/config.php
+fi
 
 # create webdav authentication file
 htdigest_hash=`printf admin:Media:$ADMIN_PASSWORD| md5sum -`
@@ -71,8 +75,6 @@ mkdir -p /var/log/nginx
 touch /var/log/nginx/error.log
 touch /var/log/nginx/access.log
 touch /var/log/nginx/webdav.log
-chmod 600 -R /var/log/nginx
-chown www-data -R /var/log/nginx
 
 #create certs
 cd /etc/nginx/ssl-certs
@@ -88,7 +90,9 @@ openssl req \
     -sha256
     
 #create DHE parameters, instead of 1024 default ones
-openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
+if [ ! -f /etc/ssl/certs/dhparam.pem ]; then
+	openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
+fi
 
 #create nginx config
 cat > /etc/nginx/conf/nginx.conf << EOF
@@ -319,10 +323,13 @@ esac
  
 exit 0
 EOF
+
 chmod +x /etc/init.d/nginx
 mkdir -p /var/tmp/nginx
-chown www-data:www-data -R /var/www/
-chown www-data:www-data -R /etc/nginx
+
+chown www-data:www-data -R /var/www/ /var/log/nginx /etc/nginx
+chmod 760 -R /var/www /var/log/nginx /etc/nginx
+
 #run nginx
 update-rc.d nginx defaults
 service nginx start
