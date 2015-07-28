@@ -168,12 +168,13 @@ http {
 
    	include /etc/nginx/conf/mime.types;
    	
-   	map \$uri \$isfilereq {
-		~/$ 0;
+   	map \$uri \$isvideoreq {
+		~(\.mkv|\.mp4|\.webm|\.flv|\.vob|\.ogg|\.ogv|\.drc|\.avi|\.nmg|\.mov|\.qt|\.wmv|\.m4p|\.m4v|\.mpeg|\.mpg|\.nsv)$ 0;
 		default 1;
 	}
 	map \$uri \$nodavreq {
 		~^/webdav 0;
+		~favicon\.ico$ 0;
 		default 1;
 	}
    	
@@ -224,7 +225,7 @@ http {
 			fastcgi_param  AUTH_USER          \$htdigest_user;
 			fastcgi_param  REMOTE_USER        \$htdigest_user;
                 	
-                	access_log /var/log/nginx/webdav.log lf_webdav if=\$isfilereq;
+                	access_log /var/log/nginx/webdav.log lf_webdav if=\$isvideoreq;
                 	
                         auth_digest 'Media';
                         auth_digest_user_file /etc/nginx/webdav.auth;
