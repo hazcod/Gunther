@@ -1,7 +1,6 @@
 #!/bin/bash
 
-#~ extra: setup an encrypted disk that mounts on boot (supposing your disk is /dev/vdb)
-#~        if you need storage over more than one disk; lvm volume group -> lvm logical volume -> luks -> ext4
+#~ extra: setup an encrypted volume that mounts on boot (supposing your disk is /dev/vdb)
 #~ note : this still asks a password on boot
 #apt-get install -y cryptsetup
 #cryptsetup -y -v luksFormat /dev/vdb
@@ -34,6 +33,7 @@ git clone https://github.com/arut/nginx-dav-ext-module
 
 # shut down nginx if necessary
 if [ ! -z "$(pgrep nginx)" ]; then
+	echo "Killing nginx"
 	killall nginx
 fi
 
@@ -51,13 +51,16 @@ make -j$cpunum && make install
 rm -r /tmp/nginx-*
 
 # clone repo
-if [ -d /var/www/ ]; then
+if [ -f /var/www/application/config.php ]; then
+	echo "Copying config to /tmp and removing /var/www"
 	cp /var/www/application/config.php /tmp/config.php
-	rm -r /var/www
+	rm -rf /var/www
 fi
+cd /tmp
 git clone https://github.com/HazCod/Gunther /var/www
-mkdir -p /var/www/webdav
+mkdir /var/www/webdav
 if [ -f /tmp/config.php ]; then
+	echo "Restoring config"
 	mv /tmp/config.php /var/www/application/config.php
 fi
 
@@ -194,7 +197,7 @@ http {
 		ssl_ciphers "ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA:DES-CBC3-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!MD5:!PSK:!RC4";
 
 		resolver 8.8.8.8;
-		ssl_stapling on;
+		ssl_stapling on; #only works when specifying an issuer
 		
 		add_header Strict-Transport-Security "max-age=31536000; includeSubdomains;";
 
@@ -324,15 +327,11 @@ exit 0
 EOF
 
 chmod +x /etc/init.d/nginx
-
 mkdir -p /var/tmp/nginx
 
-usermod -a -G media www-data
-chmod -R 660 "$MEDIA_PATH"
-chown -R media:media "$MEDIA_PATH"
-
-chown www-data:www-data -R /var/www/ /etc/nginx /var/tmp/nginx /var/log/nginx
-chmod 660 -R /var/www/ /etc/nginx /var/tmp/nginx /var/log/nginx
+chown www-data:www-data -R /var/www/ /var/log/nginx /etc/nginx
+chmod 760 -R /var/www /var/log/nginx /etc/nginx
+chmod 600 /etc/nginx/webdav.auth
 
 #run nginx
 update-rc.d nginx defaults
