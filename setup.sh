@@ -31,7 +31,6 @@ tar zxf nginx-1.8.0.tar.gz
 # download modules
 git clone https://github.com/atomx/nginx-http-auth-digest
 git clone https://github.com/arut/nginx-dav-ext-module
-#git clone https://github.com/arut/nginx-rtmp-module
 
 # shut down nginx if necessary
 if [ ! -z "$(pgrep nginx)" ]; then
@@ -45,23 +44,27 @@ cd nginx-1.8.0/
             --with-http_ssl_module \
             --with-http_dav_module \
             --prefix=/etc/nginx
-        #   --add-module=../nginx-rtmp-module \
+
 cpunum=$(nproc)
 make -j$cpunum && make install
 # cleanup
 rm -r /tmp/nginx-*
 
 # clone repo
+if [ -d /var/www/ ]; then
+	cp /var/www/application/config.php /tmp/config.php
+	rm -r /var/www
+fi
 git clone https://github.com/HazCod/Gunther /var/www
-
-# create webdav directory
 mkdir -p /var/www/webdav
+if [ -f /tmp/config.php ]; then
+	mv /tmp/config.php /var/www/application/config.php
+fi
 
 # create webdav authentication file
 htdigest_hash=`printf admin:Media:$ADMIN_PASSWORD| md5sum -`
 # add admin user to webdav file
 echo "admin:Media:${htdigest_hash:0:32}" > /etc/nginx/webdav.auth
-chmod 600 /etc/nginx/webdav.auth
 
 #create ssl directory
 mkdir -p /etc/nginx/ssl-certs
@@ -86,8 +89,9 @@ openssl req \
     -sha256
     
 #create DHE parameters, instead of 1024 default ones
-cd /etc/ssl/certs
-#openssl dhparam -out dhparam.pem 4096
+if [ ! -f /etc/ssl/certs/dhparam.pem ]; then
+	openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
+fi
 
 #create nginx config
 cat > /etc/nginx/conf/nginx.conf << EOF
@@ -112,6 +116,12 @@ http {
     upstream php {
         server unix:/tmp/php5-fpm/sock;
     }
+        #Don't send version of nginx
+        server_tokens off;
+        
+	add_header X-Frame-Options SAMEORIGIN;
+	add_header X-Content-Type-Options nosniff;
+	add_header X-XSS-Protection "1; mode=block";
         
 	#Only use secure ciphers
 	ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
@@ -172,8 +182,22 @@ http {
                 rewrite     ^   https://\$server_name\$request_uri? permanent;
         }
         server {
-                listen 443 ssl;
+                listen 443 ssl default deferred;
                 
+		ssl_session_cache shared:SSL:50m;
+		ssl_session_timeout 5m;
+		
+		ssl_dhparam /etc/ssl/certs/dhparam.pem;
+		
+		ssl_prefer_server_ciphers on;
+		ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+		ssl_ciphers "ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA:DES-CBC3-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!MD5:!PSK:!RC4";
+
+		resolver 8.8.8.8;
+		ssl_stapling on;
+		
+		add_header Strict-Transport-Security "max-age=31536000; includeSubdomains;";
+
                 # Only allow over HTTPS
                 add_header Strict-Transport-Security "max-age=63072000; includeSubdomains; preload";
                 # Use stronger DHE parameter
