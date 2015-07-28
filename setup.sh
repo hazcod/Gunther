@@ -106,15 +106,6 @@ error_log /var/log/nginx/error.log;
 events {
 	worker_connections $(ulimit -n);
 }
-#rtmp {
-#    server {
-#        listen 1935;
-#        chunk_size 2000;
-#        application stream {
-#            play $MEDIA_PATH;
-#        }
-#    }
-#}
 http {
     upstream php {
         server unix:/tmp/php5-fpm/sock;
@@ -169,8 +160,8 @@ http {
    	include /etc/nginx/conf/mime.types;
    	
    	map \$uri \$isvideoreq {
-		~(\.mkv|\.mp4|\.webm|\.flv|\.vob|\.ogg|\.ogv|\.drc|\.avi|\.nmg|\.mov|\.qt|\.wmv|\.m4p|\.m4v|\.mpeg|\.mpg|\.nsv)$ 0;
-		default 1;
+		~(\.mkv|\.mp4|\.webm|\.flv|\.vob|\.ogg|\.ogv|\.drc|\.avi|\.nmg|\.mov|\.qt|\.wmv|\.m4p|\.m4v|\.mpeg|\.mpg|\.nsv)$ 1;
+		default 0;
 	}
 	map \$uri \$nodavreq {
 		~^/webdav 0;
