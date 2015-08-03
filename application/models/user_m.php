@@ -1,5 +1,5 @@
 <?php
-class User_m
+class User_m extends Core_db
 {
     public function isValid($login, $password)
     {

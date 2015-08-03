@@ -7,9 +7,4 @@ abstract class Core_db
     {
         $this->db = DB::getInstance();
     }
-    public function updatePassword($login, $password)
-    {
-        $query = "UPDATE admins SET password = '$password' where login = '$login'";
-        return $this->db->query($query);
-    }
 }

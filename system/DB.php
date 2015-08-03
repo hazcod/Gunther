@@ -33,10 +33,16 @@ class DB
     
     private function setup()
     {
+        // new database, so setup
+        // TODO: separate file?
         $queries = array(
-                'create table if not exists roles (id serial, name text)',
-                'create table if not exists users (id serial, login text, email text, name text, role int)',
-                );
+            "CREATE TABLE IF NOT EXISTS roles (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(10) NOT NULL);",
+            "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, login VARCHAR(20) NOT NULL, pass VARCHAR(32) NOT NULL, name TEXT NOT NULL, email TEXT NOT NULL, role SMALLINT REFERENCES roles(id));",
+            "CREATE TABLE IF NOT EXISTS req_movies (date DATESTR, file TEXT NOT NULL, user SMALLINT REFERENCES users(id));",
+
+            "INSERT INTO roles(id, name) VALUES ('', 'administrator');",
+            "INSERT INTO users(id, login, name, email, pass, role) VALUES ('','admin','admin','admin@localhost.local', 'admin:Media:2b952a0aecefebc7facc12d56a3519af', 1);"
+        );
         for ($queries as $query){
             $this->query($query);
         }
