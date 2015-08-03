@@ -18,30 +18,35 @@ class DB
     // on instantination: build the connection
     private function __construct()
     {
+        global $settings;
         try {
             // $this refers to the current class
-            $this->db = new PDO('sqlite:test.db');
+            $this->db = new PDO('sqlite:' . $settings['DB_LOC']);
             // set the error reporting attribute
             $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	    if ($this->query('SELECT id FROM users LIMIT 1;')->getRow() == false){
-		error_log('Setting up database..');
-		$this->setup();
-	    }
-	} catch(PDOException $e) {
-            error_log('DB ERROR: ' . $e->getMessage());
+            
+            $this->setup();
+        } catch(PDOException $e) {
+            error_log($e->getMessage());
         }
     }
+    
+    private function setup()
+    {
+        // new database, so setup
+        // TODO: separate file?
+        $queries = array(
+            "CREATE TABLE IF NOT EXISTS roles (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(10) NOT NULL);",
+            "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, login VARCHAR(20) NOT NULL, pass VARCHAR(32) NOT NULL, name TEXT NOT NULL, email TEXT NOT NULL, role SMALLINT REFERENCES roles(id));",
+            "CREATE TABLE IF NOT EXISTS req_movies (date DATESTR, file TEXT NOT NULL, user SMALLINT REFERENCES users(id));",
 
-   private function setup()
-   {
-
-	$this->query('CREATE TABLE IF NOT EXISTS roles (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(10) NOT NULL);');
-	$this->query('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, login VARCHAR(20) NOT NULL, pass VARCHAR(32) NOT NULL, name TEXT NOT NULL, email TEXT NOT NULL, role SMALLINT REFERENCES roles(id));');
-	$this->query('CREATE TABLE IF NOT EXISTS req_movies (date DATESTR, file TEXT NOT NULL, user SMALLINT REFERENCES users(id));');
-	
-	$this->query("INSERT INTO roles(id, name) VALUES ('', 'administrator');");
-	$this->query("INSERT INTO users(id, login, name, email, pass, role) VALUES ('','admin','admin','admin@localhost.local', 'admin:Media:2b952a0aecefebc7facc12d56a3519af', 1);");
-   }
+            "INSERT INTO roles(id, name) VALUES ('', 'administrator');",
+            "INSERT INTO users(id, login, name, email, pass, role) VALUES ('','admin','admin','admin@localhost.local', 'admin:Media:2b952a0aecefebc7facc12d56a3519af', 1);"
+        );
+        for ($queries as $query){
+            $this->query($query);
+        }
+    }
 
     public function query($sql, $arguments = array())
     {
@@ -54,7 +59,6 @@ class DB
             $this->stmt->execute($arguments);
             $this->stmt->setFetchMode(PDO::FETCH_ASSOC);
         } catch(PDOException $e) {
-
             error_log($e->getMessage());
         }
 

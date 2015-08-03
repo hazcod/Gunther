@@ -16,6 +16,8 @@ require_once(FRAMEWORK_PATH . 'URL.php');
 require_once(FRAMEWORK_PATH . 'DB.php');
 require_once(FRAMEWORK_PATH . 'Core_db.php');
 require_once(FRAMEWORK_PATH . 'Controller.php');
+require_once(FRAMEWORK_PATH . 'DB.php');
+require_once(FRAMEWORK_PATH . 'Core_db.php');
 require_once(FRAMEWORK_PATH . 'Template.php');
 require_once(FRAMEWORK_PATH . 'Form.php');
 
