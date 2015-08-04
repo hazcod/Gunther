@@ -25,7 +25,9 @@ class DB
             // set the error reporting attribute
             $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             
-            $this->setup();
+            if (! file_exists($settings['DB_LOC'])) {
+		$this->setup();
+	    }
         } catch(PDOException $e) {
             error_log($e->getMessage());
         }
@@ -40,10 +42,10 @@ class DB
             "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, login VARCHAR(20) NOT NULL, pass VARCHAR(32) NOT NULL, name TEXT NOT NULL, email TEXT NOT NULL, role SMALLINT REFERENCES roles(id));",
             "CREATE TABLE IF NOT EXISTS req_movies (date DATESTR, file TEXT NOT NULL, user SMALLINT REFERENCES users(id));",
 
-            "INSERT INTO roles(id, name) VALUES ('', 'administrator');",
-            "INSERT INTO users(id, login, name, email, pass, role) VALUES ('','admin','admin','admin@localhost.local', 'admin:Media:2b952a0aecefebc7facc12d56a3519af', 1);"
+            "INSERT INTO roles(id, name) VALUES (0, 'administrator');",
+            "INSERT INTO users(id, login, name, email, pass, role) VALUES (0,'admin','admin','admin@localhost.local', 'admin:Media:2b952a0aecefebc7facc12d56a3519af', 1);"
         );
-        for ($queries as $query){
+        foreach ($queries as $query){
             $this->query($query);
         }
     }

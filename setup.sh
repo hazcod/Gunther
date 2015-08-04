@@ -20,7 +20,7 @@ MEDIA_PATH="/mnt/media"	  #edit in application/config.php too
 apt-get update && apt-get upgrade -y
 
 # install dependencies
-apt-get install -y git apache2-utils openssl libssl-dev libpcre3-dev make gcc php5-common php5-cli php5-fpm php5-curl mediainfo libexpat1-dev haveged
+apt-get install -y --force-yes git apache2-utils openssl libssl-dev libpcre3-dev make gcc php5-common php5-cli php5-fpm php5-curl php5-sqlite sqlite mediainfo libexpat1-dev haveged
 
 # install nginx
 mkdir -p /etc/nginx
