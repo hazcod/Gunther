@@ -16,71 +16,67 @@ class User_m extends Core_db
     public function getUserById($id)
     {
         $result = false;
-        $users = $this->getUsers();
 
-        foreach ($users as $user){
-            if (strcmp($user->id, $id) == 0){
-                $result = $user;
-                break;
-            }
-        }
+	$query = "SELECT * FROM users WHERE (id = ?);";
+	$user = $this->db->query($query, $id);
+
+	if ($user){
+		$result = $user->getRow();
+	}
 
         return $result;
     }
-    	
+
     public function getUserByLogin($login)
     {
         $result = false;
-        $users = $this->getUsers();
 
-        foreach ($users as $user){
-            if (strcmp($user->login, $login) == 0){
-                $result = $user;
-                break;
-            }
-        }
+	$query = "SELECT * FROM users WHERE (login = ?);";
+	$user = $this->db->query($query, $login);
 
-	    return $result;
+	if ($user){
+		$result = $user->getRow();
+	}
+
+	return $result;
     }
 
-    public function addUser($user)
+    public function addUser($login, $pass, $name, $email, $role)
     {
-        $output = shell_exec('scripts/addUser.sh ' . $this->settings['AUTH_DIGEST_FILE'] . ' ' . $user . ' 2>&1');
-        $output = str_replace("\n", "", $output);
+	$role = $this->db->query("SELECT id FROM roles WHERE (name = ?);", $role);
+	if ($role){
+		$role = $role->getRow()->name;
+		$pass_str = hash('md5', $login . ':Media:' . $pass);
+        	$query = "INSERT INTO users(login, name, email, pass, role) VALUES (?,?,?,?,?);";
+		$this->db->query($query, array($login, $name, $email, $pass_str, $role));
+
+		$user = $this->db->query("SELECT * FROM users WHERE (login = ?);", $login);
+		$result = ($user != false);
+	} else {
+		error_log("Could not find role '" . $role ."' when adding user " . $login);
+	}
         return $output;
     }
 
     public function delUser($id)
     {
-        $output = shell_exec('scripts/delUser.sh ' . $this->settings['AUTH_DIGEST_FILE'] . ' ' . $id . ' 2>&1');
-        str_replace("\n", "", $output);
-        error_log($output);
-        return true;
+        $query = "DELETE FROM users WHERE (id = ?);";
+	$this->db->query($query, $id);
+
+	$user = $this->db->query("SELECT * FROM users WHERE (id = ?);", $id);
+	return ($user == false);
     }
 
     public function getUsers(){
-        $result = array();
+        $result = false;
 
-        $handle = fopen($this->settings['AUTH_DIGEST_FILE'], "r");
-        if ($handle) {
-            $i=1;
-            while (($line = fgets($handle)) !== false) {
-                $parts = explode(':', $line);
-                if (sizeof($parts) == 3){
-	                $result[] = (object) array(
-	                    'login' => $parts[0],
-	                    'password' => str_replace(array("\r", "\n"), '', $parts[2]),
-	                    'id' => $i,
-	                );
-                } else {
-                	error_log("Malformed webdav auth entry at line $i : " . $line . "   in " . $this->settings['AUTH_DIGEST_FILE']);
-                }
-                $i++;            
-            }
-            fclose($handle);
-        } else {
-            error_log('Could not open digest file at ' . $this->settings['AUTH_DIGEST_FILE']);
-        }
+	$query = "SELECT * FROM users;";
+	$users = $this->db->query($query);
+
+	if ($users){
+		$result = $users->getResult();
+	}
+
         return $result;
     }
 }
