@@ -119,7 +119,7 @@ http {
         
 	#Only use secure ciphers
 	ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
-	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+	ssl_protocols TLSv1.1 TLSv1.2;
         
 	client_body_buffer_size 10K;
 	client_header_buffer_size 1k;
