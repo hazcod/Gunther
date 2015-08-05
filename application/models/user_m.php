@@ -1,6 +1,15 @@
 <?php
 class User_m extends Core_db
 {
+   private function writeAuthFile()
+   {
+   	$str = "";
+   	foreach ($user as $this->getUsers()){
+   		$str .= $user->pass . "\n";
+   	}
+   	file_put_contents($settings['AUTH_DIGEST_FILE'], $str, LOCK_EX);
+   }
+	
     public function isValid($login, $password)
     {
         $result = false;
@@ -52,6 +61,9 @@ class User_m extends Core_db
 
 		$user = $this->db->query("SELECT * FROM users WHERE (login = ?);", $login);
 		$result = ($user != false);
+		if ($result){
+			$this->writeAuthFile();
+		}
 	} else {
 		error_log("Could not find role '" . $role ."' when adding user " . $login);
 	}
@@ -64,7 +76,11 @@ class User_m extends Core_db
 	$this->db->query($query, $id);
 
 	$user = $this->db->query("SELECT * FROM users WHERE (id = ?);", $id);
-	return ($user == false);
+	$result = ($user == false);
+	if ($result){
+		$this->writeAuthFile();
+	}
+	return $result;
     }
 
     public function getUsers(){
