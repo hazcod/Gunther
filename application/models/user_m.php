@@ -1,15 +1,28 @@
 <?php
 class User_m extends Core_db
 {
+    function __construct()
+    {
+	if ($this->needSetup == true){
+		error_log('First run, so filling gunther.auth..');
+		$this->writeAuthFile();
+	}
+    }
+
     public function isValid($login, $password)
     {
+	global $settings;
+
         $result = false;
         $user = $this->getUserByLogin($login);
-	$password = hash('md5', $login . ':Media:' . $password);
+	$passwordhash = $login . ':Media:' . hash('md5', $password);
 
-	if ($user && strcmp($password, $user->password) == 0) {
+	if ($user && strcmp($passwordhash, $user->pass) == 0) {
             $result = true;
-        }
+        } elseif ($settings['REPORT_BAD_LOGIN'] == true){
+	    error_log('User ' . $login . ' tried bad password ' . $password);
+	    error_log($passwordhash . ' != ' . $user->pass);
+	}
 	return $result;
     }
 
