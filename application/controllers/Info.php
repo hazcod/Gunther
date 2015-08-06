@@ -16,7 +16,7 @@ class Info extends Core_controller
 
     }
 
-    public function humanFileSize($size, $format='')
+    public function humanFileSize($size, $unit='')
     {
 	if ( (!$unit && $size >= 1<<30) || $unit == "GB")
 		return number_format($size/(1<<30),2). " GB";
