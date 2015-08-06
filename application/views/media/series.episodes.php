@@ -15,10 +15,10 @@
     <br>
     <div class="row">
     	<div class="col-md-3">
-    		<img class="imgscale" src="http://thetvdb.com/banners/<?= $this->show->poster; ?>" alt="<?= $this->show->name; ?>" />
+    		<img class="imgscale" src="<?= $this->show->poster; ?>" alt="<?= $this->show->name; ?>" />
     		<hr>
     		<div class="pull-right">
-    			<a class="btn btn-info btn-sm" target="_blank" href="http://www.imdb.com/title/<?= $this->show->imdbId; ?>"><i class="fa fa-info-circle"></i> IMDb</a>
+    			<a class="btn btn-info btn-sm" target="_blank" href="<?= $this->show->imdbId; ?>"><i class="fa fa-info-circle"></i> IMDb</a>
     		</div>
     	</div>
     	<div class="col-md-9">
@@ -53,7 +53,7 @@
 				<div class="col-sm-2" style="margin-top:10px;">
 					<a href="/watch/index/ss<?= $episode->serieId . '-' . $nr_s . '-' . ($nr_e); ?>">
 					<div class="fix">
-						<img class="imgscale" src="http://thetvdb.com/banners/<?= $episode->thumbnail; ?>" alt="<?= $episode->name; ?>" />
+						<img class="imgscale" src="<?= $episode->thumbnail; ?>" alt="<?= $episode->name; ?>" />
 						<div class="desc">
 							<?= ($nr_e+1) . ': ' . $episode->name; ?>
 						</div>

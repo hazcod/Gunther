@@ -26,7 +26,7 @@
             <?php foreach ($this->episodes as $episode): ?>
             <a href="/watch/index/ss<?= $episode->serieId . '-' . $episode->season . '-' . $episode->number; ?>">
             <div class="fix">
-                <img class="imgscale" src="http://thetvdb.com/banners/<?= $episode->thumbnail; ?>" alt="<?= $episode->name; ?>" />
+                <img class="imgscale" src="<?= $episode->thumbnail; ?>" alt="<?= $episode->name; ?>" />
                 <div class="desc">
                     <?= 'S' . $episode->season . 'E' . $episode->number . ': ' . $episode->name; ?>
                 </div>

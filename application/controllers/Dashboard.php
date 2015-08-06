@@ -18,7 +18,6 @@ class Dashboard extends Core_controller
     public function index()
     { 
         if ($this->checkPrivilege() == true){
-            $this->template->user = $this->user_m->getUserByLogin($_SESSION['user']);
             $this->template->movies = $this->mediamodel->getLastMovies(10);
             $this->template->episodes = $this->mediamodel->getLatestEpisodes(10);
             $this->template->render('dashboard/index');
