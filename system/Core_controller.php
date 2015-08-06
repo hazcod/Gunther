@@ -38,9 +38,9 @@ abstract class Core_controller
         
         if (isset($_SESSION['user'])){
         	$this->user = $this->user_m->getUserByLogin($_SESSION['user']);      
-        }
+	}
 
-        $this->menu_m = Load::model('menu_m');
+	$this->menu_m = Load::model('menu_m');
         $this->template->menuitems = $this->menu_m->getMenu($this->user, $this->lang);
 
         $this->langs_m = Load::model('langs_m');
