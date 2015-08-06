@@ -228,11 +228,11 @@
 	        $result = array();
 	        $data = $this->getJson($this->settings['SB_API'] . 'shows', $flushcache);
 	        if ($data){
-		        foreach ($data->data as $id_=>$id) {
+		        foreach ($data->data as $id=>$showobj) {
 		        	try {
-		        		$show = $this->tvdb->getSerie($id_);
+		        		$show = $this->tvdb->getSerie($showobj->tvdbid);
 		        	} catch (Exception $e){
-		        		error_log("Coult not find show: " . $_id . " (" . $e .")");
+					error_log("Could not find show " . $showobj->tvrage_name . " (" . $showobj->tvdbid . ")");
 		        		$show = false;
 		        	}
 		            if ($show){
@@ -248,7 +248,11 @@
 	    	$data = json_decode(@file_get_contents($this->settings['SB_API'] . 'history&type=downloaded&limit=' . urlencode($limit)));
 	    	if ($data){
 		    	foreach ($data->data as $log){
+				if ($log->status == "Downloaded"){
 		    		array_push($result, $this->tvdb->getEpisode($log->tvdbid, $log->season, $log->episode));
+				} else {
+					error_log("Sickrage returned not-downloaded episode: " . $log->tvdbid);
+				}
 		    	}
 		    }
 	    	return $result;
@@ -319,7 +323,7 @@
 	        return $result;
 	    }
 
-	    public function getRelease($movie){
+	    public function getRelease($movie, $printall=false){
 	    	$result = false;
 
 	    	if ($movie && array_key_exists('releases', $movie)){
@@ -327,7 +331,12 @@
 	    			if (($result == false) && array_key_exists('files', $release) && (count($release->files) >0)
 	    						&& array_key_exists('movie', $release->files) && (count($release->files->movie) > 0)
          						&& file_exists($release->files->movie[0])){
-						$result = $release->files->movie[0];
+						
+							if ($printall == true){
+								$result = $release;	
+							} else {
+								$result = $release->files->movie[0];
+							}
 						if (count($release->files->movie) > 1){
 							// how would we ever check the quality of multiple video files?
 							error_log("Notice: multiple video files were available, but we can only take the first. (" . $movie->info->original_title . ") dump: " . var_dump($release->files->movie));

@@ -24,15 +24,24 @@ class DB
             $this->db = new PDO('sqlite:' . $settings['DB_LOC']);
             // set the error reporting attribute
             $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            
-            if (! file_exists($settings['DB_LOC'])) {
+
+	    //error_log('Checking ' . $settings['DB_LOC'] . ' = ' . var_dump(file_exists($settings['DB_LOC'])));
+            if (! $this->testDB()) {
+		error_log('No active database found, creating at ' . $settings['DB_LOC']);
+		$this->needSetup = true;
 		$this->setup();
 	    }
         } catch(PDOException $e) {
             error_log($e->getMessage());
         }
     }
-    
+
+    private function testDB()
+    {
+	global $settings;
+	return (filesize($settings['DB_LOC']) != 0);
+    }
+
     private function setup()
     {
         // new database, so setup

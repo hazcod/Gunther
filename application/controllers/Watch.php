@@ -13,21 +13,20 @@ class Watch extends Core_controller
             ->setPartial('flashmessage');
 
         //set page title
-        $this->template->setPagetitle($this->lang['title']);	
+        $this->template->setPagetitle($this->lang['title']);
 
         include(APPLICATION_PATH . 'includes/VideoStream.php');
     }
 
     private function streamMovie($id){
-        $movie = $this->mediamodel->getMovie($id); 
-        if ($movie){
+        $movie = $this->mediamodel->getMovie($id);
+        $release = false;
+	if ($movie){
             $release = $this->mediamodel->getRelease($movie);
         }
         if (($release != false) && file_exists($release)){
             $stream = new VideoStream($release);
             return $stream->start();
-            #header("Location: rtmp://" . $_SERVER['HTTP_HOST'] . "/stream//" . urlencode(str_replace($this->settings['MEDIA_LOC'], '', $release)));
-            #die();
         } else {
             error_log("Streamer could not find " . $release . " (id $id)");
             header("HTTP/1.0 404 Not Found");
@@ -40,14 +39,12 @@ class Watch extends Core_controller
         $serie_id = $parts[0];
         $season_id = $parts[1];
         $episode_id = $parts[2];
-        $serie = $this->mediamodel->getEpisode($serie_id, $season_id +1, $episode_id +1);
+        $serie = $this->mediamodel->getEpisode($serie_id, $season_id, $episode_id);
         if ($serie and file_exists($serie->location) and (strcmp($serie->location, '') != 0)){
             $stream = new VideoStream($serie->location);
             return $stream->start();
-            #header("Location: rtmp://" . $_SERVER['HTTP_HOST'] . "/stream//" . urlencode(str_replace($this->settings['MEDIA_LOC'], '', $erie->location)));
-            #die();
         } else {
-            error_log("Streamer could not find " . $serie . " (id $id)");
+            error_log("Streamer could not find release " . $serie . " (id $id)");
             header("HTTP/1.0 404 Not Found");
             return '404 - File Not Found';
         }
@@ -175,8 +172,8 @@ class Watch extends Core_controller
         $serie_id = $parts[0];
         $season_id = $parts[1];
         $episode_id = $parts[2];
-        $episode = $this->mediamodel->getEpisode($serie_id, $season_id +1, $episode_id +1); #no zero
-        if ($episode && file_exists($episode->location)){
+        $episode = $this->mediamodel->getEpisode($serie_id, $season_id, $episode_id);
+	 if ($episode != false && file_exists($episode->location)){
             $this->template->file = $id;
             $this->template->type = $this->mediamodel->getMimeType($episode->location);
             $this->template->codec = $this->mediamodel->getCodecInfo($episode->location)['videoCodec'] . ',' . $this->mediamodel->getCodecInfo($episode->location)['audioCodec'];
@@ -195,9 +192,11 @@ class Watch extends Core_controller
         } else {
             $this->setFlashmessage($this->lang['shownotfound'], 'danger');
             if ($episode){
-                error_log("Episode not found: " . $episode->location);
+                error_log("Episode file not found: " . $episode->location . " . Consider re-scanning.");
+            } else {
+		error_log("Episode not found, id: " . $id);
             }
-            $this->redirect('series/index');
+	    $this->redirect('series/index');
         }
    }
 
