@@ -11,7 +11,7 @@ abstract class Core_controller
         $this->template->flashmessage = $this->getFlashMessage();
 
         $this->form = Form::getInstance();
-        
+
         global $settings;
         $this->settings = $settings;
 
@@ -35,7 +35,7 @@ abstract class Core_controller
 
         $this->user_m = Load::model('user_m');
         $this->user_m->settings = $this->settings;
-        
+
         if (isset($_SESSION['user'])){
         	$this->user = $this->user_m->getUserByLogin($_SESSION['user']);      
 	}
@@ -59,7 +59,7 @@ abstract class Core_controller
     }
 
     public function isAdminUser(){
-        if ($this->user != false and strcmp($this->user->id, '1') == 0){
+        if ($this->user != false and $this->user->role == 1){
             return true;
         } else {
             return false;
