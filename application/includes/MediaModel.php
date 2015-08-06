@@ -228,11 +228,11 @@
 	        $result = array();
 	        $data = $this->getJson($this->settings['SB_API'] . 'shows', $flushcache);
 	        if ($data){
-		        foreach ($data->data as $id_=>$id) {
+		        foreach ($data->data as $id=>$showobj) {
 		        	try {
-		        		$show = $this->tvdb->getSerie($id_);
+		        		$show = $this->tvdb->getSerie($showobj->tvdbid);
 		        	} catch (Exception $e){
-		        		error_log("Coult not find show: " . $id_ . " (" . $e .")");
+					error_log("Could not find show " . $showobj->tvrage_name . " (" . $showobj->tvdbid . ")");
 		        		$show = false;
 		        	}
 		            if ($show){
