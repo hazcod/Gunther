@@ -32,7 +32,8 @@ class Home extends Core_controller
 
         if ($this->form->isFormValid()) {
             if ($this->user_m->isValid(strtolower($formdata->username), $formdata->password)){
-                $_SESSION['user'] = $formdata->username;
+                $this->user = $this->user_m->getUserByLogin(strtolower($formdata->username));
+		$_SESSION['user'] = $this->user->id;
                 $this->redirect('dashboard');
             } else {
                 $this->template->formdata = $formdata;

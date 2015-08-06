@@ -123,12 +123,12 @@ class Admin extends Core_controller
     public function removeuser($user=false){
         if ($this->checkAdminAccess()){
             $userFull = $this->user_m->getUserById($user);
-            if ($userFull and strcmp($user, '1') != 0){
+            if ($userFull and $this->user->id != $_SESSION['user']){
                 $this->user_m->delUser($user);
                 $this->setFlashmessage($this->lang['removeduser']);
                 $this->redirect('admin/index');
             } else {
-                $this->setFlashmessage($this->lang['deladmin'], 'danger');
+                $this->setFlashmessage($this->lang['delme'], 'danger');
                 $this->redirect('admin/index');
             }
         } else {

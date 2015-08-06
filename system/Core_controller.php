@@ -37,7 +37,9 @@ abstract class Core_controller
         $this->user_m->settings = $this->settings;
 
         if (isset($_SESSION['user'])){
-        	$this->user = $this->user_m->getUserByLogin($_SESSION['user']);      
+        	echo 'user set';
+		$this->user = $this->user_m->getUserById($_SESSION['user']);
+		$this->template->user = $this->user;
 	}
 
 	$this->menu_m = Load::model('menu_m');
