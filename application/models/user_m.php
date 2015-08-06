@@ -4,20 +4,22 @@ class User_m extends Core_db
 
     function __construct()
     {
-	if ($this->needSetup == true){
+	if (isset($this->needSetup) and $this->needSetup == true){
 		error_log('First run, so filling gunther.auth..');
 		$this->writeAuthFile();
 	}
+	parent::__construct();
     }
 
 
    private function writeAuthFile()
    {
    	$str = "";
-   	foreach ($user as $this->getUsers()){
+   	foreach ($this->getUsers() as $user){
    		$str .= $user->pass . "\n";
    	}
    	file_put_contents($settings['AUTH_DIGEST_FILE'], $str, LOCK_EX);
+	return true;
    }
 
 
