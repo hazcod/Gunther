@@ -59,7 +59,7 @@ class User_m extends Core_db
         $result = false;
 
 	$query = "SELECT * FROM users WHERE (login = ?);";
-	$user = $this->db->query($query, $login);
+	$user = $this->db->query($query, strtolower($login));
 
 	if ($user){
 		$result = $user->getRow();
