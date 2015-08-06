@@ -78,10 +78,7 @@ class Admin extends Core_controller
 
     public function scanmovies($full=false){
         if ($this->checkAdminAccess()){
-            if ($full){
-                $fullb = true;
-            }
-            $this->mediamodel->scanmovies($fullb);
+            $this->mediamodel->scanmovies($full);
             $this->setFlashmessage($this->lang['scanstarted']);
             $this->redirect('admin/index');
         } else {
