@@ -63,12 +63,13 @@ class Series extends Core_controller
         if ($id != false) {
             $info = $this->mediamodel->tvdb->getSerieEpisodes($id);
             $this->template->show = $info['serie'];
+            $this->template->show->poster = $this->mediamodel->getImageURL('http://thetvdb.com/banners/' . $this->template->show->poster);
 
             $seasons = array();
             $nr = 0;
             foreach ($info['episodes'] as $episode){
+                $episode->thumbnail = $this->mediamodel->getImageURL('http://thetvdb.com/banners/' . $episode->thumbnail);
                 $epi = $this->mediamodel->getEpisode($id, $episode->season, $nr);
-
                 if ($epi && array_key_exists('status', $epi) and strcmp($epi->status, 'Downloaded') == 0){
                     if (array_key_exists($episode->season, $seasons) == false){
                         $seasons[$episode->season] = array();

@@ -82,6 +82,36 @@
 			}
 		}
 
+		private function download($url, $path){
+			$ch = curl_init($url);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+			$data = curl_exec($ch);
+
+			curl_close($ch);
+
+			file_put_contents($path, $data);
+		}
+
+
+		public function getImageURL($url, $force=false) {
+			if (!file_exists($this->settings['CACHE_DIR'] . 'img/')) {
+			    mkdir($this->settings['CACHE_DIR'] . 'img/', 0777, true);
+			}
+			$cacheFile =  $this->settings['CACHE_DIR'] . 'img/' . basename($url);
+			if (file_exists($cacheFile) and $force == false){
+				return '/' . $cacheFile;
+			} else {
+				$this->download($url, $cacheFile);
+				if (file_exists($cacheFile)){
+					return '/' . $cacheFile;
+				} else {
+					error_log('Could not fetch ' . $url . ' to ' . $cacheFile);
+					return false;
+				}
+			}
+		}
+
 
 		public function flushMovieCache(){
 			$this->getAllMovies(true);
@@ -93,12 +123,40 @@
 			$this->getAllShows(true);
 		}
 
+		private function useMovieCachedImages($input){
+			if (is_array($input)){
+       			foreach ($input as $i => $movie){
+        			$input[$i]->info->images->poster[0] = $this->getImageURL($input[$i]->info->images->poster[0]);
+        		}
+        	} else {
+        		$input->info->images->poster[0] = $this->getImageURL($input->info->images->poster[0]);
+        		if (array_key_exists('actors', $input->info->images)){
+        			foreach ($input->info->images->actors as $name => $picture){
+        				$input->info->images->actors->{$name} = $this->getImageURL($input->info->images->actors->{$name});
+        			}
+        		} else {
+        			echo var_dump($input); die();
+        		}
+        	}
+        	return $input;
+		}
+
+		private function useShowCachedImages($input){
+			if (array_key_exists('thumbnail', $input)){
+				$input->thumbnail = $this->getImageURL("http://thetvdb.com/banners/" . $input->thumbnail);
+			}
+			if (array_key_exists('poster', $input)){
+				$input->poster = $this->getImageURL('http://thetvdb.com/banners/' . $input->poster);
+			}
+			return $input;
+		}
+
 
 		##- DASHBOARD
 		public function getLastMovies($limit=10){
         	$json = json_decode(@file_get_contents($this->settings['CP_API'] . 'media.list?status=done&offset=' . urlencode($limit)));
         	if ($json){
-        		return $json->movies;
+        		return $this->useMovieCachedImages($json->movies);
         	} else {
         		error_log('Could not get last movies');
         		return false;
@@ -157,7 +215,7 @@
 	 	public function getAllMovies($flushcache=false){
 	        $json = $this->getJson($this->settings['CP_API'] . 'media.list', $flushcache);
 	        if ($json){
-	        	return $json->movies;
+	        	return $this->useMovieCachedImages($json->movies);
 	        } else {
 	        	return false;
 	        }
@@ -166,7 +224,7 @@
 	    public function getDoneMovies($flushcache=false){
 	        $json = $this->getJson($this->settings['CP_API'] . 'media.list?status=done', $flushcache);
 	        if ($json){
-	        	return $json->movies;
+	        	return $this->useMovieCachedImages($json->movies);
 	        } else {
 	        	return false;
 	        }
@@ -175,7 +233,7 @@
 	    public function getBusyMovies($flushcache=false){
 	        $json = $this->getJson($this->settings['CP_API'] . 'media.list?status=active', $flushcache);
 	        if ($json){
-	        	return $json->movies;
+	        	return $this->useMovieCachedImages($json->movies);
 	        } else {
 	        	return false;
 	        }
@@ -184,7 +242,13 @@
 		public function getMovie($id=false){
 			$json = $this->getJson($this->settings['CP_API'] . 'media.get?id=' . $id);
 			if ($json){
-				return $json->media;
+				if (array_key_exists('movies', $json)){ 
+					return $this->useMovieCachedImages($json->movies);
+				} elseif (array_key_exists('media', $json)) {
+					return $this->useMovieCachedImages($json->media);
+				} else {
+					return $json;
+				}
 			} else {
 				return false;
 			}
@@ -193,7 +257,7 @@
 	    public function findExistingMovie($title){
 	    	$json = $this->getJson($this->settings['CP_API'] . 'media.list?search=' . urlencode($title));
 	    	if ($json){
-	    		return $json->movies;
+	    		return $this->useMovieCachedImages($json->movies);
 	    	} else {
 	    		return false;
 	    	}
@@ -231,8 +295,9 @@
 		        foreach ($data->data as $id=>$showobj) {
 		        	try {
 		        		$show = $this->tvdb->getSerie($showobj->tvdbid);
+		        		$show = $this->useShowCachedImages($show);
 		        	} catch (Exception $e){
-					error_log("Could not find show " . $showobj->tvrage_name . " (" . $showobj->tvdbid . ")");
+						error_log("Could not find show " . $showobj->tvrage_name . " (" . $showobj->tvdbid . ")");
 		        		$show = false;
 		        	}
 		            if ($show){
@@ -249,7 +314,7 @@
 	    	if ($data){
 		    	foreach ($data->data as $log){
 				if ($log->status == "Downloaded"){
-		    		array_push($result, $this->tvdb->getEpisode($log->tvdbid, $log->season, $log->episode));
+					array_push($result, $this->useShowCachedImages($this->tvdb->getEpisode($log->tvdbid, $log->season, $log->episode)));
 				} else {
 					error_log("Sickrage returned not-downloaded episode: " . $log->tvdbid);
 				}
@@ -282,7 +347,7 @@
 	    public function getEpisode($serie_id, $season_id, $episode_id){
 	        $json = $this->getJson($this->settings['SB_API'] . 'episode&tvdbid=' . urlencode($serie_id) . '&season=' . $season_id . '&episode=' . $episode_id . '&full_path=1');
 	        if ($json && count((array)$json->data)){
-	        	return $json->data;
+	        	return $this->useShowCachedImages($json->data);
 	        } else {
 	        	return false;
 	        }

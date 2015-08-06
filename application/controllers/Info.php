@@ -30,9 +30,9 @@ class Info extends Core_controller
     public function movie($id){
         $this->template->info = $this->mediamodel->getMovie($id);
         if ($this->template->info){
-	    $this->template->info->release = $this->mediamodel->getRelease($this->template->info, true);
+	        $this->template->info->release = $this->mediamodel->getRelease($this->template->info, true);
             $this->template->info->release->size = $this->humanFileSize(filesize($this->template->info->release->files->movie[0]));
-	    $this->template->id = $id;
+	        $this->template->id = $id;
             $this->template->setPagetitle($this->template->info->info->original_title . ' - ' . $this->lang['title']);  
             $this->template->render('info/movie');
         } else {
