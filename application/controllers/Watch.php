@@ -13,13 +13,13 @@ class Watch extends Core_controller
             ->setPartial('flashmessage');
 
         //set page title
-        $this->template->setPagetitle($this->lang['title']);	
+        $this->template->setPagetitle($this->lang['title']);
 
         include(APPLICATION_PATH . 'includes/VideoStream.php');
     }
 
     private function streamMovie($id){
-        $movie = $this->mediamodel->getMovie($id); 
+        $movie = $this->mediamodel->getMovie($id);
         if ($movie){
             $release = $this->mediamodel->getRelease($movie);
         }
@@ -175,7 +175,7 @@ class Watch extends Core_controller
         $serie_id = $parts[0];
         $season_id = $parts[1];
         $episode_id = $parts[2];
-        $episode = $this->mediamodel->getEpisode($serie_id, $season_id +1, $episode_id +1); #no zero
+        $episode = $this->mediamodel->getEpisode($serie_id, $season_id, $episode_id);
         if ($episode && file_exists($episode->location)){
             $this->template->file = $id;
             $this->template->type = $this->mediamodel->getMimeType($episode->location);
@@ -195,9 +195,11 @@ class Watch extends Core_controller
         } else {
             $this->setFlashmessage($this->lang['shownotfound'], 'danger');
             if ($episode){
-                error_log("Episode not found: " . $episode->location);
+                error_log("Episode file not found: " . $episode->location . " . Consider re-scanning.");
+            } else {
+		error_log("Episode not found, id: " . $id);
             }
-            $this->redirect('series/index');
+	    $this->redirect('series/index');
         }
    }
 

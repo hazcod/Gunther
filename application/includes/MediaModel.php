@@ -248,7 +248,11 @@
 	    	$data = json_decode(@file_get_contents($this->settings['SB_API'] . 'history&type=downloaded&limit=' . urlencode($limit)));
 	    	if ($data){
 		    	foreach ($data->data as $log){
+				if ($log->status == "Downloaded"){
 		    		array_push($result, $this->tvdb->getEpisode($log->tvdbid, $log->season, $log->episode));
+				} else {
+					error_log("Sickrage returned not-downloaded episode: " . $log->tvdbid);
+				}
 		    	}
 		    }
 	    	return $result;
