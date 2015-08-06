@@ -206,7 +206,7 @@ http {
                 
                 access_log /var/log/nginx/access.log combined if=\$nodavreq;
 
-                location ~ /(\.|scripts|cache) { deny all; access_log off; log_not_found off; return 404; }
+                location ~ /(\.|scripts|cache|setup) { deny all; access_log off; log_not_found off; return 404; }
 
                 location /webdav {
                 	# Fix for missing $remote_user in digest module : https://github.com/atomx/nginx-http-auth-digest/issues/1
