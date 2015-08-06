@@ -17,7 +17,10 @@
 		<div class="col-md-3">
 			<img src="<?= $this->info->info->images->poster[0]; ?>" alt="<?= $this->info->info->original_title; ?> poster" class="imgscale" />
 			<hr>
-    		<div class="pull-right">
+    			<div class="pull-right">
+				<span class="label label-info"><i class="fa fa-television"></i>  <?= $this->info->release->quality; ?></span>
+				<span class="label label-primary"><i class="fa fa-tachometer"></i>  <?= $this->info->release->size; ?></span>
+				<hr>
 				<a class="btn btn-success btn-sm" href="/watch/index/<?= $this->info->info->imdb; ?>"><i class="fa fa-video-camera"></i></a>
 				<a class="btn btn-primary btn-sm" target="_blank" href="/watch/getmovie/<?= $this->id; ?>"><i class="fa fa-download"></i></a>
 				<a class="btn btn-info btn-sm" target="_blank" href="http://www.imdb.com/title/<?= $this->id; ?>"><i class="fa fa-info-circle"></i></a>
