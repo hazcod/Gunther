@@ -13,7 +13,8 @@ Note: This can install downloaders for you. [Use the setupDownloaders.sh script 
 # Features
 - Based on the high performance web server nginx
 - Uses the high performant Webdav protocol for sharing; almost every client supports this
-- No database required
+- No running database required; uses SQlite
+- Caches posters and actor images; a little slower, but at least everything is over HTTPS
 - Fetches all media directly from CouchPotato/Sickbeard.
 
 
