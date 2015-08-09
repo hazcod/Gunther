@@ -1,7 +1,6 @@
 # Gunther
 ~ Easy web frontend for your media on a debian VPS.
 
-WARNING: Currently user management does not work yet. Use commit 38b53a9d5cf2cecb6b2e2b5c1ce4d7a36da26622 if you want a working version.
 
 Gunther can be used as a easy-to-use web frontend for your personal media. You can stream your media, aswell as automatically request new media to programs controlled by API. (think CouchPotato, Sickbeard, ...)
 

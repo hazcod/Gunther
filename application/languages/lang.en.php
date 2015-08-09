@@ -85,6 +85,13 @@ function getLang(){
     $lang['logcleared']   = 'Logfile has been cleared.';
     $lang['clearlog']     = 'Clear log';
     $lang['lognotcleared']= 'Log could not be cleared. Permissions problem? ';
+    $lang['searchuser']   = 'Search User';
+    $lang['addusererror'] = 'Error adding the user. Please check your input.';
+    $lang['adduser']      = 'Add user';
+    $lang['name']         = 'Name';
+    $lang['role']         = 'Role';
+    $lang['cancel']       = 'Cancel';
+    $lang['delme']        = 'You cannot delete the account you are currently logged in as.';
 
     $lang['readmore']     = 'Read more';
     $lang['synology-info']= '...offers proven NAS devices for home and enterprise users. An easy web interface smoothens the experience, while the community packages give you loads of functionality.';
