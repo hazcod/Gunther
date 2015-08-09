@@ -18,7 +18,7 @@ class User_m extends Core_db
 
         $str = "";
         foreach ($this->getUsers() as $user){
-        	$str .= $user->pass . "\n";
+        	$str .= $user->login . ':' . 'Media' . ':' . $user->pass . "\n";
         }
 
         file_put_contents($settings['AUTH_DIGEST_FILE'], $str, LOCK_EX);
