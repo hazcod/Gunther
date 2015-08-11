@@ -126,7 +126,11 @@
 		private function useMovieCachedImages($input){
 			if (is_array($input)){
        			foreach ($input as $i => $movie){
-        			$input[$i]->info->images->poster[0] = $this->getImageURL($input[$i]->info->images->poster[0]);
+        			if (sizeof($input[$i]->info->images->poster) > 0){
+					$input[$i]->info->images->poster[0] = $this->getImageURL($input[$i]->info->images->poster[0]);
+        			} else {
+        				error_log('No poster given for ' . var_dump($input[$i]->info));
+        			}
         		}
         	} else {
         		$input->info->images->poster[0] = $this->getImageURL($input->info->images->poster[0]);
