@@ -16,25 +16,24 @@
 			<hr>
 			<form method="post" action="/admin/adduser">
 				<div class="input-group">
-				  <span class="input-group-addon" id="username-input"><?= $this->lang['username']; ?></span>
-				  <input name="username" type="text" class="form-control" placeholder="user1" aria-describedby="username-input" autofocus >
+				  <span class="input-group-addon" id="username-input"><?= $this->lang['searchuser']; ?></span>
+				  <input name="usersearch" type="text" class="form-control" placeholder="username" aria-describedby="username-input" autofocus >
 				  <span class="input-group-btn">
-        			<button class="btn btn-primary" type="submit"><?= $this->lang['add']; ?></button>
+        			<a class="btn btn-primary" href="/admin/adduser"><?= $this->lang['add']; ?></a>
 				  </span>
 				</div>
 			</form>
-			<ul class="list-group">
+			<div class="list-group">
 				<?php foreach ($this->users as $user): ?>
-				<li class="list-group-item">
+				<a class="list-group-item">
 					<?= $user->login; ?>
-					<?php if (strcmp('1', $user->id) != 0): ?>
-					<div class="pull-right">
-						<a href="/admin/removeuser/<?= $user->id; ?>" onclick="return confirm('<?= $this->lang['deluserc']; ?>');"><i class="fa fa-times"></i></a>
+					<div class='pull-right clickable'>
+						<!--<i class="fa fa-edit" onclick="window.location='/admin/edituser/<?= $user->id; ?>';"></i>-->
+						<i class="fa fa-times" onclick="if (confirm('<?= 'Login: ' . $user->login . '\nName: ' . $user->name . '\nEmail: ' . $user->email . '\n\n' . $this->lang['deluserc']; ?>') == true){ window.location='/admin/removeuser/<?= $user->id; ?>'; }"></i>
 					</div>
-					<?php endif; ?>
-				</li>
+				</a>
 				<?php endforeach; ?>
-			</ul>
+			</div>
 		</div>
 
 		<div class="col-sm-4">
