@@ -64,6 +64,17 @@ class Admin extends Core_controller
         return trim($output);
     }
 
+    private function generatePassword($length=10) {
+        $alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789!@#$%^&*()_+=-][{}/><.,/?";
+        $pass = array(); //remember to declare $pass as an array
+        $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+        for ($i = 0; $i < $length; $i++) {
+            $n = mt_rand(0, $alphaLength);
+            $pass[] = $alphabet[$n];
+        }
+        return implode($pass); //turn the array into a string
+    }
+
 
     private function getLog($limit=10){
         $result = false;
@@ -122,9 +133,9 @@ class Admin extends Core_controller
 
     public function removeuser($user=false){
         if ($this->checkAdminAccess()){
-            $userFull = $this->user_m->getUserById($user);
-            if ($userFull and $this->user->id != $_SESSION['user']){
-                $this->user_m->delUser($user);
+            $user = $this->user_m->getUserById($user);
+            if ($user and $user->id != $this->user->id){
+                $this->user_m->delUser($user->id);
                 $this->setFlashmessage($this->lang['removeduser']);
                 $this->redirect('admin/index');
             } else {
@@ -139,15 +150,34 @@ class Admin extends Core_controller
 
     public function adduser(){
         if ($this->checkAdminAccess()){
-            $formdata = $this->form->getPost();
-            if ($formdata and $formdata->username){
-                $user = $formdata->username;
-                $output = $this->user_m->addUser($user);
-                $this->setFlashmessage($user . ' ' . $this->lang['addeduser'] .' <strong>' . $output .'</strong>');
-                $this->redirect('admin/index');
+            if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+                $formdata = $this->form->getPost();
+                
+                $this->form->validateLength('username', 4);
+                $this->form->validateLength('name', 4);
+                $this->form->validateLength('password', 4);
+                $this->form->validateEmail('email');
+                $this->form->validateInteger('role');
+
+                if ($formdata && $this->form->isFormValid()){
+
+                    $formdata->username = strtolower($formdata->username);
+                    $formdata->email = strtolower($formdata->email);
+
+                    $output = $this->user_m->addUser($formdata->username, $formdata->password, $formdata->name, $formdata->email, $formdata->role);
+                    $this->setFlashmessage($formdata->username . ' ' . $this->lang['addeduser'] .' <strong>' . $formdata->password .'</strong>');
+                    $this->redirect('admin/index');
+                } else {
+                    $this->setFlashmessage($this->lang['addusererror'], 'danger');
+                    $this->template->formdata = $formdata;
+                    $this->template->roles = $this->user_m->getRoles();
+                    $this->template->formdata->role = $formdata->role;
+                    $this->template->render('admin/adduser');
+                }
             } else {
-                $this->setFlashmessage($this->lang['accessdenied'], 'danger');
-                $this->redirect('admin/index');
+                $this->template->roles = $this->user_m->getRoles();
+                $this->template->password = $this->generatePassword();
+                $this->template->render('admin/adduser');
             }
         }
     }
