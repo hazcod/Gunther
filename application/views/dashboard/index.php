@@ -11,7 +11,7 @@
         <div class="slider-movies">
         <?php if ($this->movies): ?>
             <?php foreach ($this->movies as $movie): ?> 
-            <a href="/info/movie/<?= $movie->info->imdb ?>">
+            <a href="/info/movie/<?= $movie->info->imdb ?>">>
 	           <img class="imgscale" alt="<?= $movie->info->original_title; ?>" src="<?= $movie->info->images->poster[0]; ?>" />
             </a>
             <?php endforeach; ?>

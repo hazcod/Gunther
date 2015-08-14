@@ -29,9 +29,9 @@
 	
 	<?php if ($this->movies): ?>
 	<?php foreach ($this->movies as $movie): ?>
-	<div class="col-sm-2" style="margin-top:10px;">
+	<div class="col-sm-2" style="margin:0;padding:0;">
 		<a href="/info/movie/<?= $movie->info->imdb; ?>">
-			<img class="imgscale<?php if ($movie->status == 'active'){ echo ' grey-inactive';} ?>" alt="<?= $movie->info->original_title ?>" data-src="<?php if (count($movie->info->images->poster) > 0) { echo $movie->info->images->poster[0]; } else { echo 'http://www.clipartbest.com/cliparts/9T4/ep4/9T4ep4xac.png'; }; ?>" />
+			<img class="imgscale<?php if ($movie->status == 'active'){ echo ' grey-inactive';} ?>" alt="<?= $movie->info->original_title ?>" data-src="<?php if (count($movie->info->images->poster) > 0) { echo $movie->info->images->poster[0]; } else { echo '/img/notfound.png'; }; ?>" />
 		</a>
 	</div>
 	<?php endforeach; ?>

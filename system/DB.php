@@ -49,11 +49,11 @@ class DB
         $queries = array(
             "CREATE TABLE IF NOT EXISTS roles (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(10) NOT NULL);",
             "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, login VARCHAR(20) NOT NULL, pass VARCHAR(32) NOT NULL, name TEXT NOT NULL, email TEXT NOT NULL, role SMALLINT REFERENCES roles(id));",
-            "CREATE TABLE IF NOT EXISTS req_movies (date DATESTR, file TEXT NOT NULL, user SMALLINT REFERENCES users(id));",
+            "CREATE TABLE IF NOT EXISTS req_movies (date DATESTR, file TEXT NOT NULL, user SMALLINT REFERENCES users(id), ip VARCHAR(39), msec DOUBLE);",
             "CREATE TABLE IF NOT EXISTS version (version VARCHAR(10) NOT NULL);",
             "CREATE TABLE IF NOT EXISTS static_cache (id INTEGER PRIMARY KEY AUTOINCREMENT, type VARCHAR(10) NOT NULL, path TEXT NOT NULL, url TEXT NOT NULL);",
-	        "CREATE TABLE IF NOT EXISTS movies (id INTEGER PRIMARY KEY AUTOINCREMENT, tvdbid INT NOT NULL, name VARCHAR(30) NOT NULL, description TEXT NOT NULL, quality VARCHAR(15), release VARCHAR(20));",
-	    
+	    "CREATE TABLE IF NOT EXISTS movies (id INTEGER PRIMARY KEY AUTOINCREMENT, tvdbid INT NOT NULL, name VARCHAR(30) NOT NULL, description TEXT NOT NULL, quality VARCHAR(15), release VARCHAR(20));",
+
             "INSERT INTO version(version) VALUES ('1.0.0');",
             "INSERT INTO roles(id, name) VALUES (0, 'Administrator'), (1, 'Regular user');",
             "INSERT INTO users(id, login, name, email, pass, role) VALUES (0,'admin','admin','admin@localhost.local', 'admin:Media:2b952a0aecefebc7facc12d56a3519af', 1);"
