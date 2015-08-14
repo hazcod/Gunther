@@ -56,7 +56,7 @@
         <script type="text/javascript" src="<?= URL::base_uri(); ?>js/unveil.js"></script>
         <script type="text/javascript">
             $(document).ready(function() {
-              $("img").unveil(150);
+              $("img").unveil(30);
             });
         </script>
     </body>

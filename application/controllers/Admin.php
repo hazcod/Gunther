@@ -15,7 +15,7 @@ class Admin extends Core_controller
         $this->template->setPagetitle($this->lang['admin'] . ' - ' . $this->lang['title']);	
 
         $this->t = Load::model('accesslog_m');
-        $this->t->getPendingLogs();
+        //$this->t->getPendingLogs();
     }
 
     private function checkAdminAccess(){
