@@ -142,7 +142,7 @@ class Watch extends Core_controller
                 error_log('No valid release found for ' . $movie->info->original_title . ' : ' . var_dump($movie->releases));
             }
         }
-        if ($release){
+        if ($release && file_exists($release)){
             $this->template->file = $id;
             $this->template->type = $this->mediamodel->getMimeType($release);
             $this->template->codec= $this->mediamodel->getCodecInfo($release)['videoCodec'];
@@ -173,7 +173,7 @@ class Watch extends Core_controller
         $season_id = $parts[1];
         $episode_id = $parts[2];
         $episode = $this->mediamodel->getEpisode($serie_id, $season_id, $episode_id);
-	 if ($episode != false && file_exists($episode->location)){
+	   if ($episode != false && file_exists($episode->location)){
             $this->template->file = $id;
             $this->template->type = $this->mediamodel->getMimeType($episode->location);
             $this->template->codec = $this->mediamodel->getCodecInfo($episode->location)['videoCodec'] . ',' . $this->mediamodel->getCodecInfo($episode->location)['audioCodec'];

@@ -52,7 +52,7 @@ class DB
             "CREATE TABLE IF NOT EXISTS req_movies (date DATESTR, file TEXT NOT NULL, user SMALLINT REFERENCES users(id), ip VARCHAR(39), msec DOUBLE);",
             "CREATE TABLE IF NOT EXISTS version (version VARCHAR(10) NOT NULL);",
             "CREATE TABLE IF NOT EXISTS static_cache (id INTEGER PRIMARY KEY AUTOINCREMENT, type VARCHAR(10) NOT NULL, path TEXT NOT NULL, url TEXT NOT NULL);",
-	    "CREATE TABLE IF NOT EXISTS movies (id INTEGER PRIMARY KEY AUTOINCREMENT, tvdbid INT NOT NULL, name VARCHAR(30) NOT NULL, description TEXT NOT NULL, quality VARCHAR(15), release VARCHAR(20));",
+	        "CREATE TABLE IF NOT EXISTS movies (id INTEGER PRIMARY KEY AUTOINCREMENT, tvdbid INT NOT NULL, name VARCHAR(30) NOT NULL, description TEXT NOT NULL, quality VARCHAR(15), release VARCHAR(20));",
 
             "INSERT INTO version(version) VALUES ('1.0.0');",
             "INSERT INTO roles(id, name) VALUES (0, 'Administrator'), (1, 'Regular user');",
