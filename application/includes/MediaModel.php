@@ -16,26 +16,39 @@
 
 
 			$autoload->map(array(
-				$settings['movie_provider'] => 'movie/' . $this->settings['movie_provider'] . '.php',
-				$settings['serie_provider'] => 'serie/' . $this->settings['serie_provider'] . '.php'
+				$settings['movie_provider'] => $this->settings['movie_provider'] . '.php',
+				$settings['serie_provider'] => $this->settings['serie_provider'] . '.php'
 			));
 
 
 			$autoload->directory(array(
-				'providers/'
+				APPLICATION_PATH . 'includes/providers/movie/',
+				APPLICATION_PATH . 'includes/providers/serie/'
 			));
 			$autoload->register();
+			if ($this->settings['movie_provider'] != ''){
+				$this->movieprovider = new $settings['movie_provider']($this->cache, $this->settings['movie_settings']);
+				if (is_a($this->movieprovider, 'MovieProvider') == false){
+					error_log($this->settings['movie_provider']  . ' is not a valid MovieProvider!');
+					$this->movieprovider = false;
+				}
+			}
 
-			$this->movieprovider = new $settings['movie_provider']($this->cache, $this->settings['movie_api']);
-			if (is_a($this->movieprovider, 'MovieProvider') == false){
-				error_log($this->settings['movie_provider']  . ' is not a valid MovieProvider!');
-				$this->movieprovider = false;
+			if ($this->settings['serie_provider'] != ''){
+				$this->serieprovider = new $settings['serie_provider']($this->cache, $this->settings['serie_settings']);
+				if (is_a($this->serieprovider, 'SerieProvider') == false){
+					error_log($this->settings['serie_provider']  . ' is not a valid SerieProvider!');
+					$this->serieprovider = false;
+				}
 			}
-			$this->serieprovider = new $settings['serie_provider']($this->cache, $this->settings['serie_api']);
-			if (is_a($this->serieprovider, 'SerieProvider') == false){
-				error_log($this->settings['serie_provider']  . ' is not a valid SerieProvider!');
-				$this->serieprovider = false;
-			}
+		}
+
+		public function movieProvider() {
+			return $this->movieprovider;
+		}
+
+		public function showProvider() {
+			return $this->serieprovider;
 		}
 
 	}
@@ -88,12 +101,12 @@
 
 
 	abstract class MovieProvider {
-		private $api = false;
-		private $cacher = false;
+		private $settings = false;
+		private $cache = false;
 
-		function __construct($cacher, $apikey){
-			$this->api = $apikey;
-			$this->cache = $cache;
+		function __construct($cacher, $settings){
+			$this->settings = $settings;
+			$this->cache = $cacher;
 		}
 
 		abstract protected function getMovies();
@@ -111,8 +124,8 @@
 		private $api = false;
 		private $cache = false;
 
-		function __construct($cacher, $apikey){
-			$this->api = $apikey;
+		function __construct($cacher, $settings){
+			$this->settings = $settings;
 			$this->cache = $cacher;
 		}
 
@@ -130,7 +143,10 @@
 	}
 
 	class Movie {
-	
+		public $name;
+		public $year;
+		public $description;
+		public $genres;
 	}
 
 	class Show {
@@ -193,7 +209,9 @@
 	        foreach ($this->directories as $path) {
 	            if (file_exists($path . $file . '.php')) {
 	                return $path . $file . '.php';
-	            }
+	            } else {
+			error_Log("Provider not found: " . $path . $file . '.php');
+		   }
 	        }
 	    }
 	}

@@ -3,7 +3,7 @@
 	class CouchPotato extends MovieProvider {
 
 		private function buildURL(){
-			return $this->location . '/api/' . $this->api . '/';
+			return $this->location . '/api/' . $this->settings['api'] . '/';
 		}
 
 		private function convert($json){
@@ -12,7 +12,7 @@
 
 		function getMovies(){
 			$json = $this->cacher->getJson($this->buildURL() . 'media.list');
-
+			
 		}
 
 		function getMovie($id){
