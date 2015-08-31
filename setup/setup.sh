@@ -255,6 +255,8 @@ http {
 } 
 EOF
 
+useradd -b /var/www -d /var/www -G www-data www-data
+
 chmod +x /etc/init.d/nginx
 mkdir -p /var/tmp/nginx
 
