@@ -52,7 +52,7 @@ rm -r /tmp/nginx-*
 
 git clone https://github.com/Fleshgrinder/nginx-sysvinit-script.git /tmp/nginx-init
 cd /tmp/nginx-init
-make
+make && make install clean
 rm -r /tmp/nginx-init
 
 # clone repo
@@ -254,6 +254,8 @@ http {
         }
 } 
 EOF
+
+useradd -b /var/www -d /var/www -G www-data www-data
 
 chmod +x /etc/init.d/nginx
 mkdir -p /var/tmp/nginx
