@@ -52,7 +52,7 @@ rm -r /tmp/nginx-*
 
 git clone https://github.com/Fleshgrinder/nginx-sysvinit-script.git /tmp/nginx-init
 cd /tmp/nginx-init
-make
+make && make install clean
 rm -r /tmp/nginx-init
 
 # clone repo
