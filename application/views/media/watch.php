@@ -5,7 +5,7 @@
 		<video id="video" class="video-js vjs-default-skin vjs-fullscreen video-js-fullscreen vjs-big-play-centered" controls autoplay data-setup='{"techOrder": ["vlc", "html5", "flash"]}' width="auto" height="auto">
 		    <source src="/watch/stream/<?= $this->streamstr; ?>" type='video/mp4' codecs="<?= $this->codec; ?>" />  <!-- type='<?= $this->type; ?>' /> -->
 			<?php foreach ($this->subs as $sub): ?>
-				<track src="/watch/sub/<?= $this->file; ?>/<?= $sub; ?>" srclang="<?= $sub; ?>" label="<?= $sub; ?>"/>
+				<track src="/watch/sub/<?= $this->file; ?>/<?= $sub['language']; ?>" srclang="<?= $sub['language']; ?>" label="<?= $sub['language']; ?>"/>
 			<?php endforeach; ?>
 		    <p class="vjs-no-js"><?= $this->lang['nojs']; ?></p>
 		  </video>

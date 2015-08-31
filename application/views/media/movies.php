@@ -30,14 +30,17 @@
 	<?php if ($this->movies): ?>
 	<?php foreach ($this->movies as $movie): ?>
 	<div class="col-sm-2" style="margin-top:10px;">
-		<a href="/info/movie/<?= $movie->info->imdb; ?>">
-			<img class="imgscale<?php if ($movie->status == 'active'){ echo ' grey-inactive';} ?>" alt="<?= $movie->info->original_title ?>" data-src="<?php if (count($movie->info->images->poster) > 0) { echo $movie->info->images->poster[0]; } else { echo 'http://www.clipartbest.com/cliparts/9T4/ep4/9T4ep4xac.png'; }; ?>" />
+		<a href="/info/movie/<?= $movie->id; ?>">
+			<img class="imgscale<?php if ($movie->status == 'active'){ echo ' grey-inactive';} ?>" alt="<?= $movie->name; ?>" data-src="<?php if ($movie->images['poster'] != false) { echo $movie->images['poster']; } else { echo 'http://www.clipartbest.com/cliparts/9T4/ep4/9T4ep4xac.png'; }; ?>" />
 		</a>
 	</div>
 	<?php endforeach; ?>
 	<?php else: ?>
 	<p>
 		<?= $this->lang['nomovies']; ?>
+	</p>
+	<p>
+		<a href="/movies/search"><?= $this->lang['oraddit']; ?></a>
 	</p>
 	<?php endif; ?>
 </div>

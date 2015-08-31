@@ -18,8 +18,10 @@ class Dashboard extends Core_controller
     public function index()
     { 
         if ($this->checkPrivilege() == true){
-            $this->template->movies = $this->mediamodel->getLastMovies(10);
-            $this->template->episodes = $this->mediamodel->getLatestEpisodes(10);
+            if ($this->mediamodel->movieProvider() != false)
+            $this->template->movies = $this->mediamodel->movieProvider()->getMovies('done', 10);
+            if ($this->mediamodel->showProvider() != false)
+            $this->template->episodes = $this->mediamodel->showProvider()->getLatestEpisodes(10);
             $this->template->render('dashboard/index');
         }
     }

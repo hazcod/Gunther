@@ -12,8 +12,8 @@
 			$this->settings = $settings;
 			$autoload = new Autoloader();
 
+			include_once 'Cache.php';
 			$this->cache = new Cache($this->settings['cache_location']);
-
 
 			$autoload->map(array(
 				$settings['movie_provider'] => $this->settings['movie_provider'] . '.php',
@@ -26,6 +26,7 @@
 				APPLICATION_PATH . 'includes/providers/serie/'
 			));
 			$autoload->register();
+
 			if ($this->settings['movie_provider'] != ''){
 				$this->movieprovider = new $settings['movie_provider']($this->cache, $this->settings['movie_settings']);
 				if (is_a($this->movieprovider, 'MovieProvider') == false){
@@ -51,65 +52,68 @@
 			return $this->serieprovider;
 		}
 
-	}
-
-
-	class Cache {
-
-		private $location;
-
-		public function __construct($cache_location){
-			$this->location = $cache_location;
+		public function flushMovieCache(){
+			$this->movieprovider->getMovies('done', false, true);
+			$this->movieprovider->getMovies('active', false, true);
 		}
 
-		public function getJson($url, $ttl, $force=false) {
-		    $cacheFile = $this->settings['CACHE_DIR'] . md5($url);
+		public function flushShowCache(){
 
-		    if (file_exists($cacheFile) and $force == false) {
-		        $fh = fopen($cacheFile, 'r');
-		        $cacheTime = trim(fgets($fh));
+		}
 
-		        if ($ttl == false){
-		        	$ttl = '-60 minutes';
-		        }
-		        if ($cacheTime > strtottl($ttl)) {
-		            return json_decode(fread($fh, filesize($cacheFile)));
-		        } else {
-			        fclose($fh);
-			        unlink($cacheFile);
-			    }
-		    }
-
-		    $data = @file_get_contents($url);
-		    if ($data){
-		    	$json = json_decode($data);
-			    $fh = fopen($cacheFile, 'w');
-			    if ($fh == false){
-			    	error_log("!ERROR: Could not write to cache.. check your permissions! (" . $cacheFile . ")");	
-			    } else {
-			    	fwrite($fh, ttl() . "\n");
-			    	fwrite($fh, $data);
-			    	fclose($fh);
-			    }
-			    return $json;
+		public function findMedia($type, $title){
+			$url = "http://www.omdbapi.com/?type=" . urlencode($type) . "&s=" . urlencode($title);
+			$json = $this->cache->getJson($url, '1 year');
+			if ($json and array_key_exists('Search', $json)){
+				return $json->Search;
 			} else {
-				error_log('Could not fetch ' . $url);
-				return false;
+				return array();
 			}
 		}
+
+		public function getMimeType($inputFile){
+			$result = false;
+			if (file_exists($inputFile)){
+		        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+		        $result = finfo_file($finfo, $inputFile);
+		        finfo_close($finfo);
+		    }
+		    return $result;
+		}
+
+	    public function getCodecInfo($inputFile)
+	    {
+	        $cmdLine = '/usr/bin/mediainfo --Output=XML ' . $inputFile;
+	        exec($cmdLine, $output, $retcode);
+	        try
+	        {
+	            $xml = new SimpleXMLElement(join("\n",$output));
+	            $videoCodec = $xml->xpath('//track[@type="Video"]/Format');
+	            $audioCodec = $xml->xpath('//track[@type="Audio"]/Format');
+	        }
+	        catch(Exception $e)
+	        {
+	            return null;
+	        }
+	        return array(
+	            'videoCodec' => (string)$videoCodec[0],
+	            'audioCodec' => (string)$audioCodec[0],
+	        );
+	    }
+
 	}
 
 
 	abstract class MovieProvider {
-		private $settings = false;
-		private $cache = false;
+		protected $settings = false;
+		protected $cache = false;
 
 		function __construct($cacher, $settings){
 			$this->settings = $settings;
 			$this->cache = $cacher;
 		}
 
-		abstract protected function getMovies();
+		abstract protected function getMovies($status='done', $num=false);
 		abstract protected function getMovie($id);
 		abstract protected function restartApp();
 		abstract protected function refresh();
@@ -121,8 +125,8 @@
 	}
 
 	abstract class SerieProvider {
-		private $api = false;
-		private $cache = false;
+		protected $api = false;
+		protected $cache = false;
 
 		function __construct($cacher, $settings){
 			$this->settings = $settings;
@@ -147,6 +151,11 @@
 		public $year;
 		public $description;
 		public $genres;
+		public $id;
+		public $location;
+		public $actors;
+		public $subtitles;
+		public $status;
 	}
 
 	class Show {
