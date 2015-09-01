@@ -5,7 +5,7 @@
 		private $settings = false;
 		private $movieprovider = false;
 		private $serieprovider = false;
-		private $cache = false;
+		public $cache = false;
 
 		public function __construct($settings) {
 
@@ -23,7 +23,7 @@
 
 			$autoload->directory(array(
 				APPLICATION_PATH . 'includes/providers/movie/',
-				APPLICATION_PATH . 'includes/providers/serie/'
+				APPLICATION_PATH . 'includes/providers/show/'
 			));
 			$autoload->register();
 
@@ -58,7 +58,7 @@
 		}
 
 		public function flushShowCache(){
-			$this->movieprovider->getShows(true);
+			$this->showprovider()->getShows(true);
 
 		}
 
@@ -85,7 +85,7 @@
 
 	    public function getCodecInfo($inputFile)
 	    {
-	        $cmdLine = '/usr/bin/mediainfo --Output=XML ' . $inputFile;
+	        $cmdLine = '/usr/bin/mediainfo --Output=XML "' . $inputFile . '"';
 	        exec($cmdLine, $output, $retcode);
 	        try
 	        {
@@ -136,8 +136,9 @@
 		}
 
 		abstract protected function getShows();
-		abstract protected function getSeasons($id);
-		abstract protected function getEpisodes($id, $season);
+		abstract protected function getShow($id);
+		//abstract protected function getSeasons($id);
+		//abstract protected function getEpisodes($id, $season);
 		abstract protected function getEpisode($id, $season, $episode);
 		abstract protected function restartApp();
 		abstract protected function refresh();
@@ -160,6 +161,7 @@
 		public $subtitles;
 		public $status;
 		public $images;
+		public $rating; //todo
 	}
 
 	class Show {
@@ -174,6 +176,15 @@
 		public $name;
 		public $active = false;
 		public $id;
+		public $images;
+		public $rating; //todo
+	}
+
+	class Season {
+		public $name;
+		public $nr;
+		public $status;
+		public $airdate;
 		public $images;
 	}
 
@@ -213,9 +224,9 @@
 	        foreach ($this->directories as $path) {
 	            if (file_exists($path . $file . '.php')) {
 	                return $path . $file . '.php';
-	            } else {
-			error_Log("Provider not found: " . $path . $file . '.php');
-		   }
+	            }/* else {
+					error_Log("Provider not found: " . $path . $file . '.php');
+		   		}*/
 	        }
 	    }
 	}

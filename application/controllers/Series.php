@@ -17,13 +17,12 @@ class Series extends Core_controller
     }
 
     private function isShowInList($list, $id){
-        $result = false;
         foreach ($list as $item){
-            if (strcmp($item->imdbId,$id) == 0){
-                $result = true;
+            if (strcmp((string) $item->id, $id) == 0){
+                return true;
             }
         }
-        return $result;
+        return false;
     }
 
      public function search(){
@@ -31,10 +30,9 @@ class Series extends Core_controller
         $this->template->searchterm = $formdata->title;
         $existing = $this->mediamodel->showProvider()->getShows();
         $arr=array();
-        foreach ($this->mediamodel->getMediaInfo('series', $formdata->title) as $result){
-            $id = $result->imdbID;
-            if ($this->isShowInList($existing, $id) == false){
-                array_push($arr, $this->mediamodel->tvdb->getSerieByRemoteId(array('imdbid' => $id)));
+        foreach ($this->mediamodel->showProvider()->searchShow($formdata->title) as $result){
+            if ($this->isShowInList($existing, $result->id) == false){
+                array_push($arr, $result);
             } else {
                 $this->setCurrentflashmessage($this->lang['hiddenshows'], 'info');
             }
@@ -61,26 +59,7 @@ class Series extends Core_controller
 
     public function episodes($id=false){
         if ($id != false) {
-            $info = $this->mediamodel->tvdb->getSerieEpisodes($id);
-            $this->template->show = $info['serie'];
-            $this->template->show->poster = $this->mediamodel->getImageURL('http://thetvdb.com/banners/' . $this->template->show->poster);
-
-            $seasons = array();
-            $nr = 0;
-            foreach ($info['episodes'] as $episode){
-                $episode->thumbnail = $this->mediamodel->getImageURL('http://thetvdb.com/banners/' . $episode->thumbnail);
-                $epi = $this->mediamodel->getEpisode($id, $episode->season, $nr);
-                if ($epi && array_key_exists('status', $epi) and strcmp($epi->status, 'Downloaded') == 0){
-                    if (array_key_exists($episode->season, $seasons) == false){
-                        $seasons[$episode->season] = array();
-                        $nr=0;
-                    }
-                    array_push($seasons[$episode->season], $episode);
-                }
-
-                $nr++;
-            }
-            $this->template->seasons = $seasons;
+            $this->template->show = $this->mediamodel->showProvider()->getShow($id);
             $this->template->setPagetitle($this->template->show->name . ' - ' . $this->lang['title']);
             $this->template->render('media/series.episodes');
         }
@@ -90,9 +69,9 @@ class Series extends Core_controller
         if ($_POST){
             $formdata = $this->form->getPost();
             $this->template->searchterm = $formdata->search;
-            $this->template->shows = $this->mediamodel->getShowsWith($formdata->search);
+            $this->template->shows = $this->mediamodel->showProvider()->searchShow($formdata->search);
         } else {
-            $this->template->shows = $this->mediamodel->getAllShows();
+            $this->template->shows = $this->mediamodel->showProvider()->getShows();
         }
         $this->template->render('media/series');
     }

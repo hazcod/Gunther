@@ -1,5 +1,5 @@
 <?php
-/*
+
 include __DIR__ . '/TvDb/Http/HttpClient.php';
 include __DIR__ . '/TvDb/Http/CurlClient.php';
 include __DIR__ . '/TvDb/CurlException.php';
@@ -13,20 +13,20 @@ include __DIR__ . '/TvDb/Http/CacheClient.php';
 use Moinax\TvDb\Http\Cache\FilesystemCache;
 use Moinax\TvDb\Http\CacheClient;
 use Moinax\TvDb\Client;
-*/
+
 class Cache {
 
 	private $location;
-	private $tvdb;
+	public $tvdb;
 
 	public function __construct($cache_location){
 		$this->location = $cache_location;
-		/*
-		$this->tvdb = new Client($settings['TVDB_URL'], $settings['TVDB_API']);
-        $cache = new FilesystemCache($this->settings['CACHE_DIR']);
-        $httpClient = new CacheClient($cache, (int) $this->settings['CACHE_TTL']);
+		
+		$this->tvdb = new Client('https://thetvdb.com/', '919407757B63D836');
+        $cache = new FilesystemCache($this->location);
+        $httpClient = new CacheClient($cache, 604800);
         $this->tvdb->setHttpClient($httpClient);
-        */
+        
 	}
 
 	private function download($url, $path){
@@ -73,7 +73,7 @@ class Cache {
 		    }
 	    }
 
-	    $data = @file_get_contents($url);
+	    $data = file_get_contents($url);
 	    if ($data){
 	    	$json = json_decode($data);
 		    $fh = fopen($cacheFile, 'w');
@@ -89,6 +89,23 @@ class Cache {
 			error_log('Could not fetch ' . $url);
 			return false;
 		}
+	}
+
+	public function storeObject($id, $json){
+		$cacheFile = $this->location . 'objects/' . $id;
+		return (file_put_contents($cacheFile, $json) == 0);
+	}
+
+	public function getObject($id){
+		$result = false;
+		$cacheFile = $this->location . 'objects/' . $id;
+		if (!file_exists($this->location . 'objects/')) {
+		    mkdir($this->location . 'objects/', 0777, true);
+		}
+		if (file_exists($cacheFile)){
+			$result = file_get_contents($cacheFile);
+		}
+		return $result;
 	}
 }
 ?>

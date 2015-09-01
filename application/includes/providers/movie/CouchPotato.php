@@ -21,6 +21,7 @@ class CouchPotato extends MovieProvider {
 			$result->subtitles = $release['subtitles']; 
 			$result->quality  = $release['quality'];
 			$result->size = $release['size'];
+			$result->rating = 0; //todo
 
 			foreach ($json->info->images->actors as $actor => $img){
 				$json->info->images->actors->$actor = $this->cache->getImage($img);

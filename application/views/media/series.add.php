@@ -26,7 +26,7 @@
 		<?php foreach ($this->results as $show): ?>
 		<?php if ($show->name != false): ?>
 		  <a href="/series/add/<?= $show->id; ?>" class="list-group-item">
-		    <h4 class="list-group-item-heading"><?= $show->name; ?></h4>
+		    <h4 class="list-group-item-heading"><?= $show->name; ?> (<?= $show->air_by_date; ?>)</h4>
 		  </a>
 		<?php endif; ?>
 		<?php endforeach; ?>
