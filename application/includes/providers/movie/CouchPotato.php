@@ -139,7 +139,7 @@ class CouchPotato extends MovieProvider {
 		return ($json != false && $json->success == true);
 	}
 
-	function getLatestNotifications($offset=false, $limit=20){
+	function getLatestNotifications($offset=false, $limit=100){
 		if ($offset == false) $offset = '';
 		$json = $this->cache->getJson($this->buildURL() . 'notification.list?limit_offset=' . urlencode($offset) . ',' . urlencode($limit));
 		$result = $json->success;

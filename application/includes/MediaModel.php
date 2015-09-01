@@ -58,17 +58,19 @@
 		}
 
 		public function flushShowCache(){
+			$this->movieprovider->getShows(true);
 
 		}
 
-		public function findMedia($type, $title){
-			$url = "http://www.omdbapi.com/?type=" . urlencode($type) . "&s=" . urlencode($title);
-			$json = $this->cache->getJson($url, '1 year');
-			if ($json and array_key_exists('Search', $json)){
-				return $json->Search;
-			} else {
-				return array();
-			}
+		public function findMediaByTitle($type, $title){
+			//https://www.omdbapi.com/?t=spongebob&type=series&y=&plot=full&r=json
+			$url = "https://www.omdbapi.com/?plot=full&r=json&type=" . urlencode($type) . "&t=" . urlencode($title);
+			return $this->cache->getJson($url, '-1 month');
+		}
+
+		public function findMediaByID($type, $imdbid){
+			$url = "https://www.omdbapi.com/?plot=full&r=json&type=" . urlencode($type) . "&i=" . urlencode($imdbid);
+			return $this->cache->getJson($url, '-1 month');
 		}
 
 		public function getMimeType($inputFile){
@@ -156,6 +158,7 @@
 		public $actors;
 		public $subtitles;
 		public $status;
+		public $images;
 	}
 
 	class Show {
@@ -170,16 +173,7 @@
 		public $name;
 		public $active = false;
 		public $id;
-		public $banner;
-		public $poster;
-	}
-
-	class Season {
-		public $nr;
-		public $airdate;
-		public $name;
-		public $status;
-		public $picture;
+		public $images;
 	}
 
 	class Episode {

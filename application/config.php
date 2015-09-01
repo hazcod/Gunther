@@ -13,11 +13,13 @@ $settings = array(
     'movie_settings' => array(
 	'api' => '1e501582e6944bd388c1b479720d2f2f',
 	'location' => 'http://localhost:5050/',
+  'lang' => 'en'
     ),
     'serie_provider' => '',
     'serie_settings' => array(
 	'api' => '',
 	'location' => 'http://localhost:8083/',
+  'lang' => 'end'
     ),
 
    'DEFAULT_LANG' => 'en',     #default language
