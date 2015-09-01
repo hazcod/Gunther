@@ -109,15 +109,18 @@ class CouchPotato extends MovieProvider {
 	}
 
 	function refresh(){
-
+		$json = $this->cache->getJson($this->buildURL() . 'manage.update?full=true');
+		return ($json && $json->success);
 	}
 
 	function getRefreshProgress(){
-
+		$json = $this->cache->getJson($this->buildURL() . 'manager.progress');
+		return $json->progress;
 	}
 
 	function refreshMovie($id){
-
+		$json = $this->cache->getJson($this->buildURL() . 'media.refresh?id=' . urlencode($id));
+		return ($json && $json->success == true);
 	}
 
 	function searchMovie($title){
@@ -136,8 +139,12 @@ class CouchPotato extends MovieProvider {
 		return ($json != false && $json->success == true);
 	}
 
-	function getLatestNotifications(){
-
+	function getLatestNotifications($offset=false, $limit=20){
+		if ($offset == false) $offset = '';
+		$json = $this->cache->getJson($this->buildURL() . 'notification.list?limit_offset=' . urlencode($offset) . ',' . urlencode($limit));
+		$result = $json->success;
+		if ($result == true) $result = $json->notifications;
+		return $result;
 	}
 
 }
