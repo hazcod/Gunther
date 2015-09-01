@@ -59,35 +59,6 @@
 
 		public function flushShowCache(){
 			$this->showprovider()->getShows(true);
-
-<<<<<<< HEAD
-		private function useMovieCachedImages($input){
-			if (is_array($input)){
-       			foreach ($input as $i => $movie){
-        			if (sizeof($input[$i]->info->images->poster) > 0){
-					$input[$i]->info->images->poster[0] = $this->getImageURL($input[$i]->info->images->poster[0]);
-        			} else {
-        				//error_log('No poster given for ' . $input[$i]->info->original_title);
-        				$input[$i]->info->images->poster[0] = '/img/notfound.png';
-        			}
-        		}
-        	} else {
-        		$input->info->images->poster = array();
-    			if (sizeof($input->info->images->poster) > 0){
-					$input->info->images->poster[0] = $this->getImageURL($input[$i]->info->images->poster[0]);
-    			} else {
-    				//error_log('No poster given for ' . $input[$i]->info->original_title);
-    				$input->info->images->poster[0] = '/img/notfound.png';
-    			}
-        		if (array_key_exists('actors', $input->info->images)){
-        			foreach ($input->info->images->actors as $name => $picture){
-        				$input->info->images->actors->{$name} = $this->getImageURL($input->info->images->actors->{$name});
-        			}
-        		}
-        	}
-        	return $input;
-=======
->>>>>>> providers
 		}
 
 		public function findMediaByTitle($type, $title){
@@ -113,12 +84,7 @@
 
 	    public function getCodecInfo($inputFile)
 	    {
-<<<<<<< HEAD
-	        $cmdLine = '/usr/bin/mediainfo --Output=XML ' . $inputFile;
-
-=======
 	        $cmdLine = '/usr/bin/mediainfo --Output=XML "' . $inputFile . '"';
->>>>>>> providers
 	        exec($cmdLine, $output, $retcode);
 	        try
 	        {
@@ -137,34 +103,6 @@
 	    }
 
 	}
-
-<<<<<<< HEAD
-	    public function getRelease($movie, $printall=false){
-	    	$result = false;
-
-	    	if ($movie && array_key_exists('releases', $movie)){
-	    		foreach ($movie->releases as $release){
-	    			if (($result == false) && array_key_exists('files', $release) && (count($release->files) >0)
-	    						&& array_key_exists('movie', $release->files) && (count($release->files->movie) > 0)
-         						&& file_exists($release->files->movie[0])){
-						
-							if ($printall == true){
-								$result = $release;	
-							} else {
-								$result = $release->files->movie[0];
-							}
-						/*if (count($release->files->movie) > 1){
-							// how would we ever check the quality of multiple video files?
-							error_log("Notice: multiple video files were available, but we can only take the first. (" . $movie->info->original_title . ") dump: " . var_dump($release->files->movie));
-						}*/
-	    			}
-	    		}
-	    	}
-
-	    	return $result;
-	    }
-=======
->>>>>>> providers
 
 	abstract class MovieProvider {
 		protected $settings = false;
