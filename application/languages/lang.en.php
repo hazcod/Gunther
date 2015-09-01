@@ -39,6 +39,7 @@ function getLang(){
     $lang['nomovies']     = 'No movies found.';
     $lang['movienotfound']= 'Movie could not be found.';
     $lang['actors']       = 'Actors';
+    $lang['oraddit']      = '..or do you want to add it?';
 
     $lang['nojs']         = 'To view this video, enable JavaScript in your browser or upgrade to one that supports HTML5.';
 

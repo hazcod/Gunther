@@ -1,128 +1,66 @@
 <?php
 
-	include __DIR__ . '/TvDb/Http/HttpClient.php';
-	include __DIR__ . '/TvDb/Http/CurlClient.php';
-	include __DIR__ . '/TvDb/CurlException.php';
-	include __DIR__ . '/TvDb/Client.php';
-	include __DIR__ . '/TvDb/Serie.php';
-	include __DIR__ . '/TvDb/Banner.php';
-	include __DIR__ . '/TvDb/Episode.php';
-	include __DIR__ . '/TvDb/Http/Cache/Cache.php';
-	include __DIR__ . '/TvDb/Http/Cache/FilesystemCache.php';
-	include __DIR__ . '/TvDb/Http/CacheClient.php';
+	class MediaModel {
 
-	use Moinax\TvDb\Http\Cache\FilesystemCache;
-	use Moinax\TvDb\Http\CacheClient;
-	use Moinax\TvDb\Client;
+		private $settings = false;
+		private $movieprovider = false;
+		private $serieprovider = false;
+		public $cache = false;
 
-	class MediaModel
-	{
-		public function __construct($settings)
-		{
+		public function __construct($settings) {
+
 			$this->settings = $settings;
+			$autoload = new Autoloader();
 
-			if (strcmp($settings['TVDB_API'], '<API>') == 0){
-				error_log('ERROR: Set the TheTVDB API in application/config.php !');
-				echo "Please set the TheTVDB API key in " . APPLICATION_PATH . "/application/config.php\n";
+			include_once 'Cache.php';
+			$this->cache = new Cache($this->settings['cache_location']);
+
+			$autoload->map(array(
+				$settings['movie_provider'] => $this->settings['movie_provider'] . '.php',
+				$settings['serie_provider'] => $this->settings['serie_provider'] . '.php'
+			));
+
+
+			$autoload->directory(array(
+				APPLICATION_PATH . 'includes/providers/movie/',
+				APPLICATION_PATH . 'includes/providers/show/'
+			));
+			$autoload->register();
+
+			if ($this->settings['movie_provider'] != ''){
+				$this->movieprovider = new $settings['movie_provider']($this->cache, $this->settings['movie_settings']);
+				if (is_a($this->movieprovider, 'MovieProvider') == false){
+					error_log($this->settings['movie_provider']  . ' is not a valid MovieProvider!');
+					$this->movieprovider = false;
+				}
 			}
 
-			if (strcmp($settings['CP_API'], 'http://localhost:5050/api/<API>/') == 0){
-				error_log('ERROR: Set the CouchPotato API in application/config.php !');
-				echo "Please set the CouchPotato API key in " . APPLICATION_PATH . "/application/config.php\n";
-			}
-
-			if (strcmp($settings['SB_API'], 'http://localhost:8081/api/<API>/?cmd=') == 0){
-				error_log('ERROR: Set the Sickbeard API in application/config.php !');
-				echo "Please set the Sickbeard/SickRage API key in " . APPLICATION_PATH . "/application/config.php\n";
-			}
-
-	        $this->tvdb = new Client($settings['TVDB_URL'], $settings['TVDB_API']);
-	        $cache = new FilesystemCache($this->settings['CACHE_DIR']);
-	        $httpClient = new CacheClient($cache, (int) $this->settings['CACHE_TTL']);
-	        $this->tvdb->setHttpClient($httpClient);
-		}
-
-		#Fill cache function
-		public function fillCache() {
-			$this->flushMovieCache();
-			$this->flushShowCache();
-		}
-
-		#Main caching function
-		private function getJson($url, $force=false) {
-		    $cacheFile = $this->settings['CACHE_DIR'] . md5($url);
-
-		    if (file_exists($cacheFile) and $force == false) {
-		        $fh = fopen($cacheFile, 'r');
-		        $cacheTime = trim(fgets($fh));
-
-		        if ($cacheTime > strtotime('-60 minutes')) {
-		            return json_decode(fread($fh, filesize($cacheFile)));
-		        } else {
-			        fclose($fh);
-			        unlink($cacheFile);
-			    }
-		    }
-
-		    $data = @file_get_contents($url);
-		    if ($data){
-		    	$json = json_decode($data);
-			    $fh = fopen($cacheFile, 'w');
-			    if ($fh == false){
-			    	error_log("!ERROR: Could not write to cache.. check your permissions! (" . $cacheFile . ")");	
-			    } else {
-			    	fwrite($fh, time() . "\n");
-			    	fwrite($fh, $data);
-			    	fclose($fh);
-			    }
-			    return $json;
-			} else {
-				error_log('Could not fetch ' . $url);
-				return false;
-			}
-		}
-
-		private function download($url, $path){
-			$ch = curl_init($url);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-			$data = curl_exec($ch);
-
-			curl_close($ch);
-
-			file_put_contents($path, $data);
-		}
-
-
-		public function getImageURL($url, $force=false) {
-			if (!file_exists($this->settings['CACHE_DIR'] . 'img/')) {
-			    mkdir($this->settings['CACHE_DIR'] . 'img/', 0777, true);
-			}
-			$cacheFile =  $this->settings['CACHE_DIR'] . 'img/' . basename($url);
-			if (file_exists($cacheFile) and $force == false){
-				return '/' . $cacheFile;
-			} else {
-				$this->download($url, $cacheFile);
-				if (file_exists($cacheFile)){
-					return '/' . $cacheFile;
-				} else {
-					error_log('Could not fetch ' . $url . ' to ' . $cacheFile);
-					return false;
+			if ($this->settings['serie_provider'] != ''){
+				$this->serieprovider = new $settings['serie_provider']($this->cache, $this->settings['serie_settings']);
+				if (is_a($this->serieprovider, 'SerieProvider') == false){
+					error_log($this->settings['serie_provider']  . ' is not a valid SerieProvider!');
+					$this->serieprovider = false;
 				}
 			}
 		}
 
+		public function movieProvider() {
+			return $this->movieprovider;
+		}
+
+		public function showProvider() {
+			return $this->serieprovider;
+		}
 
 		public function flushMovieCache(){
-			$this->getAllMovies(true);
-			$this->getDoneMovies(true);
-			$this->getBusyMovies(true);
+			$this->movieprovider->getMovies('done', false, true);
+			$this->movieprovider->getMovies('active', false, true);
 		}
 
 		public function flushShowCache(){
-			$this->getAllShows(true);
-		}
+			$this->showprovider()->getShows(true);
 
+<<<<<<< HEAD
 		private function useMovieCachedImages($input){
 			if (is_array($input)){
        			foreach ($input as $i => $movie){
@@ -148,228 +86,40 @@
         		}
         	}
         	return $input;
+=======
+>>>>>>> providers
 		}
 
-		private function useShowCachedImages($input){
-			if (array_key_exists('thumbnail', $input)){
-				$input->thumbnail = $this->getImageURL("http://thetvdb.com/banners/" . $input->thumbnail);
-			}
-			if (array_key_exists('poster', $input)){
-				$input->poster = $this->getImageURL('http://thetvdb.com/banners/' . $input->poster);
-			}
-			return $input;
+		public function findMediaByTitle($type, $title){
+			//https://www.omdbapi.com/?t=spongebob&type=series&y=&plot=full&r=json
+			$url = "https://www.omdbapi.com/?plot=full&r=json&type=" . urlencode($type) . "&t=" . urlencode($title);
+			return $this->cache->getJson($url, '-1 month');
 		}
 
-
-		##- DASHBOARD
-		public function getLastMovies($limit=10){
-        	$json = json_decode(@file_get_contents($this->settings['CP_API'] . 'media.list?status=done&offset=' . urlencode($limit)));
-        	if ($json){
-        		return $this->useMovieCachedImages($json->movies);
-        	} else {
-        		error_log('Could not get last movies');
-        		return false;
-        	}
-    	}
-
-    	public function scanmovies($fast=false){
-    		$full = 'true';
-    		if ($fast){
-    			$full = 'false';
-    		}
-    		$r = @file_get_contents($this->settings['CP_API'] . 'manage.update?full=' . $full);
-    		if ($r){
-    			return true;
-    		} else {
-    			error_log('Could not scan movies');
-    			return false;
-    		}
-    	}
-
-    	public function scanshows(){
-    		$shows = $this->getAllShows();
-    		foreach ($shows as $show){
-    			$r = @file_get_contents($this->settings['SB_API'] . 'show.refresh&tvdbid=' . $show->id);
-    			$r2= @file_get_contents($this->settings['SB_API'] . 'show.update&tvdbid=' . $show->id);
-    			if ($r == false){
-    				error_log('Could not scan show ' . $show->id);
-    			}
-    			if ($r2 == false){
-    				error_log('Could not update show ' . $show->id);
-    			}
-    		}
-    		return true;
-    	}
-
-    	public function restartCouch(){
-    		$r = @file_get_contents($this->settings['CP_API'] . 'app.restart');
-    		if ($r){
-    			return true;
-    		} else {
-    			error_log('Could not restart CouchPotato.');
-    			return false;
-    		}
-    	}
-
-    	public function restartSick(){
-    		$result = false;
-    		$r = json_decode(@file_get_contents($this->settings['SB_API'] .'sb.restart'));
-    		if ($r){
-    			$result = (strcmp($r->result, 'success') == 0);
-    		}
-    		return $result;
-    	}
-
-    	##- MOVIES
-	 	public function getAllMovies($flushcache=false){
-	        $json = $this->getJson($this->settings['CP_API'] . 'media.list', $flushcache);
-	        if ($json){
-	        	return $this->useMovieCachedImages($json->movies);
-	        } else {
-	        	return false;
-	        }
-	    }
-
-	    public function getDoneMovies($flushcache=false){
-	        $json = $this->getJson($this->settings['CP_API'] . 'media.list?status=done', $flushcache);
-	        if ($json){
-	        	return $this->useMovieCachedImages($json->movies);
-	        } else {
-	        	return false;
-	        }
-	    }
-
-	    public function getBusyMovies($flushcache=false){
-	        $json = $this->getJson($this->settings['CP_API'] . 'media.list?status=active', $flushcache);
-	        if ($json){
-	        	return $this->useMovieCachedImages($json->movies);
-	        } else {
-	        	return false;
-	        }
-	    }
-
-		public function getMovie($id=false){
-			$json = $this->getJson($this->settings['CP_API'] . 'media.get?id=' . $id);
-			if ($json){
-				if (array_key_exists('movies', $json)){ 
-					return $this->useMovieCachedImages($json->movies);
-				} elseif (array_key_exists('media', $json)) {
-					return $this->useMovieCachedImages($json->media);
-				} else {
-					return $json;
-				}
-			} else {
-				return false;
-			}
+		public function findMediaByID($type, $imdbid){
+			$url = "https://www.omdbapi.com/?plot=full&r=json&type=" . urlencode($type) . "&i=" . urlencode($imdbid);
+			return $this->cache->getJson($url, '-1 month');
 		}
 
-	    public function findExistingMovie($title){
-	    	$json = $this->getJson($this->settings['CP_API'] . 'media.list?search=' . urlencode($title));
-	    	if ($json){
-	    		return $this->useMovieCachedImages($json->movies);
-	    	} else {
-	    		return false;
-	    	}
-	    }
-
-	    public function findMovies($title){
-	        return $this->getJson($this->settings['CP_API'] . 'movie.add?title=' . urlencode($title));
-	    }
-
-	    public function getMediaInfo($type, $title){
-	        $url = "http://www.omdbapi.com/?type=" . urlencode($type) . "&s=" . urlencode($title);
-	        $json = $this->getJson($url);
-	        if ($json and array_key_exists('Search', $json)){
-	        	return $json->Search;
-	        } else {
-	        	return array();
-	        }
-	    }
-
-	    public function addMovie($id){
-	        $json = json_decode(@file_get_contents($this->settings['CP_API'] . 'movie.add?identifier=' . urlencode($id)));
-	        if ($json){
-	        	return $json->success;
-	        } else {
-	        	return false;
-	        }
-	    }
-
-
-    	##- SHOWS
-	    public function getAllShows($flushcache=false){
-	        $result = array();
-	        $data = $this->getJson($this->settings['SB_API'] . 'shows', $flushcache);
-	        if ($data){
-		        foreach ($data->data as $id=>$showobj) {
-		        	try {
-		        		$show = $this->tvdb->getSerie($showobj->tvdbid);
-		        		$show = $this->useShowCachedImages($show);
-		        	} catch (Exception $e){
-						error_log("Could not find show " . $showobj->tvrage_name . " (" . $showobj->tvdbid . ")");
-		        		$show = false;
-		        	}
-		            if ($show){
-		            	array_push($result, $show);
-		            }
-		        }
+		public function getMimeType($inputFile){
+			$result = false;
+			if (file_exists($inputFile)){
+		        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+		        $result = finfo_file($finfo, $inputFile);
+		        finfo_close($finfo);
 		    }
-	        return $result;
-	    }
+		    return $result;
+		}
 
-	    public function getLatestEpisodes($limit=10){
-	    	$result = array();
-	    	$data = json_decode(@file_get_contents($this->settings['SB_API'] . 'history&type=downloaded&limit=' . urlencode($limit)));
-	    	if ($data){
-		    	foreach ($data->data as $log){
-				if ($log->status == "Downloaded"){
-					array_push($result, $this->useShowCachedImages($this->tvdb->getEpisode($log->tvdbid, $log->season, $log->episode)));
-				} else {
-					error_log("Sickrage returned not-downloaded episode: " . $log->tvdbid);
-				}
-		    	}
-		    }
-	    	return $result;
-	    }
-
-	    public function getShowsWith($part){
-	        $result = array();
-	        $all = $this->getAllShows();
-	        if (strcmp($part, '') == 0){
-	            $result = $all;
-	        } else {
-	            foreach ($all as $show){
-	                if (stripos($show->name, $part) > -1){
-	                    array_push($result, $show);
-	                }
-	            }
-	        }
-	        return $result;
-	    }
-
-	    public function addSeries($id){
-	        $url = $this->settings['SB_API'] . 'show.addnew&tvdbid=' . urlencode($id) . '&status=wanted';
-	        return (json_decode(@file_get_contents($url)) != false);
-	    }
-
-
-	    public function getEpisode($serie_id, $season_id, $episode_id){
-	        $json = $this->getJson($this->settings['SB_API'] . 'episode&tvdbid=' . urlencode($serie_id) . '&season=' . $season_id . '&episode=' . $episode_id . '&full_path=1');
-	        if ($json && count((array)$json->data)){
-	        	return $this->useShowCachedImages($json->data);
-	        } else {
-	        	return false;
-	        }
-	    }
-
-
-	    ##- General media stuff
 	    public function getCodecInfo($inputFile)
 	    {
+<<<<<<< HEAD
 	        $cmdLine = '/usr/bin/mediainfo --Output=XML ' . $inputFile;
 
+=======
+	        $cmdLine = '/usr/bin/mediainfo --Output=XML "' . $inputFile . '"';
+>>>>>>> providers
 	        exec($cmdLine, $output, $retcode);
-
 	        try
 	        {
 	            $xml = new SimpleXMLElement(join("\n",$output));
@@ -380,23 +130,15 @@
 	        {
 	            return null;
 	        }
-
 	        return array(
 	            'videoCodec' => (string)$videoCodec[0],
 	            'audioCodec' => (string)$audioCodec[0],
 	        );
 	    }
 
-	    public function getMimeType($inputFile){
-	    	$result = false;
-	    	if (file_exists($inputFile)){
-		        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-		        $result = finfo_file($finfo, $inputFile);
-		        finfo_close($finfo);
-		    }
-	        return $result;
-	    }
+	}
 
+<<<<<<< HEAD
 	    public function getRelease($movie, $printall=false){
 	    	$result = false;
 
@@ -421,8 +163,131 @@
 
 	    	return $result;
 	    }
+=======
+>>>>>>> providers
 
+	abstract class MovieProvider {
+		protected $settings = false;
+		protected $cache = false;
 
+		function __construct($cacher, $settings){
+			$this->settings = $settings;
+			$this->cache = $cacher;
+		}
+
+		abstract protected function getMovies($status='done', $num=false);
+		abstract protected function getMovie($id);
+		abstract protected function restartApp();
+		abstract protected function refresh();
+		abstract protected function getRefreshProgress();
+		abstract protected function refreshMovie($id);
+		abstract protected function searchMovie($title);
+		abstract protected function addMovie($id);
+		abstract protected function getLatestNotifications();
 	}
 
+	abstract class SerieProvider {
+		protected $api = false;
+		protected $cache = false;
+
+		function __construct($cacher, $settings){
+			$this->settings = $settings;
+			$this->cache = $cacher;
+		}
+
+		abstract protected function getShows();
+		abstract protected function getShow($id);
+		//abstract protected function getSeasons($id);
+		//abstract protected function getEpisodes($id, $season);
+		abstract protected function getEpisode($id, $season, $episode);
+		abstract protected function restartApp();
+		abstract protected function refresh();
+		abstract protected function getRefreshProgress();
+		abstract protected function refreshShow($id);
+		abstract protected function searchShow($title);
+		abstract protected function addShow($id);
+		abstract protected function getLatestNotifications();
+		abstract protected function getLatestEpisodes($type="downloaded", $limit=10);
+	}
+
+	class Movie {
+		public $name;
+		public $year;
+		public $description;
+		public $genres;
+		public $id;
+		public $location;
+		public $actors;
+		public $subtitles;
+		public $status;
+		public $images;
+		public $rating; //todo
+	}
+
+	class Show {
+		public $air_by_date;
+		public $description;
+		public $airs;
+		public $genres;
+		public $language;
+		public $network;
+		public $quality;
+		public $seasons;
+		public $name;
+		public $active = false;
+		public $id;
+		public $images;
+		public $rating; //todo
+	}
+
+	class Season {
+		public $name;
+		public $nr;
+		public $status;
+		public $airdate;
+		public $images;
+	}
+
+	class Episode {
+		public $airdate;
+		public $description;
+		public $size;
+		public $location;
+		public $name;
+		public $status;
+		public $images;
+	}
+
+	class AutoLoader {
+	    private $map = array();
+	    private $directories = array();
+
+	    public function register() {
+	        spl_autoload_register(array($this, 'load'));
+	    }
+	    public function unregister() {
+	        spl_autoload_unregister(array($this, 'load'));
+	    }
+	    public function map($files) {
+	        $this->map = array_merge($this->map, $files);
+	        $this->load($this->map);
+	    }
+	    public function directory($folder) {
+	        $this->directories = array_merge($this->directories, $folder);
+	    }
+	    public function load($class) {
+	        if ($file = $this->find($class)) {
+	            require $file;
+	        }
+	    }
+	    public function find($file) {
+	        foreach ($this->directories as $path) {
+	            if (file_exists($path . $file . '.php')) {
+	                return $path . $file . '.php';
+	            }/* else {
+					error_Log("Provider not found: " . $path . $file . '.php');
+		   		}*/
+	        }
+	    }
+	}
 ?>

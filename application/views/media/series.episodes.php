@@ -15,10 +15,10 @@
     <br>
     <div class="row">
     	<div class="col-md-3">
-    		<img class="imgscale" src="<?= $this->show->poster; ?>" alt="<?= $this->show->name; ?>" />
+    		<img class="imgscale" src="<?= $this->show->images['poster']; ?>" alt="<?= $this->show->name; ?>" />
     		<hr>
     		<div class="pull-right">
-    			<a class="btn btn-info btn-sm" target="_blank" href="<?= $this->show->imdbId; ?>"><i class="fa fa-info-circle"></i> IMDb</a>
+    			<a class="btn btn-info btn-sm" target="_blank" href="http://imdb.com/title/<?= $this->show->imdbid; ?>"><i class="fa fa-info-circle"></i> IMDb</a>
     		</div>
     	</div>
     	<div class="col-md-9">
@@ -26,39 +26,45 @@
     			<div class="pull-right">
 					<?= join(',', $this->show->genres); ?>
     			</div>
-    			<h3><?= $this->show->name; ?> <small><?= $this->show->firstAired->format('Y'); ?></small></h3>
+    			<h3><?= $this->show->name; ?> <small><?php if ($this->show->status != 'Ended'){ echo $this->show->air_by_date; } else { echo 'Ended'; } ?></small></h3>
     			<div class="pull-right">
     				<?= $this->show->rating; ?>/10
     			</div>
     			<hr>
     			<p>
-    				<?= $this->show->overview; ?>
+    				<?= $this->show->description; ?>
     			</p>
     			<p>
-    				<strong><?= $this->lang['status']; ?></strong>: <?= $this->show->status; ?>
-    				<br>
     				<ul class="list-inline">
     					<li> <strong><?= $this->lang['seasons']; ?></strong>: </li>
-    					<?php foreach ($this->seasons as $nr_s => $season): ?>
-    					<li> <a href="#s<?= $nr_s; ?>">   <?= $this->lang['season'] . ' ' . $nr_s; ?></a> </li>
+    					<?php foreach ($this->show->seasons as $nr_s => $season): ?>
+    					<li> <span class="badge"><a href="#s<?= $nr_s; ?>">   <?= $nr_s+1; ?></a></span> </li>
 						<?php endforeach; ?>
 					</ul>
     			</p>
     		</div>
-			<?php if ($this->seasons): ?>
-				<?php foreach ($this->seasons as $nr_s => $season): ?>
-				<h3 id="s<?= $nr_s; ?>"><i class="fa fa-book"></i> Season <?= $nr_s; ?></h3>
-				<hr>
-				<?php foreach ($season as $nr_e => $episode): ?>
+			<?php if ($this->show->seasons): ?>
+				<?php foreach ($this->show->seasons as $nr_s => $season): ?>
+				<h3 id="s<?= $nr_s; ?>"><i class="fa fa-book"></i> Season <?= $nr_s +1; ?></h3>
+				<?php foreach ($season as $epi_nr => $episode): ?>
 				<div class="col-sm-2" style="margin-top:10px;">
-					<a href="/watch/index/ss<?= $episode->serieId . '-' . $nr_s . '-' . ($nr_e); ?>">
+					<?php if ($episode->status == 'Downloaded'): ?>
+					<a href="/watch/index/ss<?= $this->show->id . '-' . ($nr_s+1) . '-' . ($epi_nr+1); ?>">
 					<div class="fix">
-						<img class="imgscale" src="<?= $episode->thumbnail; ?>" alt="<?= $episode->name; ?>" />
+						<img class="imgscale" src="<?= $episode->images['thumbnail']; ?>" alt="<?= $episode->name; ?>" />
 						<div class="desc">
-							<?= ($nr_e+1) . ': ' . $episode->name; ?>
+							<?= ($epi_nr+1) . ': ' . $episode->name; ?>
 						</div>
 					</div>
 					</a>
+					<?php else: ?>
+					<div class="fix">
+						<img class="imgscale grey-inactive" src="<?= $episode->images['thumbnail']; ?>" alt="<?= $episode->name; ?>" />
+						<div class="desc">
+							<?= ($epi_nr+1) . ': ' . $episode->name; ?>
+						</div>
+					</div>
+					<?php endif; ?>
 				</div>
 				<?php endforeach; ?>
 				<div style="clear:both;"></div>

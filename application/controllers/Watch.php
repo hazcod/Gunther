@@ -19,13 +19,9 @@ class Watch extends Core_controller
     }
 
     private function streamMovie($id){
-        $movie = $this->mediamodel->getMovie($id);
-        $release = false;
-	if ($movie){
-            $release = $this->mediamodel->getRelease($movie);
-        }
-        if (($release != false) && file_exists($release)){
-            $stream = new VideoStream($release);
+        $movie = $this->mediamodel->movieProvider()->getMovie($id);
+        if ($movie->location){
+            $stream = new VideoStream($movie->location);
             return $stream->start();
         } else {
             error_log("Streamer could not find " . $release . " (id $id)");
@@ -39,7 +35,7 @@ class Watch extends Core_controller
         $serie_id = $parts[0];
         $season_id = $parts[1];
         $episode_id = $parts[2];
-        $serie = $this->mediamodel->getEpisode($serie_id, $season_id, $episode_id);
+        $serie = $this->mediamodel->showProvider()->getEpisode($serie_id, $season_id, $episode_id);
         if ($serie and file_exists($serie->location) and (strcmp($serie->location, '') != 0)){
             $stream = new VideoStream($serie->location);
             return $stream->start();
@@ -51,11 +47,10 @@ class Watch extends Core_controller
     }
 
     public function getmovie($id){
-        return $this->offerFile($this->mediamodel->getRelease($this->mediamodel->getMovie($id)));
+        return $this->offerFile($this->mediamodel->movieProvider()->getMovie($id)->location);
     }
 
    public function stream($id=false){
-
         $prefix = substr($id, 0, 2);
         if (strcmp($prefix, 'ss') == 0){
             #custom id, so tv show
@@ -65,31 +60,13 @@ class Watch extends Core_controller
         }
    }
 
-   private function getMovieSub($id, $lang){
-        $subfile = false;
-        $movie = $this->mediamodel->getMovie($id);
-        $release = $this->mediamodel->getRelease($movie);
-        $moviename = substr(basename($release), 0, strlen(basename($release))-4);
-        $sub = dirname($release) . '/' . $moviename . '.' . $lang . '.srt';
-        if (file_exists($sub)){
-            $subfile = $sub;
-        } else {
-            # try without a lang, so movie.srt
-            $sub = dirname($release) . '/' . $moviename . '.srt';
-            if (file_exists($sub)){
-                $subfile = $sub;
-            }
-        }
-        return $subfile;
-   }
-
    private function getShowSub($id, $lang){
         $subfile = false;
         $parts = explode('-', $id);
         $serie_id = $parts[0];
         $season_id = $parts[1];
         $episode_id = $parts[2];
-        $episode = $this->mediamodel->getEpisode($serie_id, $season_id, $episode_id);
+        $episode = $this->mediamodel->showProvider()->getEpisode($serie_id, $season_id, $episode_id);
         $filepath= $episode->location;
 
         $showname = substr(basename($filepath), 0, strlen(basename($filepath))-4);
@@ -104,6 +81,14 @@ class Watch extends Core_controller
             }
         }
         return $subfile; 
+   }
+
+   private function getMovieSub($id, $lang){
+        $movie = $this->mediamodel->movieProvider()->getMovie($id);
+        foreach ($movie->subtitles as $sub){
+            if ($sub['language'] == $lang) return $sub['subtitle'];
+        }
+        return false;
    }
 
    public function sub($id=false, $lang=false){
@@ -135,6 +120,7 @@ class Watch extends Core_controller
 
 
    private function watchMovie($id){
+<<<<<<< HEAD
         $movie = $this->mediamodel->getMovie($id);
         if ($movie){
             $release = $this->mediamodel->getRelease($movie);
@@ -143,25 +129,21 @@ class Watch extends Core_controller
             }
         }
         if ($release && file_exists($release)){
+=======
+        $movie = $this->mediamodel->movieProvider()->getMovie($id);
+        if ($movie->location){
+>>>>>>> providers
             $this->template->file = $id;
-            $this->template->type = $this->mediamodel->getMimeType($release);
-            $this->template->codec= $this->mediamodel->getCodecInfo($release)['videoCodec'];
-            $subs = array();
-            foreach (glob(dirname($release) . '/*.srt') as $sub){
-                $lang='en';
-                if (substr_count(basename($sub), '.') > 1){
-                    $lang = substr($sub, strlen($sub)-6, 2);
-                }
-                array_push($subs, $lang);
-            }
+            $this->template->type = $this->mediamodel->getMimeType($movie->location);
+            $this->template->codec= $this->mediamodel->getCodecInfo($movie->location)['videoCodec'];
             $this->template->streamstr = $id;
-            $this->template->subs = array_unique($subs);
-            $this->template->setPagetitle($movie->info->original_title . ' - Gunther');
+            $this->template->subs = $movie->subtitles;
+            $this->template->setPagetitle($movie->name . ' - Gunther');
             $this->template->render('media/watch');
         } else {
             $this->setFlashmessage($this->lang['movienotfound'], 'danger');
             if ($movie){
-                error_log("Movie not found: " . $movie->info->original_title);
+                error_log("Movie not found: " . $movie->name);
             }
             $this->redirect('movies/index');
         }
@@ -172,8 +154,13 @@ class Watch extends Core_controller
         $serie_id = $parts[0];
         $season_id = $parts[1];
         $episode_id = $parts[2];
+<<<<<<< HEAD
         $episode = $this->mediamodel->getEpisode($serie_id, $season_id, $episode_id);
 	   if ($episode != false && file_exists($episode->location)){
+=======
+        $episode = $this->mediamodel->showProvider()->getEpisode($serie_id, $season_id, $episode_id);
+	    if ($episode != false && file_exists($episode->location)){
+>>>>>>> providers
             $this->template->file = $id;
             $this->template->type = $this->mediamodel->getMimeType($episode->location);
             $this->template->codec = $this->mediamodel->getCodecInfo($episode->location)['videoCodec'] . ',' . $this->mediamodel->getCodecInfo($episode->location)['audioCodec'];
