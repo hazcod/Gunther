@@ -30,7 +30,6 @@
 		<?php foreach ($this->results as $movie): ?>
 		  <a href="/movies/add/<?= $movie->imdbID; ?>" class="list-group-item">
 		    <h4 class="list-group-item-heading"><?= $movie->Title . ' (' . $movie->Year . ')'; ?></h4>
-		  </a>
 		<?php endforeach; ?>
 		</div>
 	</div>

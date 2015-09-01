@@ -37,19 +37,19 @@
 		</div>
 
 		<div class="col-sm-4">
-			<h3>CouchPotato (<?= $this->lang['movies']; ?>)</h3>
+			<h3><?= $this->settings['movie_provider']; ?> (<?= $this->lang['movies']; ?>)</h3>
 			<hr>
 			<a class="btn btn-primary" href="/admin/scanmovies/full"><i class="fa fa-refresh"></i> <?= $this->lang['refreshlibfull']; ?></a>
 			<a class="btn btn-primary" href="/admin/scanmovies"><i class="fa fa-refresh"></i> <?= $this->lang['refreshlib']; ?></a>
-			<a class="btn btn-danger" href="/admin/restartcp"><i class="fa fa-power-off"></i> <?= $this->lang['restart']; ?></a>
+			<a class="btn btn-danger" href="/admin/restartmovie"><i class="fa fa-power-off"></i> <?= $this->lang['restart']; ?></a>
 			<a class="btn btn-primary" href="/admin/clearcache/movies"><i class="fa fa-refresh"></i> <?= $this->lang['flushmovies']; ?></a>
 		</div>
 
 		<div class="col-sm-4">
-			<h3>Sick{Beard|Rage} (<?= $this->lang['series']; ?>)</h3>
+			<h3><?= $this->settings['show_provider']; ?> (<?= $this->lang['series']; ?>)</h3>
 			<hr>
 			<a class="btn btn-primary" href="/admin/scanshows"><i class="fa fa-refresh"></i> <?= $this->lang['refreshlib']; ?></a>
-			<a class="btn btn-danger" href="/admin/restartsick"><i class="fa fa-power-off"></i> <?= $this->lang['restart']; ?></a>
+			<a class="btn btn-danger" href="/admin/restartshow"><i class="fa fa-power-off"></i> <?= $this->lang['restart']; ?></a>
 			<a class="btn btn-primary" href="/admin/clearcache/shows"><i class="fa fa-refresh"></i> <?= $this->lang['flushshows']; ?></a>
 		</div>
 	</div>
