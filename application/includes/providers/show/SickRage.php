@@ -49,13 +49,35 @@ class SickRage extends ShowProvider {
 		return $result;
 	}
 
+	private function convertEpisode($episode){
+		$result = false;
+		if ($episode != false){
+			$result = new Episode();
+			$result->airdate = $episode->airdate;
+			$result->description = $episode->description;
+			$result->size = $episode->file_size_human;
+			$result->location = $episode->location;
+			$result->name = $episode->name;
+			$result->status = $episode->status;
+			$result->images = array(); //not available
+		}
+		return $result;
+	}
+
 	private function getBanner($id){
 		return $this->cache->getImage($this->buildURL() . 'show.getbanner&tvdbid=' . urlencode($id));
 	}
-	/*
-	private function getPoster($id){
-		return $this->cache->getImage($this->buildURL() . 'show.getposter&tvdbid=' . urlencode($id));
-	}*/
+
+	function getLatestEpisodes($type="downloaded", $limit=10){
+    	$result = array();
+    	$json = $this->cache->getJson($this->buildURL() . 'history&type=' . urlencode($type) . '&limit=' . urlencode($limit)));
+    	if ($json){
+	    	foreach ($json->data as $log){
+				array_push($result, $this->convertEpisode($log));
+	    	}
+	    }
+    	return $result;
+    }
 
 	function getShows($force=false){
 		$result = array();
@@ -82,11 +104,16 @@ class SickRage extends ShowProvider {
 	}
 
 	function getEpisodes($id, $season){
-		
+		return array();		
 	}
 
-	function getEpisode($id, $season, $id){
-
+	function getEpisode($id, $season, $episode){
+		$result = false;
+		$json = $this->cache->getJson($this->buildURL() . 'episode&tvdbid=' . urlencode($id) . '&season=' . urlencode($season) . '&episode=' . urlencode($episode));
+		if ($json && $json->result == 'success'){
+			$result = $this->convertEpisode($json->data);
+		}
+		return $result;
 	}
 
 	function restartApp(){

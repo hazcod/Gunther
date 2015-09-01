@@ -29,7 +29,7 @@ class Series extends Core_controller
      public function search(){
         $formdata = $this->form->getPost();
         $this->template->searchterm = $formdata->title;
-        $existing = $this->mediamodel->getAllShows();
+        $existing = $this->mediamodel->showProvider()->getShows();
         $arr=array();
         foreach ($this->mediamodel->getMediaInfo('series', $formdata->title) as $result){
             $id = $result->imdbID;
@@ -47,7 +47,7 @@ class Series extends Core_controller
     public function add($id=false){
         $this->template->setPagetitle($this->lang['addshow'] . ' - ' . $this->lang['title']);
         if ($id){
-            if ($this->mediamodel->addSeries($id)){
+            if ($this->mediamodel->showProvider()->addShow($id)){
                 $this->setflashmessage($this->lang['showadded'], 'info');
             } else {
                 $this->setflashmessage($this->lang['showadderr'], 'danger');

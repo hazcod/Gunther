@@ -89,7 +89,7 @@ class Admin extends Core_controller
 
     public function scanmovies($full=false){
         if ($this->checkAdminAccess()){
-            $this->mediamodel->scanmovies($full);
+            $this->mediamodel->movieProvider()->scanmovies($full);
             $this->setFlashmessage($this->lang['scanstarted']);
             $this->redirect('admin/index');
         } else {
@@ -100,7 +100,7 @@ class Admin extends Core_controller
 
     public function scanshows(){
         if ($this->checkAdminAccess()){
-            $this->mediamodel->scanshows();
+            $this->mediamodel->showProvider()->scanshows();
             $this->setFlashmessage($this->lang['scanstarted']);
             $this->redirect('admin/index');
         } else {
@@ -109,9 +109,9 @@ class Admin extends Core_controller
         }
     }
 
-    public function restartcp(){
+    public function restartmovie(){
         if ($this->checkAdminAccess()){
-            $this->mediamodel->restartCouch();
+            $this->mediamodel->showProvider()->restartApp();
             $this->setFlashmessage($this->lang['restarted']);
             $this->redirect('admin/index');
         } else {
@@ -120,9 +120,9 @@ class Admin extends Core_controller
         }
     }
 
-    public function restartsick(){
+    public function restartsshow(){
         if ($this->checkAdminAccess()){
-            $this->mediamodel->restartSick();
+            $this->mediamodel->showProvider()->restartApp();
             $this->setFlashmessage($this->lang['restarted']);
             $this->redirect('admin/index');
         } else {

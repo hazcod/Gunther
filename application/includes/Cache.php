@@ -1,10 +1,32 @@
 <?php
+/*
+include __DIR__ . '/TvDb/Http/HttpClient.php';
+include __DIR__ . '/TvDb/Http/CurlClient.php';
+include __DIR__ . '/TvDb/CurlException.php';
+include __DIR__ . '/TvDb/Client.php';
+include __DIR__ . '/TvDb/Serie.php';
+include __DIR__ . '/TvDb/Banner.php';
+include __DIR__ . '/TvDb/Episode.php';
+include __DIR__ . '/TvDb/Http/Cache/Cache.php';
+include __DIR__ . '/TvDb/Http/Cache/FilesystemCache.php';
+include __DIR__ . '/TvDb/Http/CacheClient.php';
+use Moinax\TvDb\Http\Cache\FilesystemCache;
+use Moinax\TvDb\Http\CacheClient;
+use Moinax\TvDb\Client;
+*/
 class Cache {
 
 	private $location;
+	private $tvdb;
 
 	public function __construct($cache_location){
 		$this->location = $cache_location;
+		/*
+		$this->tvdb = new Client($settings['TVDB_URL'], $settings['TVDB_API']);
+        $cache = new FilesystemCache($this->settings['CACHE_DIR']);
+        $httpClient = new CacheClient($cache, (int) $this->settings['CACHE_TTL']);
+        $this->tvdb->setHttpClient($httpClient);
+        */
 	}
 
 	private function download($url, $path){

@@ -21,7 +21,7 @@ class Dashboard extends Core_controller
             if ($this->mediamodel->movieProvider() != false)
             $this->template->movies = $this->mediamodel->movieProvider()->getMovies('done', 10);
             if ($this->mediamodel->showProvider() != false)
-            $this->template->episodes = $this->mediamodel->showProvider()->getLatestEpisodes(10);
+            $this->template->episodes = $this->mediamodel->showProvider()->getLatestEpisodes('downloaded', 10);
             $this->template->render('dashboard/index');
         }
     }

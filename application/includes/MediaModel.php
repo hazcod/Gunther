@@ -138,7 +138,7 @@
 		abstract protected function getShows();
 		abstract protected function getSeasons($id);
 		abstract protected function getEpisodes($id, $season);
-		abstract protected function getEpisode($id, $season, $id);
+		abstract protected function getEpisode($id, $season, $episode);
 		abstract protected function restartApp();
 		abstract protected function refresh();
 		abstract protected function getRefreshProgress();
@@ -146,6 +146,7 @@
 		abstract protected function searchShow($title);
 		abstract protected function addShow($id);
 		abstract protected function getLatestNotifications();
+		abstract protected function getLatestEpisodes($type="downloaded", $limit=10);
 	}
 
 	class Movie {
@@ -183,7 +184,7 @@
 		public $location;
 		public $name;
 		public $status;
-		public $picture;
+		public $images;
 	}
 
 	class AutoLoader {
