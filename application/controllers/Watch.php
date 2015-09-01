@@ -120,19 +120,8 @@ class Watch extends Core_controller
 
 
    private function watchMovie($id){
-<<<<<<< HEAD
-        $movie = $this->mediamodel->getMovie($id);
-        if ($movie){
-            $release = $this->mediamodel->getRelease($movie);
-            if ($release == false){
-                error_log('No valid release found for ' . $movie->info->original_title . ' : ' . var_dump($movie->releases));
-            }
-        }
-        if ($release && file_exists($release)){
-=======
         $movie = $this->mediamodel->movieProvider()->getMovie($id);
         if ($movie->location){
->>>>>>> providers
             $this->template->file = $id;
             $this->template->type = $this->mediamodel->getMimeType($movie->location);
             $this->template->codec= $this->mediamodel->getCodecInfo($movie->location)['videoCodec'];
@@ -154,13 +143,8 @@ class Watch extends Core_controller
         $serie_id = $parts[0];
         $season_id = $parts[1];
         $episode_id = $parts[2];
-<<<<<<< HEAD
-        $episode = $this->mediamodel->getEpisode($serie_id, $season_id, $episode_id);
-	   if ($episode != false && file_exists($episode->location)){
-=======
         $episode = $this->mediamodel->showProvider()->getEpisode($serie_id, $season_id, $episode_id);
 	    if ($episode != false && file_exists($episode->location)){
->>>>>>> providers
             $this->template->file = $id;
             $this->template->type = $this->mediamodel->getMimeType($episode->location);
             $this->template->codec = $this->mediamodel->getCodecInfo($episode->location)['videoCodec'] . ',' . $this->mediamodel->getCodecInfo($episode->location)['audioCodec'];
