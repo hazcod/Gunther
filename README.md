@@ -10,7 +10,7 @@ If you want to contribute, application/ is the folder you need.
 Note: This can install downloaders for you. [Use the setupDownloaders.sh script for that.](https://github.com/HazCod/Gunther/blob/master/setup/setupDownloaders.sh).
 
 # Features
-- Works with the high performance web server nginx
+- Works with the web server apache (no nginx because of broken webdav)
 - Uses the high performant Webdav protocol for sharing; almost every client supports this
 - No running database required; uses SQlite
 - Caches posters and actor images; a little slower, but at least everything is over HTTPS
@@ -29,10 +29,8 @@ nano setup.sh
 chmod +x setup.sh
 ./setup.sh
 ```
-3. Set your API keys in [config.php](/application/config.php).
-4. Setup a daily cron job to keep the site snappy. (not mandatory)
-   `01 0 * * * www-data wget --no-check-certificate -q http://localhost/cache &>/dev/null`
-5. Login with admin and the password.
+3. Set your API keys and other settings in [config.php](/application/config.php).
+4. Login with admin and the password.
 
 # TODO
 [See issue tracker.](https://github.com/HazCod/Gunther/issues)
