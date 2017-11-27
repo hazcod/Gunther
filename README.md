@@ -1,4 +1,4 @@
-# Gunther
+# Gunther - NO LONGER MAINTAINED
 ~ Easy web frontend for your media on a debian VPS.
 
 
